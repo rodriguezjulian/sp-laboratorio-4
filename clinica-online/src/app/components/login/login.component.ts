@@ -1,7 +1,10 @@
+import { AuthService } from './../../servicios/auth.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FirestoreService } from '../../servicios/firestore.service';
+import { Firestore } from '@angular/fire/firestore';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  msjError : string = "";
   usuariosRapidos = [
     {
       nombre: 'Paciente 1',
@@ -50,7 +54,7 @@ export class LoginComponent {
     },
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private auth : AuthService, private firestore : FirestoreService) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
@@ -66,9 +70,37 @@ export class LoginComponent {
 
   onLogin() {
     if (this.loginForm.valid) {
-      console.log('Usuario logueado:', this.loginForm.value);
+      this.Login()
+      //this.GuardarRegistroExitoso();
     } else {
       console.log('Formulario inválido');
     }
   }
+
+  Login() {
+    console.log("Entrando al login")
+    this.auth.login(this.loginForm.get('correo')?.value, this.loginForm.get('contrasena')?.value).then((res) => {
+      console.log("Parece que viene bien el login")
+      this.GuardarRegistroExitoso();
+    }).catch((e) => {
+      switch(e.code) {
+        case "auth/invalid-credential":
+          this.msjError = "Email o contraseña incorrectos";
+          break;
+          case "auth/invalid-email":
+            this.msjError = "EMAIL INCORRECTO.";
+            break;
+        default:
+          this.msjError = "ERROR al ingresar sesion, verifique datos ingresados.";
+          break;
+      }
+    });}
+
+    async GuardarRegistroExitoso(){
+      const newRegister = 
+      { 
+        usuario : this.loginForm.get('correo')?.value,
+      };
+      await this.firestore.createDocument('logueos', newRegister);
+    }
 }

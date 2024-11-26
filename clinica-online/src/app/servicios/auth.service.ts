@@ -15,6 +15,7 @@ export class AuthService {
   async createUser(coleccion : string, clienteData: any, email: string, password: string) {
     try {
       const userCredential: UserCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      await sendEmailVerification(userCredential.user);
       const clienteId = await this.firestoreService.createDocument(coleccion, { ...clienteData }, userCredential.user.uid);
       console.log('Cliente agregado a Firestore con ID:', clienteId);
       return userCredential;

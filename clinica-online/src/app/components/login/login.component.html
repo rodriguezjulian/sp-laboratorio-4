@@ -36,6 +36,11 @@
         </div>
         <button type="submit" class="submit-button">Ingresar</button>
       </form>
+      <div *ngIf="msjError!=''">
+        <strong><label  style="color: red;" class="form-label">
+            {{msjError}}
+          </label></strong>
+        </div>  
     </div>
   </div>
   
