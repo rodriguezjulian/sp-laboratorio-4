@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { AuthService } from '../../../servicios/auth.service';
-
+import { ImagenService } from './../../../servicios/imagen.service'; 
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
@@ -16,12 +16,14 @@ import { AuthService } from '../../../servicios/auth.service';
 })
 export class RegistroPacienteComponent implements OnInit {
   registroForm: FormGroup;
+  private file1: any;
+  private file2: any;
 
   constructor(
     private firestoreService: FirestoreService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router, private imagenService : ImagenService
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -31,6 +33,8 @@ export class RegistroPacienteComponent implements OnInit {
       obraSocial: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
+      fotoPerfilUno: ['', [Validators.required]],
+      fotoPerfilDos: ['', [Validators.required]],
     });
   }
 
@@ -52,8 +56,17 @@ export class RegistroPacienteComponent implements OnInit {
       });
     }
   }
+  uploadImageUno(foto: any) {
+    this.file1 = foto.target.files[0];
+  }
 
+  uploadImageDos(foto: any) {
+    this.file2 = foto.target.files[0];
+  }
   async crearPaciente() {
+
+    let url1 = await this.imagenService.subirImg(this.file1);
+    let url2 = await this.imagenService.subirImg(this.file2);
     const paciente = {
       nombre: this.registroForm.get('nombre')?.value,
       apellido: this.registroForm.get('apellido')?.value,
@@ -62,6 +75,8 @@ export class RegistroPacienteComponent implements OnInit {
       obraSocial: this.registroForm.get('obraSocial')?.value,
       correo: this.registroForm.get('correo')?.value,
       contrasena: this.registroForm.get('contrasena')?.value,
+      urlFotoPerfil : url1,
+      urlFotoPerfilDos : url2
     };
 
     try {

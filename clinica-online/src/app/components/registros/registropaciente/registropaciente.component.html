@@ -48,6 +48,19 @@
                 <label for="contrasena">Contraseña</label>
                 <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
               </div>
+
+              <div class="row mb-2">
+                <div class="col-md-6 form-floating form-control-group p-1 mb-2">
+                    <input type="file" class="form-control small-input" id="fotoPerfilUno" formControlName="fotoPerfilUno" (change)="uploadImageUno($event)">
+                    <label class="form-label small-label" for="fotoPerfil1">Primera foto de perfil</label>
+
+                </div>
+                <div class="col-md-6 form-floating form-control-group p-1 mb-2">
+                    <input type="file" class="form-control small-input" id="fotoPerfilDos" formControlName="fotoPerfilDos" (change)="uploadImageDos($event)">
+                    <label class="form-label small-label" for="fotoPerfil2">Segunda foto de perfil</label>
+
+                </div>
+            </div>
   
               <!-- Botón Enviar -->
               <div class="button-container">

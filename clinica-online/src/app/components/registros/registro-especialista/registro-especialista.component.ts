@@ -89,7 +89,6 @@ export class RegistroEspecialistaComponent implements OnInit {
   async crearEspecialista() {
 
     let url = await this.imagenService.subirImg(this.file);
-    console.log("url aca " + url);
     const cliente = {
       nombre : this.registroForm.get('nombre')?.value,
       apellido : this.registroForm.get('apellido')?.value,
