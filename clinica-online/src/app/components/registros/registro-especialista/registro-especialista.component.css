@@ -10,11 +10,31 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
+  .especialidad
+  {
+    color: black !;
+  }
   
   .container {
     max-width: 600px;
     width: 100%;
     padding: 20px;
+  }
+
+.select-black {
+    color: black;
+    background-color: white;
+    border: 1px solid #ffee00;
+    border-radius: 5px;
+    padding: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  
+  .select-black option {
+    color: black; 
+    background-color: white;
   }
   
   .card {

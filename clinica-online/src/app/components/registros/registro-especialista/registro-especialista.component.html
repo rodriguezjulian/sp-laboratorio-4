@@ -31,17 +31,16 @@
                 <input id="dni" formControlName="dni" type="text" class="form-input" />
               </div>
   
-              <!-- Campo Especialidad -->
               <div class="form-group">
                 <label for="especialidad">Especialidad</label>
-                <select id="especialidad" formControlName="especialidad" class="form-input">
+                <select id="especialidad" formControlName="especialidad" class="form-input select-black">
                   <option value="" disabled selected>Seleccione una especialidad</option>
                   <option *ngFor="let especialidad of especialidades" [value]="especialidad">
                     {{ especialidad }}
                   </option>
                 </select>
               </div>
-  
+              
               <!-- Nueva Especialidad -->
               <div class="form-group new-specialty">
                 <label for="nuevaEspecialidad">Nueva Especialidad</label>
