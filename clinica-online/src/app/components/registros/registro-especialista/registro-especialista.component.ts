@@ -45,6 +45,8 @@ export class RegistroEspecialistaComponent implements OnInit {
         descripcion : this.registroForm.get('nuevaEspecialidad')?.value 
       };
       await this.firestoreService.createDocument('especialidades', newRegister);
+      const auxiliar = await this.firestoreService.getEspecialidades();
+      this.especialidades = auxiliar.map((especialidad: any) => especialidad.descripcion);
       Swal.fire(
         {
         title: 'Especilidad creada', 
