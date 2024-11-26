@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'registroPaciente',
-    loadComponent: () => import('./components/registros/registropaciente/registropaciente.component').then((m) => m.RegistropacienteComponent),
+    loadComponent: () => import('./components/registros/registropaciente/registropaciente.component').then((m) => m.RegistroPacienteComponent),
   },
 
 ];

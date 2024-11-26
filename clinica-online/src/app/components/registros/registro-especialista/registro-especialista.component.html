@@ -61,6 +61,11 @@
                 <label for="contrasena">Contraseña</label>
                 <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
               </div>
+
+              <div class="col-md-6 form-floating form-control-group p-1 mb-2">
+                <input type="file" class="form-control small-input" id="fotoPerfil" formControlName="fotoPerfil" (change)="uploadImageUno($event)">
+                <label class="form-label small-label" for="fotoPerfil1">Foto de perfil</label>
+            </div>
   
               <!-- Botón Enviar -->
               <div class="button-container">

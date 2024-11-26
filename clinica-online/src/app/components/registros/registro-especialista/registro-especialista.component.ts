@@ -1,4 +1,5 @@
 import { AuthService } from './../../../servicios/auth.service';
+import { ImagenService } from './../../../servicios/imagen.service'; 
 import { FirestoreService } from './../../../servicios/firestore.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoginComponent } from '../../login/login.component';
 
 @Component({
   selector: 'app-registro-especialista',
@@ -18,8 +20,10 @@ export class RegistroEspecialistaComponent implements OnInit {
   especialidades: string[] = [''];
   registroForm: FormGroup;
   imagenPerfil: string | null = null;
+  private file : any;
 
-  constructor(private firestoreService: FirestoreService, private fb: FormBuilder,private authService : AuthService, private router: Router) {
+  constructor(private firestoreService: FirestoreService, private fb: FormBuilder,
+    private authService : AuthService, private router: Router, private imagenService : ImagenService) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -29,6 +33,7 @@ export class RegistroEspecialistaComponent implements OnInit {
       nuevaEspecialidad: [''], // Para agregar una especialidad personalizada
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
+      fotoPerfil: ['', [Validators.required]],
     });
   }
 
@@ -36,7 +41,10 @@ export class RegistroEspecialistaComponent implements OnInit {
     const auxiliar = await this.firestoreService.getEspecialidades();
     this.especialidades = auxiliar.map((especialidad: any) => especialidad.descripcion);
   }
-
+  
+  uploadImageUno(foto: any) {
+    this.file = foto.target.files[0];
+  }
   async agregarEspecialidad() {
     if(this.registroForm.get('nuevaEspecialidad')?.value  != "")
     {
@@ -60,6 +68,7 @@ export class RegistroEspecialistaComponent implements OnInit {
     }
   }
 
+
  async onSubmit() {
     if (this.registroForm.valid) {
       await this.crearEspecialista();
@@ -78,6 +87,9 @@ export class RegistroEspecialistaComponent implements OnInit {
     }
   }
   async crearEspecialista() {
+
+    let url = await this.imagenService.subirImg(this.file);
+    console.log("url aca " + url);
     const cliente = {
       nombre : this.registroForm.get('nombre')?.value,
       apellido : this.registroForm.get('apellido')?.value,
@@ -86,6 +98,7 @@ export class RegistroEspecialistaComponent implements OnInit {
       especialidad : this.registroForm.get('especialidad')?.value,
       correo : this.registroForm.get('correo')?.value,
       contrasena : this.registroForm.get('contrasena')?.value,
+      urlFotoPerfil : url
     };
     console.log(cliente);
     try {
