@@ -41,7 +41,9 @@ export class RegistroEspecialistaComponent implements OnInit {
     const auxiliar = await this.firestoreService.getEspecialidades();
     this.especialidades = auxiliar.map((especialidad: any) => especialidad.descripcion);
   }
-  
+  Home(){
+    this.router.navigate(['']);
+  }
   uploadImageUno(foto: any) {
     this.file = foto.target.files[0];
   }

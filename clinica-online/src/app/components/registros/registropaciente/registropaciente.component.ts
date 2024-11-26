@@ -56,6 +56,9 @@ export class RegistroPacienteComponent implements OnInit {
       });
     }
   }
+  Home(){
+    this.router.navigate(['']);
+  }
   uploadImageUno(foto: any) {
     this.file1 = foto.target.files[0];
   }
