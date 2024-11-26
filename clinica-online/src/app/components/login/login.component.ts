@@ -78,24 +78,33 @@ export class LoginComponent {
   }
 
   Login() {
-    console.log("Entrando al login")
-    this.auth.login(this.loginForm.get('correo')?.value, this.loginForm.get('contrasena')?.value).then((res) => {
-      console.log("Parece que viene bien el login")
-      this.GuardarRegistroExitoso();
+    console.log("Entrando al login");
+    const email = this.loginForm.get('correo')?.value;
+    const password = this.loginForm.get('contrasena')?.value;
+    this.auth.login(email, password).then(async (res) => {
+      console.log("Parece que viene bien el login");
+      if (res.user.emailVerified) {
+        console.log("Correo electrónico verificado");
+        this.GuardarRegistroExitoso();
+      } else {
+        this.msjError = "Debe confirmar su correo electrónico antes de iniciar sesión.";
+      }
     }).catch((e) => {
-      switch(e.code) {
+      switch (e.code) {
         case "auth/invalid-credential":
           this.msjError = "Email o contraseña incorrectos";
           break;
-          case "auth/invalid-email":
-            this.msjError = "EMAIL INCORRECTO.";
-            break;
+        case "auth/invalid-email":
+          this.msjError = "EMAIL INCORRECTO.";
+          break;
         default:
-          this.msjError = "ERROR al ingresar sesion, verifique datos ingresados.";
+          this.msjError = "ERROR al ingresar sesión, verifique datos ingresados.";
           break;
       }
-    });}
-
+      console.error("Error en el login: ", e);
+    });
+  }
+  
     async GuardarRegistroExitoso(){
       const newRegister = 
       { 
