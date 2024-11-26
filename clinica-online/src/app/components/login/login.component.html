@@ -1,1 +1,41 @@
-<p>login works!</p>
+<div class="login-container">
+    <div class="usuarios-rapidos">
+      <div class="usuarios">
+        <button
+          *ngFor="let usuario of usuariosRapidos"
+          class="usuario-boton"
+          (click)="rellenarUsuario(usuario)">
+          <img [src]="usuario.imagen" alt="{{ usuario.nombre }}" class="usuario-imagen" />
+          <span>{{ usuario.nombre }}</span>
+        </button>
+      </div>
+    </div>
+  
+    <div class="login-form">
+      <h2>Iniciar Sesión</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label for="correo">Correo</label>
+          <input
+            id="correo"
+            formControlName="correo"
+            type="email"
+            class="form-input"
+            placeholder="Correo electrónico"
+          />
+        </div>
+        <div class="form-group">
+          <label for="contrasena">Contraseña</label>
+          <input
+            id="contrasena"
+            formControlName="contrasena"
+            type="password"
+            class="form-input"
+            placeholder="Contraseña"
+          />
+        </div>
+        <button type="submit" class="submit-button">Ingresar</button>
+      </form>
+    </div>
+  </div>
+  

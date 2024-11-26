@@ -20,7 +20,6 @@ export class RegistroPacienteComponent implements OnInit {
   private file2: any;
 
   constructor(
-    private firestoreService: FirestoreService,
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router, private imagenService : ImagenService
@@ -78,6 +77,7 @@ export class RegistroPacienteComponent implements OnInit {
       obraSocial: this.registroForm.get('obraSocial')?.value,
       correo: this.registroForm.get('correo')?.value,
       contrasena: this.registroForm.get('contrasena')?.value,
+      autorizado : "no",
       urlFotoPerfil : url1,
       urlFotoPerfilDos : url2
     };

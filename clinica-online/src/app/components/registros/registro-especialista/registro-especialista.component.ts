@@ -72,7 +72,9 @@ export class RegistroEspecialistaComponent implements OnInit {
 
 
  async onSubmit() {
+  console.log("recien toque el boton");
     if (this.registroForm.valid) {
+      console.log("previo a llamar a crearEspecialista()");
       await this.crearEspecialista();
       this.registroForm.reset();
     } else {
@@ -89,8 +91,9 @@ export class RegistroEspecialistaComponent implements OnInit {
     }
   }
   async crearEspecialista() {
-
+    console.log("antes de subir la imagen");
     let url = await this.imagenService.subirImg(this.file);
+    console.log("despues de subir la img");
     const cliente = {
       nombre : this.registroForm.get('nombre')?.value,
       apellido : this.registroForm.get('apellido')?.value,
@@ -99,8 +102,10 @@ export class RegistroEspecialistaComponent implements OnInit {
       especialidad : this.registroForm.get('especialidad')?.value,
       correo : this.registroForm.get('correo')?.value,
       contrasena : this.registroForm.get('contrasena')?.value,
+      autorizado : "no",
       urlFotoPerfil : url
     };
+    console.log("cree la constante del cliente");
     console.log(cliente);
     try {
       this.authService.createUser("especialista",cliente, this.registroForm.get('correo')?.value, this.registroForm.get('contrasena')?.value);
