@@ -6,17 +6,19 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { ImagenService } from '../../../servicios/imagen.service';
 import { AuthService } from '../../../servicios/auth.service';
-
+import { RecaptchaModule } from 'ng-recaptcha';
 @Component({
   selector: 'app-registro-admin',
   templateUrl: './registro-admin.component.html',
   styleUrls: ['./registro-admin.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule,RecaptchaModule],
 })
 export class RegistroAdminComponent implements OnInit {
   registroForm: FormGroup;
   private file: any;
+  public showCaptchaError : boolean = false;
+  public captcha: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +34,13 @@ export class RegistroAdminComponent implements OnInit {
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
       fotoPerfil: ['', Validators.required],
+      recaptcha: ['', Validators.required],
     });
+  }
+
+  resolved(captchaResponse: any) {
+    this.captcha = captchaResponse;
+    this.showCaptchaError = false;
   }
 
   ngOnInit(): void {}
