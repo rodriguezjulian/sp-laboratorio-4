@@ -28,49 +28,43 @@
           </button>
         </div>
       </div>
-
-      <!-- Modal Pacientes -->
-<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="pacienteModalLabel">Pacientes</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Bienvenido paciente!! <br>
-        ¿Qué desea hacer?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="goTo('registroPaciente')" data-bs-dismiss="modal">Registrarse</button>
-        <button type="button" class="btn btn-primary" (click)="goTo('login')" data-bs-dismiss="modal">Iniciar Sesión</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Especialistas -->
-<div class="modal fade" id="especialistaModal" tabindex="-1" aria-labelledby="especialistaModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="especialistaModalLabel">Especialistas</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Bienvenido especialista!! <br>
-        ¿Qué desea hacer?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="goTo('registroPaciente')" data-bs-dismiss="modal">Registrarse</button>
-        <button type="button" class="btn btn-primary" (click)="goTo('login')" data-bs-dismiss="modal">Iniciar Sesión</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-      
+        <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="pacienteModalLabel">Pacientes</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Bienvenido paciente!! <br>
+                ¿Qué desea hacer?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="goTo('registroPaciente')" data-bs-dismiss="modal">Registrarse</button>
+                <button type="button" class="btn btn-primary" (click)="goTo('login')" data-bs-dismiss="modal">Iniciar Sesión</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal Especialistas -->
+        <div class="modal fade" id="especialistaModal" tabindex="-1" aria-labelledby="especialistaModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="especialistaModalLabel">Especialistas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Bienvenido especialista!! <br>
+                ¿Qué desea hacer?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="goTo('registroPaciente')" data-bs-dismiss="modal">Registrarse</button>
+                <button type="button" class="btn btn-primary" (click)="goTo('login')" data-bs-dismiss="modal">Iniciar Sesión</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   </main>
 </body>
