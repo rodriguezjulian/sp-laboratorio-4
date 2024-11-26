@@ -78,17 +78,32 @@ export class LoginComponent {
   }
 
   Login() {
+    const hardcodedUsers = [
+      "dominic@gmail.com",
+      "jordana@gmail.com",
+      "hugh@gmail.com",
+      "david@gmail.com",
+      "messi@gmail.com",
+      "julianAdmin@gmail.com",
+    ];
     console.log("Entrando al login");
+
     const email = this.loginForm.get('correo')?.value;
     const password = this.loginForm.get('contrasena')?.value;
     this.auth.login(email, password).then(async (res) => {
       console.log("Parece que viene bien el login");
-      if (res.user.emailVerified) {
-        console.log("Correo electrónico verificado");
-        this.GuardarRegistroExitoso();
-      } else {
-        this.msjError = "Debe confirmar su correo electrónico antes de iniciar sesión.";
+      //evito esta verificacion en usuarios hardcodeados
+      if (!hardcodedUsers.includes(email))
+      {
+        if (res.user.emailVerified) {
+          console.log("Correo electrónico verificado");
+          this.GuardarRegistroExitoso();
+        } else {
+          this.msjError = "Debe confirmar su correo electrónico antes de iniciar sesión.";
+          return;
+        }
       }
+      console.log("todo piola");
     }).catch((e) => {
       switch (e.code) {
         case "auth/invalid-credential":
