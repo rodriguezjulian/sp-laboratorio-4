@@ -49,7 +49,7 @@ p {
 }
 
 .imgPaciente, .imgEquipoMedico {
-  width: 300px;
+  width: 200px;
   height: auto;
   margin-top: 30px;
   border-radius: 10px;

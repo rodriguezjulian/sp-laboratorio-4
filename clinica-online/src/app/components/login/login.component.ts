@@ -43,10 +43,10 @@ export class LoginComponent {
       imagen: 'https://firebasestorage.googleapis.com/v0/b/ppsutn-2ed7e.appspot.com/o/fotosperfil%2F1732603014197-messi.jpg?alt=media&token=df6986b1-34b6-4014-b6cc-11e6deac5031',
     },
     {
-      nombre: 'messi@gmail.com',
-      correo: 'especialista2@mail.com',
-      contrasena: '123456',
-      imagen: 'https://example.com/especialista2.jpg',
+      nombre: 'Admin',
+      correo: 'julianAdmin@gmail.com',
+      contrasena: '12345678',
+      imagen: 'https://firebasestorage.googleapis.com/v0/b/ppsutn-2ed7e.appspot.com/o/fotosperfil%2F1732605540296-illia.jpeg?alt=media&token=dcd34edb-55dc-4342-aefc-407790cde3cc',
     },
   ];
 

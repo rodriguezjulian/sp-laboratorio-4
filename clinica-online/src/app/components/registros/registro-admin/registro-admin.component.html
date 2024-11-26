@@ -1,1 +1,103 @@
-<p>registro-admin works!</p>
+<section class="fondo">
+    <div class="container">
+      <div class="form-container">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="title">Registro de Administrador</h2>
+            <p class="subtitle">Por favor ingrese los datos requeridos</p>
+  
+            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+              <!-- Campo Nombre -->
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input
+                  id="nombre"
+                  formControlName="nombre"
+                  type="text"
+                  class="form-input"
+                />
+              </div>
+  
+              <!-- Campo Apellido -->
+              <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input
+                  id="apellido"
+                  formControlName="apellido"
+                  type="text"
+                  class="form-input"
+                />
+              </div>
+  
+              <!-- Campo Edad -->
+              <div class="form-group">
+                <label for="edad">Edad</label>
+                <input
+                  id="edad"
+                  formControlName="edad"
+                  type="number"
+                  class="form-input"
+                />
+              </div>
+  
+              <!-- Campo DNI -->
+              <div class="form-group">
+                <label for="dni">DNI</label>
+                <input
+                  id="dni"
+                  formControlName="dni"
+                  type="text"
+                  class="form-input"
+                />
+              </div>
+  
+              <!-- Campo Correo -->
+              <div class="form-group">
+                <label for="correo">Correo</label>
+                <input
+                  id="correo"
+                  formControlName="correo"
+                  type="email"
+                  class="form-input"
+                />
+              </div>
+  
+              <!-- Campo Contraseña -->
+              <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input
+                  id="contrasena"
+                  formControlName="contrasena"
+                  type="password"
+                  class="form-input"
+                />
+              </div>
+  
+              <div class="col-md-6 form-floating form-control-group p-1 mb-2">
+                <input type="file" class="form-control small-input" id="fotoPerfil" formControlName="fotoPerfil" (change)="uploadImageUno($event)">
+                <label class="form-label small-label" for="fotoPerfil">Foto de perfil</label>
+            </div>
+  
+              <!-- Botón de Registro -->
+              <div class="button-container">
+                <button type="submit" class="submit-button">
+                  Registrar Administrador
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="text-end">
+            <button
+             
+              class="btn btn-primary btn-lg px-5 mb-4"
+              style="background-color: brown; color: white"
+              (click)="Home()"
+            >
+              ATRÁS
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
