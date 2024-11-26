@@ -10,22 +10,34 @@ body, html {
 }
 
 .fondo {
-  min-height: 100vh; /* Permite que se expanda si hay contenido adicional */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0;
   padding: 0;
-  background: linear-gradient(45deg, #FFD700, #e48080); /* Fondo degradado */
-  background-attachment: fixed; /* Fija el fondo para que no desaparezca */
+  background: linear-gradient(45deg, #FFD700, #e48080);
+  background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .p-header {
   font-size: 1.2em;
-  color: black; /* Asegura que el texto sea negro */
+  color: black;
   text-align: center;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: black;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+p {
+  color: black;
 }
 
 .botones {
@@ -44,14 +56,50 @@ body, html {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: black; /* Asegura que el texto sea negro */
-  font-weight: bold;
-  font-size: 2.5rem;
+.modal-dialog {
+  max-width: 500px;
+  margin: auto;
 }
 
-p {
-  color: black; /* Asegura que todos los párrafos tengan texto negro */
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  background-color: #e48080;
+  color: white;
+  border-bottom: 2px solid #FFD700;
+}
+
+.modal-body {
+  text-align: center;
+  padding: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-footer button {
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #FFD700;
+  color: black;
+}
+
+.modal-footer .btn-primary {
+  background-color: #e48080;
+  color: white;
 }

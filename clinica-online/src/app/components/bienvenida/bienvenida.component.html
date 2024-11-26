@@ -11,14 +11,66 @@
           </p>
         </div>
       </div>
+
+      <!-- Sección de botones -->
       <div class="d-flex flex-column align-items-center">
+        <!-- Imagen Pacientes -->
         <div class="p-3 bg-body-tertiary border rounded-3 mb-4 botones">
-          <img src="../../../assets/registroPacientes.jpeg" alt="Imagen pacientes" class="img-fluid imgPaciente">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#pacienteModal" class="btn-img">
+            <img src="../../../assets/registroPacientes.jpeg" alt="Imagen pacientes" class="img-fluid imgPaciente">
+          </button>
         </div>
+
+        <!-- Imagen Especialistas -->
         <div class="p-3 bg-body-tertiary border rounded-3 botones">
-          <img src="../../../assets/registroEspecialistas.jpeg" alt="Imagen especialista" class="img-fluid imgEquipoMedico">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#especialistaModal" class="btn-img">
+            <img src="../../../assets/registroEspecialistas.jpeg" alt="Imagen especialista" class="img-fluid imgEquipoMedico">
+          </button>
         </div>
       </div>
+
+      <!-- Modal Pacientes -->
+<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="pacienteModalLabel">Pacientes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bienvenido paciente!! <br>
+        ¿Qué desea hacer?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Registrarse</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Iniciar Sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Especialistas -->
+<div class="modal fade" id="especialistaModal" tabindex="-1" aria-labelledby="especialistaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="especialistaModalLabel">Especialistas</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bienvenido especialista!! <br>
+        ¿Qué desea hacer?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Registrarse</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Iniciar Sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      
     </div>
   </main>
 </body>
