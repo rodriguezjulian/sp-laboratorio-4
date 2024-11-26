@@ -1,4 +1,4 @@
-<section class="vh-100 gradient-custom">
+<section class="fondo">
     <div class="container">
       <div class="form-container">
         <div class="card">
@@ -9,31 +9,32 @@
             <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
               <!-- Campo Nombre -->
               <div class="form-group">
-                <input formControlName="nombre" type="text" class="form-input" />
-                <label class="form-label">Nombre</label>
+                <label for="nombre">Nombre</label>
+                <input id="nombre" formControlName="nombre" type="text" class="form-input" />
               </div>
   
               <!-- Campo Apellido -->
               <div class="form-group">
-                <input formControlName="apellido" type="text" class="form-input" />
-                <label class="form-label">Apellido</label>
+                <label for="apellido">Apellido</label>
+                <input id="apellido" formControlName="apellido" type="text" class="form-input" />
               </div>
   
               <!-- Campo Edad -->
               <div class="form-group">
-                <input formControlName="edad" type="number" class="form-input" />
-                <label class="form-label">Edad</label>
+                <label for="edad">Edad</label>
+                <input id="edad" formControlName="edad" type="number" class="form-input" />
               </div>
   
               <!-- Campo DNI -->
               <div class="form-group">
-                <input formControlName="dni" type="text" class="form-input" />
-                <label class="form-label">DNI</label>
+                <label for="dni">DNI</label>
+                <input id="dni" formControlName="dni" type="text" class="form-input" />
               </div>
   
               <!-- Campo Especialidad -->
               <div class="form-group">
-                <select formControlName="especialidad" class="form-input">
+                <label for="especialidad">Especialidad</label>
+                <select id="especialidad" formControlName="especialidad" class="form-input">
                   <option value="" disabled selected>Seleccione una especialidad</option>
                   <option *ngFor="let especialidad of especialidades" [value]="especialidad">
                     {{ especialidad }}
@@ -42,23 +43,26 @@
               </div>
   
               <!-- Nueva Especialidad -->
-              <div class="form-group">
-                <input formControlName="nuevaEspecialidad" type="text" class="form-input" placeholder="Agregar nueva especialidad" />
-                <button type="button" (click)="agregarEspecialidad()">Agregar</button>
+              <div class="form-group new-specialty">
+                <label for="nuevaEspecialidad">Nueva Especialidad</label>
+                <div class="specialty-container">
+                  <input id="nuevaEspecialidad" formControlName="nuevaEspecialidad" type="text" class="form-input" />
+                  <button type="button" (click)="agregarEspecialidad()" class="btn btn-secondary">Agregar</button>
+                </div>
               </div>
   
               <!-- Campo Correo -->
               <div class="form-group">
-                <input formControlName="correo" type="email" class="form-input" />
-                <label class="form-label">Correo</label>
+                <label for="correo">Correo</label>
+                <input id="correo" formControlName="correo" type="email" class="form-input" />
               </div>
   
               <!-- Campo Contraseña -->
               <div class="form-group">
-                <input formControlName="contrasena" type="password" class="form-input" />
-                <label class="form-label">Contraseña</label>
+                <label for="contrasena">Contraseña</label>
+                <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
               </div>
-
+  
               <!-- Botón Enviar -->
               <div class="button-container">
                 <button type="submit" class="submit-button">Registrar Especialista</button>

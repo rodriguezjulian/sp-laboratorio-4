@@ -1,10 +1,11 @@
+import { AuthService } from './../../../servicios/auth.service';
 import { FirestoreService } from './../../../servicios/firestore.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-especialista',
@@ -18,7 +19,7 @@ export class RegistroEspecialistaComponent implements OnInit {
   registroForm: FormGroup;
   imagenPerfil: string | null = null;
 
-  constructor(private firestoreService: FirestoreService, private fb: FormBuilder) {
+  constructor(private firestoreService: FirestoreService, private fb: FormBuilder,private authService : AuthService, private router: Router) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -28,7 +29,6 @@ export class RegistroEspecialistaComponent implements OnInit {
       nuevaEspecialidad: [''], // Para agregar una especialidad personalizada
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
-      imagenPerfil: ['', Validators.required],
     });
   }
 
@@ -60,13 +60,59 @@ export class RegistroEspecialistaComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+ async onSubmit() {
     if (this.registroForm.valid) {
-      console.log('Datos del especialista:', this.registroForm.value);
-      alert('Registro exitoso');
+      await this.crearEspecialista();
       this.registroForm.reset();
     } else {
-      alert('Formulario no válido, por favor revisa los campos.');
+      Swal.fire(
+        {
+        title: 'ERROR', 
+        html: 'Por favor verifica los datos ingresados.', 
+        icon: 'error',
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');   
+        }
+      });
+    }
+  }
+  async crearEspecialista() {
+    const cliente = {
+      nombre : this.registroForm.get('nombre')?.value,
+      apellido : this.registroForm.get('apellido')?.value,
+      edad : this.registroForm.get('edad')?.value,
+      dni : this.registroForm.get('dni')?.value,
+      especialidad : this.registroForm.get('especialidad')?.value,
+      correo : this.registroForm.get('correo')?.value,
+      contrasena : this.registroForm.get('contrasena')?.value,
+    };
+    console.log(cliente);
+    try {
+      this.authService.createUser("especialista",cliente, this.registroForm.get('correo')?.value, this.registroForm.get('contrasena')?.value);
+      Swal.fire({
+        title: 'Especialista creado',
+        text: '¡Ya puede empezar a usar nuestro sitio!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        backdrop: `rgba(0,0,0,0.8)`,
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');
+        }
+      });
+      this.router.navigate(['/login']);
+    } catch (error) {
+      Swal.fire(
+        {
+        title: 'ERROR', 
+        html: 'Por favor verifica los datos ingresados.', 
+        icon: 'error',
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');   
+        }
+      });
     }
   }
 }

@@ -1,9 +1,20 @@
-.gradient-custom {
-    background: linear-gradient(to bottom, #ad0d0d, #ffee00);
+.fondo {
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #FFD700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .container {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
   }
   
   .card {
@@ -12,21 +23,84 @@
     padding: 2rem;
     color: white;
     text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
   
-  .profile-preview {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-top: 10px;
-    object-fit: cover;
-  }
-  
+  /* Formulario */
   .form-group {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
   }
   
-  button {
-    margin-top: 10px;
+  label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #ccc;
+    text-align: left;
+  }
+  
+  .form-input {
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+    transition: border 0.3s;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border: 1px solid #ffee00;
+  }
+  
+  /* Especialidad Nueva */
+  .new-specialty {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .specialty-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .specialty-container .btn {
+    padding: 10px 15px;
+    border: none;
+    background-color: #ffee00;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .specialty-container .btn:hover {
+    background-color: #e6d000;
+  }
+  
+  /* Botón de Enviar */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #45a045;
   }
   
