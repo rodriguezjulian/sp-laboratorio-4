@@ -1,12 +1,98 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { FirestoreService } from '../../../servicios/firestore.service';
+import { AuthService } from '../../../servicios/auth.service';
 
 @Component({
-  selector: 'app-registropaciente',
-  standalone: true,
-  imports: [],
+  selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
-  styleUrl: './registropaciente.component.css'
+  styleUrls: ['./registropaciente.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
 })
-export class RegistropacienteComponent {
+export class RegistroPacienteComponent implements OnInit {
+  registroForm: FormGroup;
 
+  constructor(
+    private firestoreService: FirestoreService,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.registroForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      edad: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
+      dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
+      obraSocial: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required, Validators.minLength(8)]],
+    });
+  }
+
+  async ngOnInit() {}
+
+  async onSubmit() {
+    if (this.registroForm.valid) {
+      await this.crearPaciente();
+      this.registroForm.reset();
+    } else {
+      Swal.fire({
+        title: 'ERROR',
+        html: 'Por favor verifica los datos ingresados.',
+        icon: 'error',
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');
+        },
+      });
+    }
+  }
+
+  async crearPaciente() {
+    const paciente = {
+      nombre: this.registroForm.get('nombre')?.value,
+      apellido: this.registroForm.get('apellido')?.value,
+      edad: this.registroForm.get('edad')?.value,
+      dni: this.registroForm.get('dni')?.value,
+      obraSocial: this.registroForm.get('obraSocial')?.value,
+      correo: this.registroForm.get('correo')?.value,
+      contrasena: this.registroForm.get('contrasena')?.value,
+    };
+
+    try {
+      await this.authService.createUser(
+        'paciente',
+        paciente,
+        this.registroForm.get('correo')?.value,
+        this.registroForm.get('contrasena')?.value
+      );
+      Swal.fire({
+        title: 'Paciente registrado',
+        text: '¡Ya puede empezar a usar nuestro sitio!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        backdrop: `rgba(0,0,0,0.8)`,
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');
+        },
+      });
+      this.router.navigate(['/login']);
+    } catch (error) {
+      Swal.fire({
+        title: 'ERROR',
+        html: 'Hubo un problema al registrar al paciente.',
+        icon: 'error',
+        didOpen: () => {
+          document.documentElement.classList.remove('swal2-height-auto');
+          document.body.classList.remove('swal2-height-auto');
+        },
+      });
+    }
+  }
 }

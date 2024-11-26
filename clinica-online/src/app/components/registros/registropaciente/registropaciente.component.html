@@ -1,1 +1,62 @@
-<p>registropaciente works!</p>
+<section class="fondo">
+    <div class="container">
+      <div class="form-container">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="title">Registro de Paciente</h2>
+            <p class="subtitle">Por favor ingrese los datos requeridos</p>
+  
+            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+              <!-- Campo Nombre -->
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" formControlName="nombre" type="text" class="form-input" />
+              </div>
+  
+              <!-- Campo Apellido -->
+              <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input id="apellido" formControlName="apellido" type="text" class="form-input" />
+              </div>
+  
+              <!-- Campo Edad -->
+              <div class="form-group">
+                <label for="edad">Edad</label>
+                <input id="edad" formControlName="edad" type="number" class="form-input" />
+              </div>
+  
+              <!-- Campo DNI -->
+              <div class="form-group">
+                <label for="dni">DNI</label>
+                <input id="dni" formControlName="dni" type="text" class="form-input" />
+              </div>
+  
+              <!-- Campo Obra Social -->
+              <div class="form-group">
+                <label for="obraSocial">Obra Social</label>
+                <input id="obraSocial" formControlName="obraSocial" type="text" class="form-input" />
+              </div>
+  
+              <!-- Campo Correo -->
+              <div class="form-group">
+                <label for="correo">Correo</label>
+                <input id="correo" formControlName="correo" type="email" class="form-input" />
+              </div>
+  
+              <!-- Campo Contraseña -->
+              <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
+              </div>
+  
+              <!-- Botón Enviar -->
+              <div class="button-container">
+                <button type="submit" class="submit-button">Registrar Paciente</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
