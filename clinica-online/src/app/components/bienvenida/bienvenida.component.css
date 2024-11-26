@@ -1,0 +1,46 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.fondo {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(45deg, #FFD700, #e48080);
+  background-size: cover;
+}
+
+.p-header {
+  font-size: 1.2em;
+  color: #333;
+  text-align: center;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imgPaciente, .imgEquipoMedico {
+  width: 300px;
+  height: auto;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
