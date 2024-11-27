@@ -98,6 +98,11 @@ export class FirestoreService {
       throw error;
     }
   }
+
+  async getEspecialistaByCorreo(correo: string) {
+    const especialistas = await this.getDocumentsByField<any>('especialista', 'correo', correo);
+    return especialistas.length > 0 ? especialistas[0] : null;
+  }
   
   async getPacientes() {
     try {

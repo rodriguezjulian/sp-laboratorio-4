@@ -78,7 +78,6 @@ export class LoginComponent {
     }
   }  
 
-
   Login() {
     const hardcodedUsers = [
       'dominic@gmail.com',
@@ -92,49 +91,50 @@ export class LoginComponent {
     const email = this.loginForm.get('correo')?.value;
     const password = this.loginForm.get('contrasena')?.value;
   
-    this.auth
-      .login(email, password)
-      .then(async (res) => {
-        // Verificación de usuarios hardcodeados
-        if (!hardcodedUsers.includes(email)) {
-          if (!res.user.emailVerified) {
-            this.msjError = 'Debe confirmar su correo electrónico antes de iniciar sesión.';
-            return;
-          }
-        }
-  
-        console.log('Usuario logueado:', res.user);
-  
-        // Verificar si el usuario es administrador y está habilitado
-        const uid = res.user.uid;
-        const usuarioInfo = await this.firestore.getUsuarioInfo(uid);
-  
-        if (usuarioInfo.coleccion === 'especialista' && !usuarioInfo.habilitado) {
+    this.firestore
+      .getEspecialistaByCorreo(email)
+      .then((especialista) => {
+        // Si el correo pertenece a un especialista no habilitado, bloqueamos el inicio de sesión
+        if (especialista && !especialista.habilitado) {
           this.msjError = 'El especialista no está habilitado para iniciar sesión.';
-          this.auth.logout();
-          return;
+          return; 
         }
+        this.auth
+          .login(email, password)
+          .then(async (res) => {
+            if (!hardcodedUsers.includes(email)) {
+              if (!res.user.emailVerified) {
+                this.msjError = 'Debe confirmar su correo electrónico antes de iniciar sesión.';
+                return;
+              }
+            }
   
-        // Si todas las condiciones se cumplen, redirigir al home
-        this.router.navigate(['/home']);
+            console.log('Usuario logueado:', res.user);
+  
+            // Si todas las condiciones se cumplen, redirigir al home
+            this.router.navigate(['/home']);
+          })
+          .catch((e) => {
+            switch (e.code) {
+              case 'auth/invalid-credential':
+                this.msjError = 'Email o contraseña incorrectos';
+                break;
+              case 'auth/invalid-email':
+                this.msjError = 'EMAIL INCORRECTO.';
+                break;
+              default:
+                this.msjError = 'ERROR al ingresar sesión, verifique datos ingresados.';
+                break;
+            }
+            console.error('Error en el login:', e);
+          });
       })
-      .catch((e) => {
-        switch (e.code) {
-          case 'auth/invalid-credential':
-            this.msjError = 'Email o contraseña incorrectos';
-            break;
-          case 'auth/invalid-email':
-            this.msjError = 'EMAIL INCORRECTO.';
-            break;
-          default:
-            this.msjError = 'ERROR al ingresar sesión, verifique datos ingresados.';
-            break;
-        }
-        console.error('Error en el login:', e);
+      .catch((error) => {
+        console.error('Error al verificar el especialista:', error);
+        this.msjError = 'Ocurrió un problema al validar el usuario.';
       });
   }
   
-
   obtenerUsuarioActual() {
     const usuario = this.auth.obtenerUsuarioActual();
     console.log('Usuario actual:', usuario);
