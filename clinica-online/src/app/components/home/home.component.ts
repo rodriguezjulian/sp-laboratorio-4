@@ -16,17 +16,16 @@ constructor(private auth: AuthService) {
   {
     console.log("por aqui");
     const test = this.auth.obtenerUsuarioActual();
-  if(test !=null )
+    if(test !=null )
 
-  { 
-    console.log('UID:', test.uid);
-    console.log('Correo:', test.email);
-    console.log( "se reconoce el logueo " );
-  }
-  else
-  {
-    console.log("no se reconoce al logueo");
-  }
-  
+    { 
+      console.log('UID:', test.uid);
+      console.log('Correo:', test.email);
+      console.log( "se reconoce el logueo " );
+    }
+    else
+    {
+      console.log("no se reconoce al logueo");
+    }
   }
 }

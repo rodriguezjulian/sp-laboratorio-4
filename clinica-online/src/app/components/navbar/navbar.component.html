@@ -34,7 +34,12 @@
         }
       </div>
       <div class="d-flex">
-        <button
+        <div *ngIf="usuarioLogueado">     
+          
+          <label class="labelNombre" for="nombreUsuario">{{ nombreUsuario }}</label>
+
+        </div>
+          <button
           *ngIf="usuarioLogueado"
           class="btn btn-outline-light"
           (click)="cerrarSesion()"

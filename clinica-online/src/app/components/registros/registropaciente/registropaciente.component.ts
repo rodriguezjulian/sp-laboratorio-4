@@ -8,6 +8,8 @@ import { AuthService } from '../../../servicios/auth.service';
 import { ImagenService } from './../../../servicios/imagen.service'; 
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
+import { FirestoreService } from '../../../servicios/firestore.service';
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
@@ -22,11 +24,12 @@ export class RegistroPacienteComponent implements OnInit {
   token:boolean = false;
   public msjError : string = "";
   usuarioLogueado: User | null = null;
+  proximaRuta : string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private auth: Auth,
+    private auth: Auth, private firestoreService : FirestoreService,
     private router: Router, private imagenService : ImagenService
   ) {
     this.registroForm = this.fb.group({
@@ -54,6 +57,16 @@ export class RegistroPacienteComponent implements OnInit {
   }
 
   async onSubmit() {
+    if(this.usuarioLogueado!=null)
+    {
+      let uid = this.usuarioLogueado.uid;
+      console.log(uid);
+     
+      let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
+      this.proximaRuta = "/home"
+      console.log(usuarioLogueado.correo);
+      console.log(usuarioLogueado.contrasena);
+    }
     for (const field in this.registroForm.controls) {
       const control = this.registroForm.get(field);
       if (control?.invalid) {
@@ -64,6 +77,7 @@ export class RegistroPacienteComponent implements OnInit {
       }
     }
     if (this.registroForm.valid) {
+      console.log("antes de llamar a crearpaciente()")
       await this.crearPaciente();
     } else {
       Swal.fire({
@@ -109,21 +123,36 @@ export class RegistroPacienteComponent implements OnInit {
       contrasena: this.registroForm.get('contrasena')?.value,
       autorizado : "no",
       urlFotoPerfil : url1,
-      urlFotoPerfilDos : url2
+      urlFotoPerfilDos : url2,
+      rol : "paciente"
     };
 
     try {
+      console.log("por crear paciente")
 
       if(this.token)
         {
-          await this.authService.createUser(
-            'paciente',
-            paciente,
-            this.registroForm.get('correo')?.value,
-            this.registroForm.get('contrasena')?.value
-          );
+          if(this.usuarioLogueado!=null)
+            {
+              let uid = this.usuarioLogueado.uid;
+              let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
+              await this.authService.createUser(
+                'paciente',
+                paciente,
+                this.registroForm.get('correo')?.value,
+                this.registroForm.get('contrasena')?.value,usuarioLogueado.correo,usuarioLogueado.contrasena
+              );
+            }else
+            {
+              console.log("lo creo sin estar logueado")
+              await this.authService.createUser(
+                'paciente',
+                paciente,
+                this.registroForm.get('correo')?.value,
+                this.registroForm.get('contrasena')?.value
+              );
+            }
           this.registroForm.reset();
-          
           Swal.fire({
             title: 'Paciente registrado',
             text: '¡Ya puede empezar a usar nuestro sitio!',
@@ -135,14 +164,7 @@ export class RegistroPacienteComponent implements OnInit {
               document.body.classList.remove('swal2-height-auto');
             },
           });
-          if(this.usuarioLogueado == null)
-          {
-            this.router.navigate(['/login']);
-          }
-          else
-          {
-            this.router.navigate(['/home']);
-          }
+            this.router.navigate([this.proximaRuta]);
         }
         else
         {

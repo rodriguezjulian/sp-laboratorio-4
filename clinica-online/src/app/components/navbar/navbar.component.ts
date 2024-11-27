@@ -15,6 +15,8 @@ export class NavbarComponent implements OnInit {
   rutaActual : string = "";
   load! : Promise <boolean>;
   rol : string = "";
+  nombreUsuario : string = "";
+
 
   constructor(private firestoreService : FirestoreService,private auth: Auth, private router: Router) {}
   ngOnInit() {
@@ -25,8 +27,8 @@ export class NavbarComponent implements OnInit {
       if (user?.uid) {
         try {
           const usuarioInfo = await this.firestoreService.getUsuarioInfo(user.uid);
-          
-          if (usuarioInfo?.rol) {
+          this.nombreUsuario = usuarioInfo?.nombre + usuarioInfo?.apellido;
+            if (usuarioInfo?.rol) {
             this.rol = usuarioInfo.rol;
             console.log("Rol del usuario:", this.rol);
           } else {
