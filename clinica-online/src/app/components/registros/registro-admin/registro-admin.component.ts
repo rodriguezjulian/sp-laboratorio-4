@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { ImagenService } from '../../../servicios/imagen.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
-
+import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 @Component({
   selector: 'app-registro-admin',
   templateUrl: './registro-admin.component.html',
@@ -22,12 +22,14 @@ export class RegistroAdminComponent implements OnInit {
   public captcha: string = '';
   token:boolean = false;
   public msjError : string = "";
+  usuarioLogueado: User | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private imagenService: ImagenService
+    private imagenService: ImagenService,
+    private auth: Auth
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -40,7 +42,16 @@ export class RegistroAdminComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  async ngOnInit()
+  {
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.usuarioLogueado = user;
+      } else {
+        this.usuarioLogueado = null;
+      }
+    });
+  }
   
   Home(){
     this.router.navigate(['']);
@@ -85,6 +96,11 @@ export class RegistroAdminComponent implements OnInit {
 
   executeRecaptchaVisible(token:any){
     this.token = !this.token;
+  }
+
+  SeccionUsuarios()
+  {
+    this.router.navigate(['/seccionUsuarios']);
   }
 
   async crearAdministrador() {

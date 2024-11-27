@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../servicios/auth.service';
 import { ImagenService } from './../../../servicios/imagen.service'; 
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
+import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
@@ -20,10 +21,12 @@ export class RegistroPacienteComponent implements OnInit {
   private file2: any;
   token:boolean = false;
   public msjError : string = "";
+  usuarioLogueado: User | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private auth: Auth,
     private router: Router, private imagenService : ImagenService
   ) {
     this.registroForm = this.fb.group({
@@ -39,7 +42,16 @@ export class RegistroPacienteComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {}
+  async ngOnInit()
+  {
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.usuarioLogueado = user;
+      } else {
+        this.usuarioLogueado = null;
+      }
+    });
+  }
 
   async onSubmit() {
     for (const field in this.registroForm.controls) {
@@ -64,6 +76,10 @@ export class RegistroPacienteComponent implements OnInit {
         },
       });
     }
+  }
+  SeccionUsuarios()
+  {
+    this.router.navigate(['/seccionUsuarios']);
   }
   Home(){
     this.router.navigate(['']);

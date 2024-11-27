@@ -1,10 +1,61 @@
 <section class="fondo">
-    <div class="container">
-      <div class="button-container">
-        <button class="action-button" (click)="navigateTo('paciente')">AGREGAR PACIENTE</button>
-        <button class="action-button" (click)="navigateTo('especialista')">AGREGAR ESPECIALISTA</button>
-        <button class="action-button" (click)="navigateTo('admin')">AGREGAR ADMIN</button>
+  <div class="container">
+    <!-- Botones de acción -->
+    <div class="button-container mb-4">
+      <button class="action-button" (click)="navigateTo('paciente')">AGREGAR PACIENTE</button>
+      <button class="action-button" (click)="navigateTo('especialista')">AGREGAR ESPECIALISTA</button>
+      <button class="action-button" (click)="navigateTo('admin')">AGREGAR ADMIN</button>
+    </div>
+
+    <!-- Listado de Pacientes -->
+    <h3 class="text-center mt-5">Pacientes</h3>
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let paciente of pacientes">
+        <div class="card h-100">
+          <img [src]="paciente.urlFotoPerfil" class="card-img-top" alt="Foto del paciente" />
+          <div class="card-body">
+            <h5 class="card-title">{{ paciente.nombre }} {{ paciente.apellido }}</h5>
+            <p class="card-text">
+              <strong>Edad:</strong> {{ paciente.edad }} <br />
+              <strong>Correo:</strong> {{ paciente.correo }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
-  
+
+    <!-- Listado de Especialistas -->
+    <h3 class="text-center mt-5">Especialistas</h3>
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let especialista of especialistas">
+        <div class="card h-100">
+          <img [src]="especialista.urlFotoPerfil" class="card-img-top" alt="Foto del especialista" />
+          <div class="card-body">
+            <h5 class="card-title">{{ especialista.nombre }} {{ especialista.apellido }}</h5>
+            <p class="card-text">
+              <strong>Edad:</strong> {{ especialista.edad }} <br />
+              <strong>Correo:</strong> {{ especialista.correo }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Listado de Administradores -->
+    <h3 class="text-center mt-5">Administradores</h3>
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let administrador of administradores">
+        <div class="card h-100">
+          <img [src]="administrador.urlFotoPerfil" class="card-img-top" alt="Foto del administrador" />
+          <div class="card-body">
+            <h5 class="card-title">{{ administrador.nombre }} {{ administrador.apellido }}</h5>
+            <p class="card-text">
+              <strong>Edad:</strong> {{ administrador.edad }} <br />
+              <strong>Correo:</strong> {{ administrador.correo }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -92,14 +92,13 @@
             </form>
           </div>
           <div class="text-end">
-            <button
-             
-              class="btn btn-primary btn-lg px-5 mb-4"
-              style="background-color: brown; color: white"
-              (click)="Home()"
-            >
-              ATRÁS
-            </button>
+            @if(usuarioLogueado!=null)
+            {
+              <button (click)="SeccionUsuarios()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
+            }@else 
+            {
+              <button (click)="Home()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
+            }
           </div>
         </div>
       </div>

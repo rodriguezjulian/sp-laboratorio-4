@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
+import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
@@ -22,9 +24,10 @@ export class RegistroEspecialistaComponent implements OnInit {
   private file : any;
   public msjError : string = "";
   token:boolean = false;
+  usuarioLogueado: User | null = null;
 
   constructor(private firestoreService: FirestoreService, private fb: FormBuilder,
-    private authService : AuthService, private router: Router, private imagenService : ImagenService) {
+    private authService : AuthService, private router: Router, private imagenService : ImagenService, private auth: Auth) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -41,7 +44,15 @@ export class RegistroEspecialistaComponent implements OnInit {
   async ngOnInit() {
     const auxiliar = await this.firestoreService.getEspecialidades();
     this.especialidades = auxiliar.map((especialidad: any) => especialidad.descripcion);
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.usuarioLogueado = user;
+      } else {
+        this.usuarioLogueado = null;
+      }
+    });
   }
+
   Home(){
     this.router.navigate(['']);
   }
@@ -157,5 +168,9 @@ export class RegistroEspecialistaComponent implements OnInit {
         }
       });
     }
+  }
+  SeccionUsuarios()
+  {
+    this.router.navigate(['/seccionUsuarios']);
   }
 }
