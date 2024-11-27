@@ -130,7 +130,15 @@ export class RegistroAdminComponent implements OnInit {
         text: '¡Ya puede iniciar sesión!',
         icon: 'success',
       });
-      this.router.navigate(['/login']);
+      if(this.usuarioLogueado == null)
+      {
+        this.router.navigate(['/login']);
+      }
+      else
+      {
+        this.router.navigate(['/home']);
+      }
+      
     } catch (error) {
       Swal.fire({
         title: 'Error',

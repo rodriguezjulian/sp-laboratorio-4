@@ -135,7 +135,14 @@ export class RegistroPacienteComponent implements OnInit {
               document.body.classList.remove('swal2-height-auto');
             },
           });
-          this.router.navigate(['/login']);
+          if(this.usuarioLogueado == null)
+          {
+            this.router.navigate(['/login']);
+          }
+          else
+          {
+            this.router.navigate(['/home']);
+          }
         }
         else
         {

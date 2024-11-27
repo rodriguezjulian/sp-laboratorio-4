@@ -1,4 +1,17 @@
-.home-container {
+.fondo {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #ffd700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .home-container {
     font-family: Arial, sans-serif;
   }
   
@@ -34,10 +47,10 @@
   }
   
   .bg-light {
-    background-color: #f9f9f9;
+    background-color: rgb(190, 190, 190) !important;
   }
   
   #contact {
-    background-color: #f1f1f1;
+    background: linear-gradient(45deg, #ffd700, #e48080);
   }
   
