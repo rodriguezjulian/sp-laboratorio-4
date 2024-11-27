@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FirestoreService } from '../../servicios/firestore.service';
 import { Firestore } from '@angular/fire/firestore';
+import { Router, RouterLink } from '@angular/router';
+import { User } from '@angular/fire/auth';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [RouterLink,CommonModule,ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -54,7 +56,7 @@ export class LoginComponent {
     },
   ];
 
-  constructor(private fb: FormBuilder, private auth : AuthService, private firestore : FirestoreService) {
+  constructor(private router: Router, private fb: FormBuilder, private auth : AuthService, private firestore : FirestoreService) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
@@ -79,45 +81,47 @@ export class LoginComponent {
 
   Login() {
     const hardcodedUsers = [
-      "dominic@gmail.com",
-      "jordana@gmail.com",
-      "hugh@gmail.com",
-      "david@gmail.com",
-      "messi@gmail.com",
-      "julianAdmin@gmail.com",
+      'dominic@gmail.com',
+      'jordana@gmail.com',
+      'hugh@gmail.com',
+      'david@gmail.com',
+      'messi@gmail.com',
+      'julianAdmin@gmail.com',
     ];
-    console.log("Entrando al login");
 
     const email = this.loginForm.get('correo')?.value;
     const password = this.loginForm.get('contrasena')?.value;
-    this.auth.login(email, password).then(async (res) => {
-      console.log("Parece que viene bien el login");
-      //evito esta verificacion en usuarios hardcodeados
-      if (!hardcodedUsers.includes(email))
-      {
-        if (res.user.emailVerified) {
-          console.log("Correo electrónico verificado");
-          this.GuardarRegistroExitoso();
-        } else {
-          this.msjError = "Debe confirmar su correo electrónico antes de iniciar sesión.";
-          return;
+
+    this.auth.login(email, password)
+      .then(async (res) => {
+        if (!hardcodedUsers.includes(email)) {
+          if (!res.user.emailVerified) {
+            this.msjError = 'Debe confirmar su correo electrónico antes de iniciar sesión.';
+            return;
+          }
         }
-      }
-      console.log("todo piola");
-    }).catch((e) => {
-      switch (e.code) {
-        case "auth/invalid-credential":
-          this.msjError = "Email o contraseña incorrectos";
-          break;
-        case "auth/invalid-email":
-          this.msjError = "EMAIL INCORRECTO.";
-          break;
-        default:
-          this.msjError = "ERROR al ingresar sesión, verifique datos ingresados.";
-          break;
-      }
-      console.error("Error en el login: ", e);
-    });
+        console.log('Usuario logueado:', res.user);
+        this.router.navigate(['/home']);
+      })
+      .catch((e) => {
+        switch (e.code) {
+          case 'auth/invalid-credential':
+            this.msjError = 'Email o contraseña incorrectos';
+            break;
+          case 'auth/invalid-email':
+            this.msjError = 'EMAIL INCORRECTO.';
+            break;
+          default:
+            this.msjError = 'ERROR al ingresar sesión, verifique datos ingresados.';
+            break;
+        }
+        console.error('Error en el login:', e);
+      });
+  }
+
+  obtenerUsuarioActual() {
+    const usuario = this.auth.obtenerUsuarioActual();
+    console.log('Usuario actual:', usuario);
   }
   
     async GuardarRegistroExitoso(){

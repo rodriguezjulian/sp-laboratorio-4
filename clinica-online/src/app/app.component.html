@@ -1,2 +1,5 @@
-<app-navbar></app-navbar>
-<router-outlet />
+<div *ngIf="usuarioLogueado!=null">
+    <app-navbar></app-navbar>
+  </div>
+  <router-outlet></router-outlet>
+  

@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from './firestore.service';
 import { Auth, authState, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut,UserCredential  } from '@angular/fire/auth';
-
+import {  User, onAuthStateChanged} from '@angular/fire/auth';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-
+  usuarioLogueado: User | null = null;
   constructor(private firestoreService: FirestoreService, private auth: Auth) {
+    onAuthStateChanged(this.auth, (user) => {
+      this.usuarioLogueado = user;
+      console.log('Estado del usuario cambiado:', this.usuarioLogueado);
+    });
     this.auth.languageCode = 'es';    
   }
 
@@ -29,10 +33,17 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
+    console.log("estoy en el login");
     return signInWithEmailAndPassword(this.auth, email, password);
   }
-
-  async logout(reload = true) {
-    await signOut(this.auth);
+  obtenerUsuarioActual(): User | null {
+    return this.usuarioLogueado;
   }
+  /*async logout(reload = true) {
+    await signOut(this.auth);
+  }*/
+    async logout() {
+      await this.auth.signOut();
+      this.usuarioLogueado = null;
+    }
 }
