@@ -129,7 +129,7 @@ export class RegistroEspecialistaComponent implements OnInit {
     console.log("antes de subir la imagen");
     let url = await this.imagenService.subirImg(this.file);
     console.log("despues de subir la img");
-    const cliente = {
+    const especialista = {
       nombre : this.registroForm.get('nombre')?.value,
       apellido : this.registroForm.get('apellido')?.value,
       edad : this.registroForm.get('edad')?.value,
@@ -141,9 +141,23 @@ export class RegistroEspecialistaComponent implements OnInit {
       urlFotoPerfil : url
     };
     console.log("cree la constante del cliente");
-    console.log(cliente);
+    console.log(especialista);
     try {
-      this.authService.createUser("especialista",cliente, this.registroForm.get('correo')?.value, this.registroForm.get('contrasena')?.value);
+
+      if(this.usuarioLogueado!=null)
+        {
+          let uid = this.usuarioLogueado.uid;
+          let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
+          await this.authService.createUser(
+            'especialista',
+            especialista,
+            this.registroForm.get('correo')?.value,
+            this.registroForm.get('contrasena')?.value,usuarioLogueado.correo,usuarioLogueado.contrasena
+          );
+        }else
+        {
+          await this.authService.createUser("especialista",especialista, this.registroForm.get('correo')?.value, this.registroForm.get('contrasena')?.value);
+        }
       Swal.fire({
         title: 'Especialista creado',
         text: '¡Ya puede empezar a usar nuestro sitio!',
