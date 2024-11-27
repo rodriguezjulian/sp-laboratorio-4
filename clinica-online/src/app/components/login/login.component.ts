@@ -4,9 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FirestoreService } from '../../servicios/firestore.service';
-import { Firestore } from '@angular/fire/firestore';
 import { Router, RouterLink } from '@angular/router';
-import { User } from '@angular/fire/auth';
+import { signOut } from '@angular/fire/auth';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -56,7 +55,7 @@ export class LoginComponent {
     },
   ];
 
-  constructor(private router: Router, private fb: FormBuilder, private auth : AuthService, private firestore : FirestoreService) {
+  constructor(private router: Router, private fb: FormBuilder ,private auth : AuthService, private firestore : FirestoreService) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
@@ -77,7 +76,8 @@ export class LoginComponent {
     } else {
       console.log('Formulario inválido');
     }
-  }
+  }  
+
 
   Login() {
     const hardcodedUsers = [
@@ -88,19 +88,34 @@ export class LoginComponent {
       'messi@gmail.com',
       'julianAdmin@gmail.com',
     ];
-
+  
     const email = this.loginForm.get('correo')?.value;
     const password = this.loginForm.get('contrasena')?.value;
-
-    this.auth.login(email, password)
+  
+    this.auth
+      .login(email, password)
       .then(async (res) => {
+        // Verificación de usuarios hardcodeados
         if (!hardcodedUsers.includes(email)) {
           if (!res.user.emailVerified) {
             this.msjError = 'Debe confirmar su correo electrónico antes de iniciar sesión.';
             return;
           }
         }
+  
         console.log('Usuario logueado:', res.user);
+  
+        // Verificar si el usuario es administrador y está habilitado
+        const uid = res.user.uid;
+        const usuarioInfo = await this.firestore.getUsuarioInfo(uid);
+  
+        if (usuarioInfo.coleccion === 'especialista' && !usuarioInfo.habilitado) {
+          this.msjError = 'El especialista no está habilitado para iniciar sesión.';
+          this.auth.logout();
+          return;
+        }
+  
+        // Si todas las condiciones se cumplen, redirigir al home
         this.router.navigate(['/home']);
       })
       .catch((e) => {
@@ -118,6 +133,7 @@ export class LoginComponent {
         console.error('Error en el login:', e);
       });
   }
+  
 
   obtenerUsuarioActual() {
     const usuario = this.auth.obtenerUsuarioActual();

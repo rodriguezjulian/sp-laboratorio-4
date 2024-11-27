@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, onAuthStateChanged, signOut, User } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 import {FirestoreService} from './../../servicios/firestore.service';
 @Component({
   selector: 'app-navbar',
