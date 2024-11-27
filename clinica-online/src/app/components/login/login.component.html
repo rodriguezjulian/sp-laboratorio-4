@@ -35,6 +35,10 @@
           />
         </div>
         <button type="submit" class="submit-button">Ingresar</button>
+        <div class="d-flex justify-content-center mt-4">
+          <button (click)="bienvenida()" class="btn btn-primary btn-lg px-5 mb-4" style="background-color:brown; color: white;">ATRÁS</button>
+        </div>
+        
       </form>
       <div *ngIf="msjError!=''">
         <strong><label  style="color: red;" class="form-label">

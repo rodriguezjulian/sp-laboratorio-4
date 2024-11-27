@@ -134,7 +134,10 @@ export class LoginComponent {
         this.msjError = 'Ocurrió un problema al validar el usuario.';
       });
   }
-  
+  bienvenida()
+  {
+    this.router.navigate(['/']);
+  }
   obtenerUsuarioActual() {
     const usuario = this.auth.obtenerUsuarioActual();
     console.log('Usuario actual:', usuario);
