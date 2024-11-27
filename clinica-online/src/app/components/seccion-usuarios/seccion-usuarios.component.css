@@ -1,0 +1,40 @@
+.fondo {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #ffde59, #ff6b6b);
+  }
+  
+  .container {
+    text-align: center;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .action-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: #343a40;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .action-button:hover {
+    background-color: fuchsia;
+    color : black;
+    transform: scale(1.1);
+  }
+  
+  .action-button:active {
+    transform: scale(1);
+  }
+  

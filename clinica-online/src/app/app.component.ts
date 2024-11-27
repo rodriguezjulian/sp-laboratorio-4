@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     onAuthStateChanged(this.auth, (user) => {
-      this.usuarioLogueado = user; // Actualiza el estado del usuario logueado
+      this.usuarioLogueado = user;
       console.log('Usuario actual:', user);
     });
   }

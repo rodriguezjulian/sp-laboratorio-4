@@ -64,6 +64,51 @@ export class FirestoreService {
     }
   }
 
+  async getUsuarioInfo(uid: string) {
+    const colecciones = ['administrador', 'especialista', 'paciente'];
+    
+    for (const coleccion of colecciones) {
+      try {
+        const userDoc = await this.getDocument<any>(`${coleccion}/${uid}`);
+        if (userDoc.exists()) {
+          return { ...userDoc.data(), coleccion }; // Retorna la información del usuario y la colección donde se encontró
+        }
+      } catch (error) {
+        console.log("Usuario no encontrado en la colección");
+      }
+    }
+    throw new Error(`Usuario con UID ${uid} no encontrado en ninguna colección.`);
+  }
+  async getAdministradores() {
+    try {
+      const adminDocs = await this.getDocuments<any>('administrador');
+      return adminDocs.docs.map(doc => doc.data()); // Retorna un array con todos los administradores
+    } catch (error) {
+      console.error("Error al obtener la colección de administradores:", error);
+      throw error;
+    }
+  }
+  
+  async getEspecialistas() {
+    try {
+      const especialistaDocs = await this.getDocuments<any>('especialista');
+      return especialistaDocs.docs.map(doc => doc.data()); // Retorna un array con todos los especialistas
+    } catch (error) {
+      console.error("Error al obtener la colección de especialistas:", error);
+      throw error;
+    }
+  }
+  
+  async getPacientes() {
+    try {
+      const pacienteDocs = await this.getDocuments<any>('paciente');
+      return pacienteDocs.docs.map(doc => doc.data()); // Retorna un array con todos los pacientes
+    } catch (error) {
+      console.error("Error al obtener la colección de pacientes:", error);
+      throw error;
+    }
+  }
+  
   async getUsuarios() {
     const snapshot = await this.getDocuments<any>('usuarios');
     return snapshot.docs.map(doc => doc.data());
@@ -85,23 +130,6 @@ export class FirestoreService {
     return doc.data().token;
   }
   
-  async getPedidoByUid(uid: string) {
-    try {
-      // Llamar a getDocument para obtener el snapshot del documento
-      const docSnapshot = await this.getDocument(`listaPedidos/${uid}`);
-  
-      // Verificar si el documento existe
-      if (!docSnapshot.exists()) {
-        throw new Error('No se encontró el pedido con el uid proporcionado');
-      }
-  
-      // Devolver los datos del documento
-      return docSnapshot.data(); // Acceder a los datos del documento
-    } catch (error) {
-      console.error('Error al obtener el pedido:', error);
-      throw error; // Manejar el error según sea necesario
-    }
-  }
   async getEspecialidades() {
     const snapshot = await this.getDocuments<any>('especialidades');
     return snapshot.docs.map(doc => doc.data());

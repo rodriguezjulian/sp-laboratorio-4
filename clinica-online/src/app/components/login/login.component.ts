@@ -45,7 +45,7 @@ export class LoginComponent {
     {
       nombre: 'Especialista 2',
       correo: 'messi@gmail.com',
-      contrasena: '123456',
+      contrasena: '12345645',
       imagen: 'https://firebasestorage.googleapis.com/v0/b/ppsutn-2ed7e.appspot.com/o/fotosperfil%2F1732603014197-messi.jpg?alt=media&token=df6986b1-34b6-4014-b6cc-11e6deac5031',
     },
     {
@@ -73,7 +73,7 @@ export class LoginComponent {
   onLogin() {
     if (this.loginForm.valid) {
       this.Login()
-      //this.GuardarRegistroExitoso();
+      this.GuardarRegistroExitoso();
     } else {
       console.log('Formulario inválido');
     }
@@ -124,11 +124,11 @@ export class LoginComponent {
     console.log('Usuario actual:', usuario);
   }
   
-    async GuardarRegistroExitoso(){
-      const newRegister = 
-      { 
-        usuario : this.loginForm.get('correo')?.value,
-      };
-      await this.firestore.createDocument('logueos', newRegister);
-    }
+  async GuardarRegistroExitoso(){
+    const newRegister = 
+    { 
+      usuario : this.loginForm.get('correo')?.value,
+    };
+    await this.firestore.createDocument('logueos', newRegister);
+  }
 }

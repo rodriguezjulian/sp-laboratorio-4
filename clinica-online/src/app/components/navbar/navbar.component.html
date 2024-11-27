@@ -13,11 +13,25 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" (click)="home()" routerLinkActive="active">Inicio</a>
-          </li>
-        </ul>
+        @if(load | async)
+        {
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              @if(rol == 'admin')
+              {
+                <a class="nav-link" (click)="seccionUsuarios()" routerLinkActive="active">Inicio de admin</a>
+              }
+              @if(rol == 'paciente')
+              {
+                <a class="nav-link" (click)="home()" routerLinkActive="active">Inicio de paciente</a>
+              }
+              @if(rol == 'especialista')
+              {
+                <a class="nav-link" (click)="home()" routerLinkActive="active">Inicio de especialista</a>
+              }
+            </li>
+          </ul>
+        }
       </div>
       <div class="d-flex">
         <button
