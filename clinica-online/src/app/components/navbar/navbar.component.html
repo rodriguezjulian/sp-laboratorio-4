@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/home">Clinica</a>
+      <a class="navbar-brand" (click)="home()" routerLink="/home">Clinica</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -19,7 +19,7 @@
             <li class="nav-item">
               @if(rol == 'admin')
               {
-                <a class="nav-link" (click)="seccionUsuarios()" routerLinkActive="active">Inicio de admin</a>
+                <a class="nav-link" (click)="seccionUsuarios()" routerLinkActive="active">Usuarios</a>
               }
               @if(rol == 'paciente')
               {

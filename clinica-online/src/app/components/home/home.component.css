@@ -1,0 +1,43 @@
+.home-container {
+    font-family: Arial, sans-serif;
+  }
+  
+  .bg-overlay {
+    background: url("../../../assets/sobreNosotros.jpeg") no-repeat center center;
+    background-size: cover;
+    padding: 100px 0;
+    position: relative;
+  }
+  
+  .bg-overlay::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  .jumbotron .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  #services .card {
+    transition: transform 0.3s;
+  }
+  
+  #services .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .bg-light {
+    background-color: #f9f9f9;
+  }
+  
+  #contact {
+    background-color: #f1f1f1;
+  }
+  
