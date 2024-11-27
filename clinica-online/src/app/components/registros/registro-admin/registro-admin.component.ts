@@ -6,19 +6,22 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { ImagenService } from '../../../servicios/imagen.service';
 import { AuthService } from '../../../servicios/auth.service';
-import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
+
 @Component({
   selector: 'app-registro-admin',
   templateUrl: './registro-admin.component.html',
   styleUrls: ['./registro-admin.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,RecaptchaModule],
+  imports: [ReactiveFormsModule, CommonModule,RecaptchaModule,RecaptchaFormsModule],
 })
 export class RegistroAdminComponent implements OnInit {
   registroForm: FormGroup;
   private file: any;
   public showCaptchaError : boolean = false;
   public captcha: string = '';
+  token:boolean = false;
+  public msjError : string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -34,13 +37,7 @@ export class RegistroAdminComponent implements OnInit {
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
       fotoPerfil: ['', Validators.required],
-      recaptcha: ['', Validators.required],
     });
-  }
-
-  resolved(captchaResponse: any) {
-    this.captcha = captchaResponse;
-    this.showCaptchaError = false;
   }
 
   ngOnInit(): void {}
@@ -56,13 +53,27 @@ export class RegistroAdminComponent implements OnInit {
     for (const field in this.registroForm.controls) {
       const control = this.registroForm.get(field);
       if (control?.invalid) {
+        
+        this.msjError = `Campo inválido: ${field}`;
         console.log(`Campo inválido: ${field}`, control.errors);
       }
     }
     
     if (this.registroForm.valid) {
-        await this.crearAdministrador();
-      this.registroForm.reset();
+      if(this.token)
+        {
+          await this.crearAdministrador();
+          this.registroForm.reset();
+        }else
+        {
+          Swal.fire({
+            title: 'Error',
+            text: 'Verifica que no es un robot para continuar',
+            icon: 'error',
+          });
+          return;
+        }
+
     } else {
       Swal.fire({
         title: 'Error',
@@ -71,6 +82,11 @@ export class RegistroAdminComponent implements OnInit {
       });
     }
   }
+
+  executeRecaptchaVisible(token:any){
+    this.token = !this.token;
+  }
+
 
   async crearAdministrador() {
     try {

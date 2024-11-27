@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/home">Clinica</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" (click)="home()" routerLinkActive="active">Inicio</a>
+          </li>
+        </ul>
+      </div>
+      <div class="d-flex">
+        <button
+          *ngIf="usuarioLogueado"
+          class="btn btn-outline-light"
+          (click)="cerrarSesion()"
+        >
+          Cerrar Sesión
+        </button>
+        <button
+          *ngIf="!usuarioLogueado && rutaActual=='registroPaciente'"
+          class="btn btn-outline-light"
+          (click)="iniciarSesion()"
+        >
+          Iniciar Sesión
+        </button>
+      </div>
+    </div>
+  </nav>
+  

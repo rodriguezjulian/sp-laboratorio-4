@@ -77,15 +77,18 @@
                 <input type="file" class="form-control small-input" id="fotoPerfil" formControlName="fotoPerfil" (change)="uploadImageUno($event)">
                 <label class="form-label small-label" for="fotoPerfil">Foto de perfil</label>
             </div>
-  
-            <re-captcha (resolved)="resolved($event)" siteKey="6LfBWIoqAAAAAN_oc7cUPUUaOLJS7L1bCOOPLGt_"></re-captcha>
-
+            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7" ></re-captcha>
               <!-- Botón de Registro -->
               <div class="button-container">
                 <button type="submit" class="submit-button">
                   Registrar Administrador
                 </button>
               </div>
+               <div *ngIf="msjError!=''">
+        <strong><label  style="color: red;" class="form-label">
+            {{msjError}}
+          </label></strong>
+        </div>  
             </form>
           </div>
           <div class="text-end">
