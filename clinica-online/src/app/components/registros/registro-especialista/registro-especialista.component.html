@@ -66,11 +66,16 @@
                 <input type="file" class="form-control small-input" id="fotoPerfil" formControlName="fotoPerfil" (change)="uploadImageUno($event)">
                 <label class="form-label small-label" for="fotoPerfil">Foto de perfil</label>
             </div>
-  
+            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7" ></re-captcha>
               <!-- Botón Enviar -->
               <div class="button-container">
                 <button type="submit" class="submit-button">Registrar Especialista</button>
               </div>
+              <div *ngIf="msjError!=''">
+                <strong><label  style="color: red;" class="form-label">
+                    {{msjError}}
+                  </label></strong>
+                </div>  
             </form>
           </div>
           <div class="text-end">

@@ -7,20 +7,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { LoginComponent } from '../../login/login.component';
-
+import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
   styleUrls: ['./registro-especialista.component.scss'],
   standalone : true,
-  imports : [ReactiveFormsModule,CommonModule]
+  imports : [ReactiveFormsModule,CommonModule,RecaptchaModule,RecaptchaFormsModule]
 })
 export class RegistroEspecialistaComponent implements OnInit {
   especialidades: string[] = [''];
   registroForm: FormGroup;
   imagenPerfil: string | null = null;
   private file : any;
+  public msjError : string = "";
+  token:boolean = false;
 
   constructor(private firestoreService: FirestoreService, private fb: FormBuilder,
     private authService : AuthService, private router: Router, private imagenService : ImagenService) {
@@ -69,14 +70,37 @@ export class RegistroEspecialistaComponent implements OnInit {
       });
     }
   }
-
+  executeRecaptchaVisible(token:any){
+    this.token = !this.token;
+  }
 
  async onSubmit() {
+  for (const field in this.registroForm.controls) {
+    const control = this.registroForm.get(field);
+    if (control?.invalid) {
+      
+      this.msjError = `Campo inválido: ${field}`;
+      console.log(`Campo inválido: ${field}`, control.errors);
+    }
+  }
   console.log("recien toque el boton");
     if (this.registroForm.valid) {
       console.log("previo a llamar a crearEspecialista()");
-      await this.crearEspecialista();
-      this.registroForm.reset();
+      if(this.token)
+        {
+          await this.crearEspecialista();
+          this.registroForm.reset();
+        }
+        else
+        {
+          Swal.fire({
+            title: 'Error',
+            text: 'Verifica que no es un robot para continuar',
+            icon: 'error',
+          });
+          return;
+        }
+
     } else {
       Swal.fire(
         {
