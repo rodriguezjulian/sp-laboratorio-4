@@ -33,7 +33,17 @@ export class SeccionUsuariosComponent {
   ngOnInit(): void {
     this.loadUsers();
   }
-  
+  async toggleHabilitado(especialista: any) {
+    especialista.habilitado = !especialista.habilitado;
+    try {
+      await this.firestoreService.updateDocument(`especialista/${especialista.id}`, {
+        habilitado: especialista.habilitado,
+      });
+      console.log('Estado actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el estado:', error);
+    }
+  }
   async loadUsers() {
     try {
       this.pacientes = await this.firestoreService.getPacientes();

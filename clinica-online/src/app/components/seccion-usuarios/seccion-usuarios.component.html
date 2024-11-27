@@ -28,13 +28,27 @@
     <h3 class="text-center mt-5">Especialistas</h3>
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let especialista of especialistas">
-        <div class="card h-100">
+        <div
+          class="card h-100"
+          [ngClass]="especialista.habilitado ? 'habilitado' : 'deshabilitado'"
+        >
           <img [src]="especialista.urlFotoPerfil" class="card-img-top" alt="Foto del especialista" />
           <div class="card-body">
             <h5 class="card-title">{{ especialista.nombre }} {{ especialista.apellido }}</h5>
             <p class="card-text">
               <strong>Edad:</strong> {{ especialista.edad }} <br />
               <strong>Correo:</strong> {{ especialista.correo }}
+            </p>
+            <p>
+              <strong>Estado: </strong>
+              <span
+                class="badge"
+                [ngClass]="especialista.habilitado ? 'bg-success' : 'bg-danger'"
+                (click)="toggleHabilitado(especialista)"
+                style="cursor: pointer;"
+              >
+                {{ especialista.habilitado ? 'Habilitado' : 'Deshabilitado' }}
+              </span>
             </p>
           </div>
         </div>
@@ -46,7 +60,11 @@
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let administrador of administradores">
         <div class="card h-100">
-          <img [src]="administrador.urlFotoPerfil" class="card-img-top" alt="Foto del administrador" />
+          <img
+            [src]="administrador.urlFotoPerfil"
+            class="card-img-top"
+            alt="Foto del administrador"
+          />
           <div class="card-body">
             <h5 class="card-title">{{ administrador.nombre }} {{ administrador.apellido }}</h5>
             <p class="card-text">

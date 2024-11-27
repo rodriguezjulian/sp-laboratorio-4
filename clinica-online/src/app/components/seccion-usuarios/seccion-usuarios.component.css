@@ -66,4 +66,30 @@
     margin-bottom: 20px;
   }
   
+  .fondo {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #ffd700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .habilitado {
+    border: 2px solid #28a745;
+  }
+  
+  .deshabilitado {
+    border: 2px solid #dc3545;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
   
