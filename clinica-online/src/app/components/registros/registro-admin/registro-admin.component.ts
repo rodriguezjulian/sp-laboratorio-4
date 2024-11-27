@@ -8,6 +8,8 @@ import { ImagenService } from '../../../servicios/imagen.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
+import { FirestoreService } from '../../../servicios/firestore.service';
 @Component({
   selector: 'app-registro-admin',
   templateUrl: './registro-admin.component.html',
@@ -29,7 +31,8 @@ export class RegistroAdminComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private imagenService: ImagenService,
-    private auth: Auth
+    private auth: Auth,
+    private firestore : FirestoreService
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -118,11 +121,16 @@ export class RegistroAdminComponent implements OnInit {
         urlFotoPerfil: url,
       };
 
+
+      let uid = this.usuarioLogueado!.uid;
+      let usuarioLogueado : any = await this.firestore.getUsuarioInfo(uid);
       await this.authService.createUser(
         'administrador',
         admin,
         admin.correo,
-        admin.contrasena
+        admin.contrasena,
+        usuarioLogueado.correo,
+        usuarioLogueado.contrasena
       );
 
       Swal.fire({
