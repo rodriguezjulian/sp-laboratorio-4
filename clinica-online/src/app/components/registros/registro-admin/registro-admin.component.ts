@@ -87,7 +87,6 @@ export class RegistroAdminComponent implements OnInit {
     this.token = !this.token;
   }
 
-
   async crearAdministrador() {
     try {
       console.log("dentro de crear Admin")

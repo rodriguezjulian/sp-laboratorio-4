@@ -4,20 +4,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { FirestoreService } from '../../../servicios/firestore.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { ImagenService } from './../../../servicios/imagen.service'; 
+import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
   styleUrls: ['./registropaciente.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule,RecaptchaModule,RecaptchaFormsModule],
 })
 export class RegistroPacienteComponent implements OnInit {
   registroForm: FormGroup;
   private file1: any;
   private file2: any;
+  token:boolean = false;
+  public msjError : string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -40,9 +42,17 @@ export class RegistroPacienteComponent implements OnInit {
   async ngOnInit() {}
 
   async onSubmit() {
+    for (const field in this.registroForm.controls) {
+      const control = this.registroForm.get(field);
+      if (control?.invalid) {
+        
+        this.msjError = `Campo inválido: ${field}`;
+        console.log(`Campo inválido: ${field}`, control.errors);
+        return;
+      }
+    }
     if (this.registroForm.valid) {
       await this.crearPaciente();
-      this.registroForm.reset();
     } else {
       Swal.fire({
         title: 'ERROR',
@@ -60,6 +70,10 @@ export class RegistroPacienteComponent implements OnInit {
   }
   uploadImageUno(foto: any) {
     this.file1 = foto.target.files[0];
+  }
+
+  executeRecaptchaVisible(token:any){
+    this.token = !this.token;
   }
 
   uploadImageDos(foto: any) {
@@ -83,24 +97,39 @@ export class RegistroPacienteComponent implements OnInit {
     };
 
     try {
-      await this.authService.createUser(
-        'paciente',
-        paciente,
-        this.registroForm.get('correo')?.value,
-        this.registroForm.get('contrasena')?.value
-      );
-      Swal.fire({
-        title: 'Paciente registrado',
-        text: '¡Ya puede empezar a usar nuestro sitio!',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-        backdrop: `rgba(0,0,0,0.8)`,
-        didOpen: () => {
-          document.documentElement.classList.remove('swal2-height-auto');
-          document.body.classList.remove('swal2-height-auto');
-        },
-      });
-      this.router.navigate(['/login']);
+
+      if(this.token)
+        {
+          await this.authService.createUser(
+            'paciente',
+            paciente,
+            this.registroForm.get('correo')?.value,
+            this.registroForm.get('contrasena')?.value
+          );
+          this.registroForm.reset();
+          
+          Swal.fire({
+            title: 'Paciente registrado',
+            text: '¡Ya puede empezar a usar nuestro sitio!',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            backdrop: `rgba(0,0,0,0.8)`,
+            didOpen: () => {
+              document.documentElement.classList.remove('swal2-height-auto');
+              document.body.classList.remove('swal2-height-auto');
+            },
+          });
+          this.router.navigate(['/login']);
+        }
+        else
+        {
+          Swal.fire({
+            title: 'Error',
+            text: 'Verifica que no es un robot para continuar',
+            icon: 'error',
+          });
+        }
+
     } catch (error) {
       Swal.fire({
         title: 'ERROR',
