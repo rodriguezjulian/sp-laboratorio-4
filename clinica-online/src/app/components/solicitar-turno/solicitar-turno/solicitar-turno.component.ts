@@ -16,8 +16,8 @@ export class SolicitarTurnoComponent implements OnInit {
   especialista: any;
   especialidad: any;
   usuarioLogueado: User | null = null;
-  horariosDisponibles: any[] = [];
-  diasDisponibles: string[] = [];
+  horariosDisponibles: { [key: string]: { desde: string; hasta: string }[] } = {};
+  diasDisponibles: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   turnoSeleccionado: { dia: string; desde: string; hasta: string } | null = null;
 
   constructor(
@@ -32,7 +32,6 @@ export class SolicitarTurnoComponent implements OnInit {
       if (user) {
         this.usuarioLogueado = user;
         await this.cargarEspecialistaYEspecialidad();
-        this.generarSemana();
         this.cargarHorariosDisponibles();
       } else {
         Swal.fire('Error', 'Debe iniciar sesión para generar un turno.', 'error');
@@ -63,27 +62,14 @@ export class SolicitarTurnoComponent implements OnInit {
     }
   }
 
-  generarSemana() {
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const hoy = new Date();
-    this.diasDisponibles = Array.from({ length: 7 }, (_, i) => {
-      const fecha = new Date(hoy);
-      fecha.setDate(hoy.getDate() + i);
-      const diaNombre = dias[fecha.getDay() - 1] || 'Sábado';
-      return `${diaNombre} (${fecha.toLocaleDateString()})`;
-    });
-  }
-
   cargarHorariosDisponibles() {
     const horariosEspecialidad = this.especialista.horarios;
-    this.horariosDisponibles = this.diasDisponibles.flatMap((diaCompleto) => {
-      const [dia] = diaCompleto.split(' ');
+    this.diasDisponibles.forEach((dia) => {
       const horario = horariosEspecialidad[dia];
-
-      if (!horario) return [];
-
-      const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-      return turnos.map((turno) => ({ dia: diaCompleto, desde: turno.desde, hasta: turno.hasta }));
+      if (horario) {
+        const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
+        this.horariosDisponibles[dia] = turnos;
+      }
     });
   }
 

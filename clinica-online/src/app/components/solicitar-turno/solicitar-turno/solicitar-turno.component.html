@@ -8,33 +8,21 @@
         <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
       </div>
   
-      <!-- Tabla de horarios disponibles -->
-      <div class="horarios-container">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Día</th>
-              <th>Desde</th>
-              <th>Hasta</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let horario of horariosDisponibles">
-              <td>{{ horario.dia }}</td>
-              <td>{{ horario.desde }}</td>
-              <td>{{ horario.hasta }}</td>
-              <td>
-                <button
-                  class="btn btn-primary"
-                  (click)="seleccionarTurno(horario.dia, horario.desde, horario.hasta)"
-                >
-                  Seleccionar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Horarios por día -->
+      <div class="row text-center">
+        <div class="col-md-2" *ngFor="let dia of diasDisponibles">
+          <h5>{{ dia }}</h5>
+          <ul class="list-unstyled">
+            <li *ngFor="let turno of horariosDisponibles[dia] || []">
+              <button
+                class="btn btn-sm btn-primary my-2"
+                (click)="seleccionarTurno(dia, turno.desde, turno.hasta)"
+              >
+                {{ turno.desde }} - {{ turno.hasta }}
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
   
       <!-- Botón para confirmar turno -->
