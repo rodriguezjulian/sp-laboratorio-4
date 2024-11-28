@@ -1,14 +1,15 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from '../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-horarios',
   templateUrl: './gestion-horarios.component.html',
   styleUrls: ['./gestion-horarios.component.scss'],
-  standalone : true,
-  imports : [CommonModule]
+  standalone: true,
+  imports: [CommonModule],
 })
 export class GestionHorariosComponent implements OnInit {
   especialista: any;
@@ -43,91 +44,68 @@ export class GestionHorariosComponent implements OnInit {
   huboCambios: boolean = false;
   usuarioLogueado: User | null = null;
 
-  constructor(private firestoreService: FirestoreService,  private auth: Auth) {}
-
+  constructor(private firestoreService: FirestoreService, private auth: Auth) {}
 
   async ngOnInit() {
-    // Esperar a que el estado de autenticación se determine
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
-  
-        // Ejecutar las funciones después de obtener el usuario logueado
         await this.cargarEspecialista();
         await this.cargarEspecialidades();
       } else {
         this.usuarioLogueado = null;
-        console.error('No hay usuario logueado');
+       
       }
     });
   }
-  
+
   async cargarEspecialista() {
-    // Verificar que el usuario está logueado
     if (!this.usuarioLogueado) {
-      console.error('No hay usuario logueado.');
+
       return;
     }
-  
-    // Obtener el UID del especialista logueado
-    let uid = this.usuarioLogueado.uid;
-    console.log("UID del especialista logueado: ", uid);
-  
-    // Obtener información del especialista desde Firestore
+
+    const uid = this.usuarioLogueado.uid;
     const especialistaDoc = await this.firestoreService.getDocument<any>(`especialista/${uid}`);
     this.especialista = especialistaDoc.exists() ? especialistaDoc.data() : null;
-  
+
     if (this.especialista?.horarios) {
       this.horariosPorDia = this.especialista.horarios;
-  
-      // Llamar a un método para actualizar los campos visibles
       this.actualizarCamposHorarios();
     }
-  
-    console.log('Especialista cargado:', this.especialista);
   }
-  
+
   async cargarEspecialidades() {
     if (!this.especialista?.especialidad) {
-      console.error('El especialista no tiene especialidades asignadas.');
       return;
     }
-  
-    // Obtener los UIDs de las especialidades del especialista
-    const especialidadIds = this.especialista.especialidad; // Array de UIDs
-  
-    // Cargar solo las especialidades que corresponden a los UIDs
+
+    const especialidadIds = this.especialista.especialidad;
     const especialidadesSnapshot = await this.firestoreService.getDocuments<any>('especialidades');
     const todasEspecialidades = especialidadesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-  
-    // Filtrar especialidades asignadas al especialista
+
     this.especialidades = todasEspecialidades.filter((especialidad) =>
       especialidadIds.includes(especialidad.id)
     );
-  
-    console.log('Especialidades del especialista:', this.especialidades);
   }
-  
+
   actualizarCamposHorarios() {
     for (const dia of this.dias) {
       const horarioDia = this.horariosPorDia[dia];
       if (horarioDia) {
-        // Asignar el valor del campo "Desde" si existe
         const selectDesde = document.getElementById(`desde-${dia}`) as HTMLSelectElement;
         if (selectDesde && horarioDia.desde) {
           selectDesde.value = horarioDia.desde;
         }
-  
-        // Asignar el valor del campo "Hasta" si existe
+
         const selectHasta = document.getElementById(`hasta-${dia}`) as HTMLSelectElement;
         if (selectHasta && horarioDia.hasta) {
           selectHasta.value = horarioDia.hasta;
         }
-  
-        // Asignar la especialidad si existe
+
         const selectEspecialidad = document.getElementById(`especialidad-${dia}`) as HTMLSelectElement;
         if (selectEspecialidad && horarioDia.especialidad) {
           selectEspecialidad.value = horarioDia.especialidad;
@@ -135,10 +113,6 @@ export class GestionHorariosComponent implements OnInit {
       }
     }
   }
-  
-  
-  
-  
 
   seleccionarEspecialidad(dia: string, event: any) {
     const especialidadId = event.target.value;
@@ -156,52 +130,64 @@ export class GestionHorariosComponent implements OnInit {
 
   async guardarCambios() {
     try {
-      // Validar los horarios antes de guardar
       for (const dia of this.dias) {
         const horario = this.horariosPorDia[dia];
-  
+
         if (horario) {
-          // Verificar que los campos "Desde" y "Hasta" estén definidos
           if (!horario.desde || !horario.hasta) {
-            alert(`Debe seleccionar horarios válidos para el día ${dia}`);
+            await Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: `Debe seleccionar horarios válidos para el día ${dia}`,
+            });
             return;
           }
-  
-          // Validar la correlación entre "Desde" y "Hasta"
-          const desde = this.convertirHoraAEntero(horario.desde); // Convertir "Desde" a un valor numérico
-          const hasta = this.convertirHoraAEntero(horario.hasta); // Convertir "Hasta" a un valor numérico
-  
-          if (hasta <= desde || hasta - desde < 0.5) { // 0.5 representa 30 minutos
-            alert(
-              `El horario "Hasta" debe ser al menos 30 minutos después del horario "Desde" para el día ${dia}.`
-            );
+
+          const desde = this.convertirHoraAEntero(horario.desde);
+          const hasta = this.convertirHoraAEntero(horario.hasta);
+
+          if (hasta <= desde || hasta - desde < 0.5) {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: `El horario "Hasta" debe ser al menos 30 minutos después del horario "Desde" para el día ${dia}.`,
+            });
             return;
           }
-  
-          // Validar que la especialidad esté seleccionada
+
           if (!horario.especialidad) {
-            alert(`Debe seleccionar una especialidad para el día ${dia}`);
+            await Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: `Debe seleccionar una especialidad para el día ${dia}`,
+            });
             return;
           }
         }
       }
-  
-      // Guardar los horarios y la especialidad para cada día
+
       await this.firestoreService.updateDocument(`especialista/${this.especialista.id}`, {
         horarios: this.horariosPorDia,
       });
-  
+
       this.huboCambios = false;
-      alert('Horarios y especialidades guardados exitosamente');
+      await Swal.fire({
+        icon: 'success',
+        title: 'Guardado',
+        text: 'Horarios y especialidades guardados exitosamente',
+      });
     } catch (error) {
       console.error('Error al guardar cambios:', error);
-      alert('Hubo un problema al guardar los cambios');
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al guardar los cambios',
+      });
     }
   }
-  
+
   convertirHoraAEntero(hora: string): number {
     const [horas, minutos] = hora.split(':').map(Number);
     return horas + minutos / 60;
   }
-  
 }
