@@ -126,14 +126,52 @@ export class GestionHorariosComponent implements OnInit {
 
   async guardarCambios() {
     try {
+      // Validar los horarios antes de guardar
+      for (const dia of this.dias) {
+        const horario = this.horariosPorDia[dia];
+  
+        if (horario) {
+          // Verificar que los campos "Desde" y "Hasta" estén definidos
+          if (!horario.desde || !horario.hasta) {
+            alert(`Debe seleccionar horarios válidos para el día ${dia}`);
+            return;
+          }
+  
+          // Validar la correlación entre "Desde" y "Hasta"
+          const desde = this.convertirHoraAEntero(horario.desde); // Convertir "Desde" a un valor numérico
+          const hasta = this.convertirHoraAEntero(horario.hasta); // Convertir "Hasta" a un valor numérico
+  
+          if (hasta <= desde || hasta - desde < 0.5) { // 0.5 representa 30 minutos
+            alert(
+              `El horario "Hasta" debe ser al menos 30 minutos después del horario "Desde" para el día ${dia}.`
+            );
+            return;
+          }
+  
+          // Validar que la especialidad esté seleccionada
+          if (!horario.especialidad) {
+            alert(`Debe seleccionar una especialidad para el día ${dia}`);
+            return;
+          }
+        }
+      }
+  
+      // Guardar los horarios y la especialidad para cada día
       await this.firestoreService.updateDocument(`especialista/${this.especialista.id}`, {
         horarios: this.horariosPorDia,
       });
+  
       this.huboCambios = false;
-      alert('Horarios guardados exitosamente');
+      alert('Horarios y especialidades guardados exitosamente');
     } catch (error) {
       console.error('Error al guardar cambios:', error);
       alert('Hubo un problema al guardar los cambios');
     }
   }
+  
+  convertirHoraAEntero(hora: string): number {
+    const [horas, minutos] = hora.split(':').map(Number);
+    return horas + minutos / 60;
+  }
+  
 }
