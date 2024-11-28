@@ -30,31 +30,48 @@
               <td>{{ dia }}</td>
               <td>
                 <select
+                  id="especialidad-{{ dia }}"
                   class="form-select"
                   (change)="seleccionarEspecialidad(dia, $event)"
                 >
                   <option value="" disabled selected>Seleccione una especialidad</option>
-                  <option *ngFor="let esp of especialidades" [value]="esp.id">
+                  <option
+                    *ngFor="let esp of especialidades"
+                    [value]="esp.id"
+                    [selected]="horariosPorDia[dia]?.especialidad === esp.id"
+                  >
                     {{ esp.descripcion }}
                   </option>
                 </select>
               </td>
               <td>
                 <select
+                  id="desde-{{ dia }}"
                   class="form-select"
                   (change)="cambiarHorario(dia, 'desde', $event)"
                 >
                   <option value="" disabled selected>Desde</option>
-                  <option *ngFor="let turno of turnos">{{ turno }}</option>
+                  <option
+                    *ngFor="let turno of turnos"
+                    [selected]="horariosPorDia[dia]?.desde === turno"
+                  >
+                    {{ turno }}
+                  </option>
                 </select>
               </td>
               <td>
                 <select
+                  id="hasta-{{ dia }}"
                   class="form-select"
                   (change)="cambiarHorario(dia, 'hasta', $event)"
                 >
                   <option value="" disabled selected>Hasta</option>
-                  <option *ngFor="let turno of turnos">{{ turno }}</option>
+                  <option
+                    *ngFor="let turno of turnos"
+                    [selected]="horariosPorDia[dia]?.hasta === turno"
+                  >
+                    {{ turno }}
+                  </option>
                 </select>
               </td>
             </tr>

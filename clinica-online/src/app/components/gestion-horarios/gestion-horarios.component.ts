@@ -62,7 +62,6 @@ export class GestionHorariosComponent implements OnInit {
     });
   }
   
-
   async cargarEspecialista() {
     // Verificar que el usuario está logueado
     if (!this.usuarioLogueado) {
@@ -80,6 +79,9 @@ export class GestionHorariosComponent implements OnInit {
   
     if (this.especialista?.horarios) {
       this.horariosPorDia = this.especialista.horarios;
+  
+      // Llamar a un método para actualizar los campos visibles
+      this.actualizarCamposHorarios();
     }
   
     console.log('Especialista cargado:', this.especialista);
@@ -108,6 +110,34 @@ export class GestionHorariosComponent implements OnInit {
   
     console.log('Especialidades del especialista:', this.especialidades);
   }
+  
+  actualizarCamposHorarios() {
+    for (const dia of this.dias) {
+      const horarioDia = this.horariosPorDia[dia];
+      if (horarioDia) {
+        // Asignar el valor del campo "Desde" si existe
+        const selectDesde = document.getElementById(`desde-${dia}`) as HTMLSelectElement;
+        if (selectDesde && horarioDia.desde) {
+          selectDesde.value = horarioDia.desde;
+        }
+  
+        // Asignar el valor del campo "Hasta" si existe
+        const selectHasta = document.getElementById(`hasta-${dia}`) as HTMLSelectElement;
+        if (selectHasta && horarioDia.hasta) {
+          selectHasta.value = horarioDia.hasta;
+        }
+  
+        // Asignar la especialidad si existe
+        const selectEspecialidad = document.getElementById(`especialidad-${dia}`) as HTMLSelectElement;
+        if (selectEspecialidad && horarioDia.especialidad) {
+          selectEspecialidad.value = horarioDia.especialidad;
+        }
+      }
+    }
+  }
+  
+  
+  
   
 
   seleccionarEspecialidad(dia: string, event: any) {
