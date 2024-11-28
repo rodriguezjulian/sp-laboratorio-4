@@ -62,16 +62,46 @@ export class SolicitarTurnoComponent implements OnInit {
     }
   }
 
-  cargarHorariosDisponibles() {
+  async cargarHorariosDisponibles() {
     const horariosEspecialidad = this.especialista.horarios;
+  
+    // Obtener los turnos ya asignados para este especialista y especialidad
+    const turnosAsignados = await this.firestoreService.getCollection('turnos', {
+      where: [
+        { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
+        { field: 'uidEspecialidad', op: '==', value: this.route.snapshot.paramMap.get('especialidadId') },
+      ],
+    });
+  
+    // Filtra los turnos asignados y organiza por día
+    const turnosAsignadosPorDia: { [key: string]: any[] } = {};
+    turnosAsignados.forEach((asignado: any) => {
+      if (!turnosAsignadosPorDia[asignado.dia]) {
+        turnosAsignadosPorDia[asignado.dia] = [];
+      }
+      turnosAsignadosPorDia[asignado.dia].push({ desde: asignado.desde, hasta: asignado.hasta });
+    });
+  
+    // Genera los horarios disponibles
     this.diasDisponibles.forEach((dia) => {
       const horario = horariosEspecialidad[dia];
       if (horario) {
         const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-        this.horariosDisponibles[dia] = turnos;
+  
+        // Filtrar turnos ocupados
+        const turnosDisponibles = turnos.filter((turno) => {
+          return !(
+            turnosAsignadosPorDia[dia]?.some(
+              (asignado: any) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
+            )
+          );
+        });
+  
+        this.horariosDisponibles[dia] = turnosDisponibles;
       }
     });
   }
+  
 
   generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string }[] {
     const intervalos: { desde: string; hasta: string }[] = [];

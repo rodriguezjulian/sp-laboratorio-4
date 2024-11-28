@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentSnapshot, Firestore, QuerySnapshot, collection, 
+import { DocumentSnapshot, Firestore, QuerySnapshot, collection, QueryConstraint,
   collectionGroup, deleteDoc, doc, getDoc, getDocs, serverTimestamp, where, query,
   setDoc, updateDoc} from '@angular/fire/firestore';
 import {  onSnapshot } from '@angular/fire/firestore';
@@ -29,7 +29,29 @@ export class FirestoreService {
     return dataDoc.id;
   }
   //----------------//
-
+  async getCollection(
+    collectionName: string,
+    queryOptions?: { where: Array<{ field: string; op: string; value: any }> }
+  ) {
+    // Obtén la referencia a la colección
+    const collectionRef = collection(this.firestore, collectionName);
+  
+    // Construye las condiciones de la consulta
+    let constraints: QueryConstraint[] = [];
+    if (queryOptions && queryOptions.where) {
+      constraints = queryOptions.where.map((condition) =>
+        where(condition.field, condition.op as any, condition.value)
+      );
+    }
+  
+    // Crea la consulta
+    const q = query(collectionRef, ...constraints);
+  
+    // Ejecuta la consulta y retorna los documentos
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+  
 
   //---| UPDATE |---//
   async updateDocument(path: string, data: any) {
