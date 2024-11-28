@@ -3,11 +3,20 @@
       <h2 class="text-center mt-4">Turnos Disponibles</h2>
   
       <!-- Información del especialista y especialidad -->
-      <div class="especialista-info my-4">
+      <div class="especialista-info ">
         <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
         <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
       </div>
-  
+        <!-- Botón para confirmar turno -->
+        <div class="text-center mb-2">
+            <button
+              class="btn btn-success px-4"
+              [disabled]="!turnoSeleccionado"
+              (click)="confirmarTurno()"
+            >
+              Confirmar Turno
+            </button>
+          </div>
       <!-- Horarios por día -->
       <div class="row text-center">
         <div class="col-md-2" *ngFor="let dia of diasDisponibles">
@@ -23,17 +32,6 @@
             </li>
           </ul>
         </div>
-      </div>
-  
-      <!-- Botón para confirmar turno -->
-      <div class="text-center mt-4">
-        <button
-          class="btn btn-success px-4"
-          [disabled]="!turnoSeleccionado"
-          (click)="confirmarTurno()"
-        >
-          Confirmar Turno
-        </button>
       </div>
     </div>
   </section>

@@ -85,7 +85,9 @@ export class SolicitarTurnoComponent implements OnInit {
     // Genera los horarios disponibles
     this.diasDisponibles.forEach((dia) => {
       const horario = horariosEspecialidad[dia];
-      if (horario) {
+  
+      if (horario && horario.especialidad.includes(this.route.snapshot.paramMap.get('especialidadId'))) {
+        // Solo carga los turnos si la especialidad está disponible ese día
         const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
   
         // Filtrar turnos ocupados
@@ -101,6 +103,7 @@ export class SolicitarTurnoComponent implements OnInit {
       }
     });
   }
+  
   
 
   generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string }[] {
