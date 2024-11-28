@@ -7,30 +7,38 @@
         <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
         <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
       </div>
-        <!-- Botón para confirmar turno -->
-        <div class="text-center mb-2">
-            <button
-              class="btn btn-success px-4"
-              [disabled]="!turnoSeleccionado"
-              (click)="confirmarTurno()"
-            >
-              Confirmar Turno
-            </button>
-          </div>
+  
+      <!-- Botón para confirmar turno -->
+      <div class="text-center mb-2">
+        <button
+          class="btn btn-success px-4"
+          [disabled]="!turnoSeleccionado"
+          (click)="confirmarTurno()"
+        >
+          Confirmar Turno
+        </button>
+      </div>
+  
       <!-- Horarios por día -->
       <div class="row text-center">
         <div class="col-md-2" *ngFor="let dia of diasDisponibles">
           <h5>{{ dia }}</h5>
+
           <ul class="list-unstyled">
             <li *ngFor="let turno of horariosDisponibles[dia] || []">
               <button
-                class="btn btn-sm btn-primary my-2"
-                (click)="seleccionarTurno(dia, turno.desde, turno.hasta)"
+                class="btn btn-sm my-2"
+                [ngClass]="{ 'btn-primary': turno.estado, 'btn-secondary': !turno.estado }"
+                [disabled]="!turno.estado"
+                (click)="turno.estado && seleccionarTurno(dia, turno.desde, turno.hasta)"
               >
                 {{ turno.desde }} - {{ turno.hasta }}
+                <span *ngIf="!turno.estado" class="text-muted ocupado">(Ocupado)</span>
               </button>
             </li>
           </ul>
+          
+          
         </div>
       </div>
     </div>

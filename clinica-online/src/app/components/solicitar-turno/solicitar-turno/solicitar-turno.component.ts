@@ -16,7 +16,7 @@ export class SolicitarTurnoComponent implements OnInit {
   especialista: any;
   especialidad: any;
   usuarioLogueado: User | null = null;
-  horariosDisponibles: { [key: string]: { desde: string; hasta: string }[] } = {};
+  horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
   diasDisponibles: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   turnoSeleccionado: { dia: string; desde: string; hasta: string } | null = null;
 
@@ -34,7 +34,7 @@ export class SolicitarTurnoComponent implements OnInit {
         await this.cargarEspecialistaYEspecialidad();
         this.cargarHorariosDisponibles();
       } else {
-        Swal.fire('Error', 'Debe iniciar sesión para generar un turno.', 'error');
+  
         this.router.navigate(['/login']);
       }
     });
@@ -64,16 +64,14 @@ export class SolicitarTurnoComponent implements OnInit {
 
   async cargarHorariosDisponibles() {
     const horariosEspecialidad = this.especialista.horarios;
-  
-    // Obtener los turnos ya asignados para este especialista y especialidad
+
     const turnosAsignados = await this.firestoreService.getCollection('turnos', {
       where: [
         { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
         { field: 'uidEspecialidad', op: '==', value: this.route.snapshot.paramMap.get('especialidadId') },
       ],
     });
-  
-    // Filtra los turnos asignados y organiza por día
+
     const turnosAsignadosPorDia: { [key: string]: any[] } = {};
     turnosAsignados.forEach((asignado: any) => {
       if (!turnosAsignadosPorDia[asignado.dia]) {
@@ -81,33 +79,26 @@ export class SolicitarTurnoComponent implements OnInit {
       }
       turnosAsignadosPorDia[asignado.dia].push({ desde: asignado.desde, hasta: asignado.hasta });
     });
-  
-    // Genera los horarios disponibles
+
     this.diasDisponibles.forEach((dia) => {
       const horario = horariosEspecialidad[dia];
-  
       if (horario && horario.especialidad.includes(this.route.snapshot.paramMap.get('especialidadId'))) {
-        // Solo carga los turnos si la especialidad está disponible ese día
         const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-  
-        // Filtrar turnos ocupados
-        const turnosDisponibles = turnos.filter((turno) => {
-          return !(
-            turnosAsignadosPorDia[dia]?.some(
-              (asignado: any) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
-            )
-          );
-        });
-  
-        this.horariosDisponibles[dia] = turnosDisponibles;
+
+        const turnosConEstado = turnos.map((turno) => ({
+          ...turno,
+          estado: !turnosAsignadosPorDia[dia]?.some(
+            (asignado: any) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
+          ),
+        }));
+
+        this.horariosDisponibles[dia] = turnosConEstado;
       }
     });
   }
-  
-  
 
-  generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string }[] {
-    const intervalos: { desde: string; hasta: string }[] = [];
+  generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string; estado: boolean }[] {
+    const intervalos: { desde: string; hasta: string; estado: boolean }[] = [];
     let [horas, minutos] = desde.split(':').map(Number);
     const [horasFin, minutosFin] = hasta.split(':').map(Number);
 
@@ -120,7 +111,7 @@ export class SolicitarTurnoComponent implements OnInit {
       }
       const fin = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
       if (horas < horasFin || (horas === horasFin && minutos <= minutosFin)) {
-        intervalos.push({ desde: inicio, hasta: fin });
+        intervalos.push({ desde: inicio, hasta: fin, estado: true });
       }
     }
 

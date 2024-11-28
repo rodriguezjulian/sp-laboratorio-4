@@ -1,0 +1,21 @@
+.btn-secondary {
+    background-color: #fa1a1a;
+    color: white;
+    cursor: not-allowed;
+  }
+  .ocupado{
+    color : white !important;
+  }
+  .fondo {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #ffd700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
