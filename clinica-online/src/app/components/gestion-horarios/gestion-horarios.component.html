@@ -3,15 +3,22 @@
       <h2 class="text-center mt-4">Gestión de Horarios y Especialidades</h2>
   
       <!-- Información del especialista -->
-      <div class="especialista-info text-center my-4">
-        <img
-          [src]="especialista?.urlFotoPerfil || 'https://via.placeholder.com/150'"
-          class="perfil-img"
-          alt="Foto del Especialista"
-        />
-        <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
-        <p>DNI: {{ especialista?.dni }}</p>
-        <p>Correo: {{ especialista?.correo }}</p>
+      <div class="especialista-info d-flex align-items-center justify-content-center my-4">
+        <!-- Foto del especialista -->
+        <div class="foto-container text-center">
+          <img
+            [src]="especialista?.urlFotoPerfil || 'https://via.placeholder.com/150'"
+            class="perfil-img"
+            alt="Foto del Especialista"
+          />
+        </div>
+  
+        <!-- Datos del especialista -->
+        <div class="datos-container ms-4">
+          <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
+          <p><strong>DNI:</strong> {{ especialista?.dni }}</p>
+          <p><strong>Correo:</strong> {{ especialista?.correo }}</p>
+        </div>
       </div>
   
       <!-- Tabla de días y horarios -->

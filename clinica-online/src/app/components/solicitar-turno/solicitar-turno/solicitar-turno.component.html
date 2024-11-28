@@ -1,0 +1,52 @@
+<section class="fondo">
+    <div class="container">
+      <h2 class="text-center mt-4">Turnos Disponibles</h2>
+  
+      <!-- Información del especialista y especialidad -->
+      <div class="especialista-info my-4">
+        <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
+        <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
+      </div>
+  
+      <!-- Tabla de horarios disponibles -->
+      <div class="horarios-container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Desde</th>
+              <th>Hasta</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let horario of horariosDisponibles">
+              <td>{{ horario.dia }}</td>
+              <td>{{ horario.desde }}</td>
+              <td>{{ horario.hasta }}</td>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  (click)="seleccionarTurno(horario.dia, horario.desde, horario.hasta)"
+                >
+                  Seleccionar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Botón para confirmar turno -->
+      <div class="text-center mt-4">
+        <button
+          class="btn btn-success px-4"
+          [disabled]="!turnoSeleccionado"
+          (click)="confirmarTurno()"
+        >
+          Confirmar Turno
+        </button>
+      </div>
+    </div>
+  </section>
+  

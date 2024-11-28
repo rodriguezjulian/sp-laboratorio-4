@@ -23,4 +23,47 @@
     text-align: center;
     vertical-align: middle;
   }
-  
+  .fondo {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.especialista-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foto-container img.perfil-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.datos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.datos-container h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.datos-container p {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+.table {
+  margin-top: 20px;
+  background: white;
+}
+
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}

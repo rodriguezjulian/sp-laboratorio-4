@@ -2,3 +2,6 @@
     color:yellow;
     margin-right: 20px;
 }
+.nav-item{
+    display: flex;
+}
