@@ -38,4 +38,9 @@ export const routes: Routes = [
     path: 'mostrarEspecialidades/:id',
     loadComponent: () => import('./components/solicitar-turno/mostrarespecialidades/mostrarespecialidades.component').then((m) =>m.MostrarEspecialidadesComponent ),
   },
+  {
+    path: 'perfilEspecialista',
+    loadComponent: () => import('./components/gestion-horarios/gestion-horarios.component').then((m) =>m.GestionHorariosComponent ),
+  },
+  
 ];

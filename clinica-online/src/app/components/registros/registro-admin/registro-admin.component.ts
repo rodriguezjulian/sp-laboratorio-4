@@ -47,6 +47,7 @@ export class RegistroAdminComponent implements OnInit {
 
   async ngOnInit()
   {
+    //      let usuarioLogueado : any = await this.firestore.getUsuarioInfo(uid);
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         this.usuarioLogueado = user;

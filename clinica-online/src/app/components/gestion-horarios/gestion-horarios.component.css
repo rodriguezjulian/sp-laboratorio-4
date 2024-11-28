@@ -1,0 +1,26 @@
+.fondo {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #ffde59, #ff6b6b);
+    padding: 20px;
+  }
+  
+  .perfil-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+  
+  .horarios-container {
+    margin-top: 20px;
+  }
+  
+  .table th,
+  .table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  

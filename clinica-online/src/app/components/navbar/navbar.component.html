@@ -20,6 +20,7 @@
               @if(rol == 'admin')
               {
                 <a class="nav-link" (click)="seccionUsuarios()" routerLinkActive="active">Usuarios</a>
+
               }
               @if(rol == 'paciente')
               {
@@ -27,6 +28,7 @@
               }
               @if(rol == 'especialista')
               {
+                <a class="nav-link" (click)="perfilEspecialista()" routerLinkActive="active">Perfil</a>
                 <a class="nav-link" (click)="home()" routerLinkActive="active">Inicio de especialista</a>
               }
             </li>

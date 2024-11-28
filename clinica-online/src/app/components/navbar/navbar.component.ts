@@ -47,7 +47,9 @@ export class NavbarComponent implements OnInit {
   seccionUsuarios() {
     this.router.navigate(['/seccionUsuarios']);
   }
-  
+  perfilEspecialista() {
+    this.router.navigate(['/perfilEspecialista']);
+  }
   home() {
     this.router.navigate(['/home']);
   }

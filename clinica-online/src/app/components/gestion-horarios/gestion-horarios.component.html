@@ -1,0 +1,77 @@
+<section class="fondo">
+    <div class="container">
+      <h2 class="text-center mt-4">Gestión de Horarios y Especialidades</h2>
+  
+      <!-- Información del especialista -->
+      <div class="especialista-info text-center my-4">
+        <img
+          [src]="especialista?.urlFotoPerfil || 'https://via.placeholder.com/150'"
+          class="perfil-img"
+          alt="Foto del Especialista"
+        />
+        <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
+        <p>DNI: {{ especialista?.dni }}</p>
+        <p>Correo: {{ especialista?.correo }}</p>
+      </div>
+  
+      <!-- Tabla de días y horarios -->
+      <div class="horarios-container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Especialidad</th>
+              <th>Desde</th>
+              <th>Hasta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dia of dias">
+              <td>{{ dia }}</td>
+              <td>
+                <select
+                  class="form-select"
+                  (change)="seleccionarEspecialidad(dia, $event)"
+                >
+                  <option value="" disabled selected>Seleccione una especialidad</option>
+                  <option *ngFor="let esp of especialidades" [value]="esp.id">
+                    {{ esp.descripcion }}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <select
+                  class="form-select"
+                  (change)="cambiarHorario(dia, 'desde', $event)"
+                >
+                  <option value="" disabled selected>Desde</option>
+                  <option *ngFor="let turno of turnos">{{ turno }}</option>
+                </select>
+              </td>
+              <td>
+                <select
+                  class="form-select"
+                  (change)="cambiarHorario(dia, 'hasta', $event)"
+                >
+                  <option value="" disabled selected>Hasta</option>
+                  <option *ngFor="let turno of turnos">{{ turno }}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Botón para guardar cambios -->
+      <div class="text-center mt-4">
+        <button
+          class="btn btn-primary px-4"
+          [disabled]="!huboCambios"
+          (click)="guardarCambios()"
+        >
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </section>
+  
