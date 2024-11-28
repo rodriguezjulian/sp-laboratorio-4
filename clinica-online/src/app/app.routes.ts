@@ -30,4 +30,12 @@ export const routes: Routes = [
     path: 'seccionUsuarios',
     loadComponent: () => import('./components/seccion-usuarios/seccion-usuarios.component').then((m) => m.SeccionUsuariosComponent),
   },
+  {
+    path: 'mostrarEspecialistas',
+    loadComponent: () => import('./components/solicitar-turno/mostrarespecialistas/mostrarespecialistas.component').then((m) => m.MostrarEspecialistasComponent),
+  },
+  {
+    path: 'mostrarEspecialidades/:id',
+    loadComponent: () => import('./components/solicitar-turno/mostrarespecialidades/mostrarespecialidades.component').then((m) =>m.MostrarEspecialidadesComponent ),
+  },
 ];

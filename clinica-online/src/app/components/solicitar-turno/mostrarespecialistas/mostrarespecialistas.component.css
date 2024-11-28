@@ -1,0 +1,37 @@
+.fondo {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: linear-gradient(45deg, #ffd700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .especialista-card {
+    text-align: center;
+  }
+  
+  .especialista-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .img-redonda {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #343a40;
+    transition: transform 0.3s ease;
+  }
+  
+  .img-redonda:hover {
+    transform: scale(1.1);
+    border-color: #ffd700;
+  }
+  

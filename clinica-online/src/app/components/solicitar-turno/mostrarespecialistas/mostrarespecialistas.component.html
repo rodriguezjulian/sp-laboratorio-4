@@ -1,0 +1,23 @@
+<section class="fondo">
+    <div class="container">
+      <h3 class="text-center mt-5">Seleccione Especialista</h3>
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-3 mb-4 text-center" *ngFor="let especialista of especialistas">
+          <div class="especialista-card">
+            <h5>{{ especialista.nombre }}</h5>
+            <button
+              class="especialista-button"
+              (click)="seleccionarEspecialista(especialista)"
+            >
+              <img
+                [src]="especialista.urlFotoPerfil"
+                class="img-redonda"
+                alt="Foto del especialista"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

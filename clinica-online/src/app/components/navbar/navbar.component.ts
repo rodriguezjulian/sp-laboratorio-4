@@ -51,6 +51,9 @@ export class NavbarComponent implements OnInit {
   home() {
     this.router.navigate(['/home']);
   }
+  mostrarEspecialistas() {
+    this.router.navigate(['/mostrarEspecialistas']);
+  }
 
   iniciarSesion() {
     this.router.navigate(['/login']);
