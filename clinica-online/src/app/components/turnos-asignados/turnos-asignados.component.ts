@@ -125,25 +125,18 @@ export class TurnosAsignadosComponent implements OnInit {
   }//: string | null = null;
 
 
-  cambiarEspecialidad(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    if (!selectElement) {
-      console.warn('Elemento select no encontrado.');
-      return;
-    }
-  
-    const selectedValue = selectElement.value;
-    if (!selectedValue) {
-      console.warn('Especialidad no seleccionada.');
-      return;
-    }
-  
-    this.especialidadSeleccionada = selectedValue;
-    console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
-  
-    this.cargarTurnosAsignados(); // Recarga los turnos filtrados por especialidad
+cambiarEspecialidad(especialidadId: string) {
+  if (!especialidadId) {
+    console.warn('Especialidad no seleccionada.');
+    return;
   }
-  
+
+  this.especialidadSeleccionada = especialidadId;
+  console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
+
+  this.cargarTurnosAsignados(); // Recarga los turnos filtrados por especialidad
+}
+
   
   cambiarSemana(proxima: boolean) {
     this.mostrandoProximaSemana = proxima; // Cambia entre semana actual y próxima

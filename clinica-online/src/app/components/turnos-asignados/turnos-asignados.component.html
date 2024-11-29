@@ -1,65 +1,63 @@
 <section class="fondo">
-    <div class="container">
-      <h2 class="text-center mt-4">Turnos Asignados</h2>
-  
-      <!-- Selector de especialidades -->
-      <div class="text-center mb-3" *ngIf="especialidades.length > 1">
-        <label for="especialidad">Filtrar por especialidad:</label>
-        <select
-          id="especialidad"
-          class="form-select d-inline-block w-auto"
-          [value]="especialidadSeleccionada"
-          (change)="cambiarEspecialidad($event)"
+  <div class="container">
+    <h2 class="text-center mt-4">Turnos Asignados</h2>
+
+    <!-- Lista de especialidades -->
+    <div class="text-center mb-3" *ngIf="especialidades.length > 1">
+      <p><strong>Especialidades:</strong></p>
+      <div class="btn-group">
+        <button
+          class="btn btn-outline-primary"
+          *ngFor="let especialidad of especialidades"
+          [class.active]="especialidadSeleccionada === especialidad.id"
+          (click)="cambiarEspecialidad(especialidad.id)"
         >
-          <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">
-            {{ especialidad.descripcion }}
-          </option>
-        </select>
+          {{ especialidad.descripcion }}
+        </button>
       </div>
-      
-  
-      <!-- Botones para cambiar de semana -->
-      <div class="text-center mb-3">
-        <button class="btn btn-secondary" (click)="cambiarSemana(false)">Semana Actual</button>
-        <button class="btn btn-secondary mx-4" (click)="cambiarSemana(true)">Próxima Semana</button>
-      </div>
-  
-      <!-- Tabla de turnos -->
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Día</th>
-            <th>Fecha</th>
-            <th>Horarios</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let diaData of diasDisponibles">
-            <td>{{ diaData.dia }}</td>
-            <td>{{ diaData.fecha }}</td>
-            <td>
-              <ul>
-                <li *ngFor="let turno of diaData.turnos">
-                  {{ turno.desde }} - {{ turno.hasta }}
-                </li>
-              </ul>
-            </td>
-            <td>
-              <ul>
-                <li *ngFor="let turno of diaData.turnos">
-                  {{ turno.estado }}
-                </li>
-              </ul>
-            </td>
-          </tr>
-  
-          <!-- Mostrar mensaje si no hay turnos -->
-          <tr *ngIf="!tieneTurnosAsignados()">
-            <td colspan="4" class="text-center">No hay turnos asignados para esta semana.</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
-  </section>
-  
+
+    <!-- Botones para cambiar de semana -->
+    <div class="text-center mb-3">
+      <button class="btn btn-secondary" (click)="cambiarSemana(false)">Semana Actual</button>
+      <button class="btn btn-secondary mx-4" (click)="cambiarSemana(true)">Próxima Semana</button>
+    </div>
+
+    <!-- Tabla de turnos -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Fecha</th>
+          <th>Horarios</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let diaData of diasDisponibles">
+          <td>{{ diaData.dia }}</td>
+          <td>{{ diaData.fecha }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let turno of diaData.turnos">
+                {{ turno.desde }} - {{ turno.hasta }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let turno of diaData.turnos">
+                {{ turno.estado }}
+              </li>
+            </ul>
+          </td>
+        </tr>
+
+        <!-- Mostrar mensaje si no hay turnos -->
+        <tr *ngIf="!tieneTurnosAsignados()">
+          <td colspan="4" class="text-center">No hay turnos asignados para esta semana.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
