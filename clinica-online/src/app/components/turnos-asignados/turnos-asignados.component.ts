@@ -124,18 +124,28 @@ export class TurnosAsignadosComponent implements OnInit {
       console.error('Error al cargar turnos asignados:', error);
       Swal.fire('Error', 'Hubo un problema al cargar los turnos asignados.', 'error');
     }
-  }
+  }//: string | null = null;
 
-  cambiarEspecialidad(especialidadId: Event) {
 
-    const selectedValue = (especialidadId.target as HTMLSelectElement).value;
-    console.log("acAAAAAAAAAAa " , especialidadId);
+  cambiarEspecialidad(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    if (!selectElement) {
+      console.warn('Elemento select no encontrado.');
+      return;
+    }
+  
+    const selectedValue = selectElement.value;
     if (!selectedValue) {
       console.warn('Especialidad no seleccionada.');
       return;
     }
+  
+    this.especialidadSeleccionada = selectedValue;
+    console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
+  
     this.cargarTurnosAsignados(); // Recarga los turnos filtrados por especialidad
   }
+  
   
   cambiarSemana(proxima: boolean) {
     this.mostrandoProximaSemana = proxima; // Cambia entre semana actual y próxima
