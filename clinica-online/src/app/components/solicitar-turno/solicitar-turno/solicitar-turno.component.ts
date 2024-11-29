@@ -42,26 +42,27 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   configurarDiasDisponibles() {
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const hoy = new Date();
     const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; // Convertir índice 0 (domingo) a 6 (sábado)
-  
-    // Determinar el inicio de la semana actual o la próxima semana
-    const inicioSemana = this.mostrandoProximaSemana
+    
+    // Determinar el inicio de los 6 días a mostrar (semana actual o próxima semana)
+    const inicioDias = this.mostrandoProximaSemana
       ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex))) // Próxima semana
-      : new Date(hoy.setDate(hoy.getDate())); // Desde hoy (semana actual)
+      : new Date(hoy); // Desde hoy (semana actual)
   
-    // Generar los días y fechas correspondientes
-    this.diasDisponibles = Array.from({ length: 7 }, (_, index) => {
-      const fecha = new Date(inicioSemana);
-      fecha.setDate(inicioSemana.getDate() + index);
-      const dia = dias[(diaActualIndex + index) % dias.length]; // Ciclar los días desde el día actual
+    // Generar los próximos 6 días con sus nombres y fechas correspondientes
+    this.diasDisponibles = Array.from({ length: 6 }, (_, index) => {
+      const fecha = new Date(inicioDias);
+      fecha.setDate(inicioDias.getDate() + index); // Incrementar los días desde el inicio
+      const dia = dias[(diaActualIndex + index) % dias.length]; // Ciclar los días de la semana
       return {
         dia,
         fecha: fecha.toISOString().split('T')[0], // Formato YYYY-MM-DD
       };
     });
   }
+  
   
   async cargarEspecialistaYEspecialidad() {
     const especialistaId = this.route.snapshot.paramMap.get('especialistaId');
