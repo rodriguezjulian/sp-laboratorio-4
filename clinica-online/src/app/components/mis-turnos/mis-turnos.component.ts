@@ -5,13 +5,13 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from '../login/login.component';
-
+import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 @Component({
   selector: 'app-mis-turnos',
   templateUrl: './mis-turnos.component.html',
   styleUrls: ['./mis-turnos.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,EstadoTurnoColorDirective],
 })
 export class MisTurnosComponent implements OnInit {
   usuarioLogueado: User | null = null;

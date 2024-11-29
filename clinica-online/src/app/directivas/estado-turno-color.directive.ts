@@ -30,9 +30,8 @@ export class EstadoTurnoColorDirective implements OnChanges {
         color = 'gray';
         break;
       default:
-        color = 'black';
+        color = 'blue';
     }
-
     this.el.nativeElement.style.color = color;
   }
 }

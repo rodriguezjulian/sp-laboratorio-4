@@ -38,7 +38,7 @@
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.fecha }}</td>
           <td>{{ turno.desde }} - {{ turno.hasta }}</td>
-          <td>{{ turno.estado }}</td>
+          <td [EstadoTurnoColor]="turno.estado">{{ turno.estado | titlecase }}</td>
           <td>
             <button
               *ngIf="turno.estado === 'pendiente'"
