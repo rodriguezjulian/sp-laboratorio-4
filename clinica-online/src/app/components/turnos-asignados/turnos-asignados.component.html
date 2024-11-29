@@ -1,0 +1,26 @@
+<section class="fondo">
+    <div class="container">
+      <h2 class="text-center mt-4">Turnos Asignados</h2>
+  
+      <!-- Mostrar los turnos por día -->
+      <div class="row text-center" *ngFor="let dia of dias">
+        <div class="col-md-12">
+          <h5 class="mt-3">{{ dia }}</h5>
+  
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let turno of turnosAsignados[dia] || []">
+              <strong>Horario:</strong> {{ turno.desde }} - {{ turno.hasta }}<br>
+              <strong>Fecha:</strong> {{ turno.fecha }}<br>
+              <strong>Estado:</strong> {{ turno.estado }}
+            </li>
+          </ul>
+  
+          <!-- Si no hay turnos asignados para el día -->
+          <p *ngIf="!turnosAsignados[dia]?.length" class="text-muted">
+            No hay turnos asignados para {{ dia }}.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  

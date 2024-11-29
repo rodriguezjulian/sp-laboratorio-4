@@ -45,5 +45,13 @@ export const routes: Routes = [
   {
     path: 'solicitarTurno/:especialistaId/:especialidadId',
     loadComponent: () => import('./components/solicitar-turno/solicitar-turno/solicitar-turno.component').then((m) => m.SolicitarTurnoComponent),
+  },
+  {
+    path: 'turnosAsignados',
+    loadComponent: () => import('./components/turnos-asignados/turnos-asignados.component').then((m) => m.TurnosAsignadosComponent),
   }  
+
+
+
+  
 ];

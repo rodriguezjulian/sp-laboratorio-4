@@ -47,6 +47,10 @@ export class NavbarComponent implements OnInit {
   seccionUsuarios() {
     this.router.navigate(['/seccionUsuarios']);
   }
+  turnosAsignados() {
+    this.router.navigate(['/turnosAsignados']);
+  }
+
   perfilEspecialista() {
     this.router.navigate(['/perfilEspecialista']);
   }

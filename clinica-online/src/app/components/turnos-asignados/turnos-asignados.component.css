@@ -1,0 +1,19 @@
+.fondo {
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  h5 {
+    color: #003366;
+  }
+  
+  .list-group-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+  }
+  
+  .text-muted {
+    font-style: italic;
+    color: #999999;
+  }
+  
