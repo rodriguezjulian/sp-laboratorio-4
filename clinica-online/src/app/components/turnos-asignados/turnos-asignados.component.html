@@ -55,11 +55,15 @@
           <td>
             <ul>
               <li *ngFor="let turno of diaData.turnos">
-                <!-- Mostrar solo texto si el turno está cancelado o rechazado -->
-                <span *ngIf="turno.estado === 'Cancelado' || turno.estado === 'Rechazado'" class="text-muted">
-                  {{ turno.estado }}
-                </span>
-          
+                <!-- Ver Reseña -->
+                <button
+                  *ngIf="(turno.estado === 'Cancelado' || turno.estado === 'Rechazado') && turno.comentario?.length > 0"
+                  class="btn btn-info btn-sm"
+                  (click)="verResenia(turno)"
+                >
+                  Ver Reseña
+                </button>
+
                 <!-- Acciones si el turno no está cancelado ni rechazado -->
                 <ng-container *ngIf="turno.estado !== 'Cancelado' && turno.estado !== 'Rechazado'">
                   <!-- Finalizar turno si ya está aceptado -->
@@ -70,7 +74,7 @@
                   >
                     Finalizar
                   </button>
-          
+
                   <!-- Acciones para otros estados -->
                   <ng-container *ngIf="turno.estado !== 'Aceptado'">
                     <!-- Cancelar turno -->
@@ -102,8 +106,6 @@
               </li>
             </ul>
           </td>
-          
-          
         </tr>
 
         <!-- Mostrar mensaje si no hay turnos -->

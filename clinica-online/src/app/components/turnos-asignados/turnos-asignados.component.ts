@@ -143,6 +143,14 @@ cambiarEspecialidad(especialidadId: string) {
     this.configurarDiasDisponibles(); // Reconfigura los días de la semana
     this.cargarTurnosAsignados(); // Recarga los turnos asignados
   }
+  verResenia(turno: any) {
+    Swal.fire({
+      title: 'Reseña del Turno',
+      text: turno.comentario,
+      icon: 'info',
+      confirmButtonText: 'Cerrar',
+    });
+  }
   
   tieneTurnosAsignados(): boolean {
     return this.diasDisponibles.some((dia : any) => dia.turnos.length > 0);
