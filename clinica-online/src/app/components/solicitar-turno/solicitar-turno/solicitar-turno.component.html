@@ -1,50 +1,38 @@
 <section class="fondo">
-    <div class="container">
-      <h2 class="text-center mt-4">Turnos Disponibles</h2>
-  
-      <!-- Información del especialista y especialidad -->
-      <div class="especialista-info">
-        <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
-        <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
-      </div>
-      <div class="text-center m-4">
-        <button
-          class="btn btn-success px-4"
-          [disabled]="!turnoSeleccionado"
-          (click)="confirmarTurno()"
-        >
-          Guardar Turno
-        </button>
-      </div>
-      <!-- Botones para cambiar de semana -->
-      <div class="text-center mb-3">
-        <button class="btn btn-secondary mx-2" (click)="cambiarSemana(false)">Semana Actual</button>
-        <button class="btn btn-secondary" (click)="cambiarSemana(true)">Próxima Semana</button>
-      </div>
-  
-      <!-- Horarios por día -->
-      <div class="row text-center">
-        <div class="col-md-2" *ngFor="let diaData of diasDisponibles">
-          <!-- Mostrar el día y la fecha -->
-          <h5>{{ diaData.dia }} {{ diaData.fecha }}</h5>
-          <ul class="list-unstyled">
-            <li *ngFor="let turno of horariosDisponibles[diaData.dia] || []">
-              <button
-                class="btn btn-sm my-2"
-                [ngClass]="{ 'btn-primary': turno.estado, 'btn-secondary': !turno.estado }"
-                [disabled]="!turno.estado"
-                (click)="turno.estado && seleccionarTurno(diaData.dia, turno.desde, turno.hasta, diaData.fecha)"
-              >
-                {{ turno.desde }} - {{ turno.hasta }}
-                <span *ngIf="!turno.estado" class="text-muted ocupado">(Ocupado)</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-  
-      <!-- Botón para guardar turno -->
+  <div class="container">
+    <h2 class="text-center mt-4">Turnos Disponibles</h2>
 
+    <!-- Información del especialista y especialidad -->
+    <div class="especialista-info">
+      <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
+      <p><strong>Especialidad:</strong> {{ especialidad?.descripcion }}</p>
     </div>
-  </section>
-  
+
+    <!-- Botones para cambiar de semana -->
+    <div class="text-center mb-3">
+      <button class="btn btn-secondary mx-2" (click)="cambiarSemana(false)">Semana Actual</button>
+      <button class="btn btn-secondary" (click)="cambiarSemana(true)">Próxima Semana</button>
+    </div>
+
+    <!-- Horarios por día -->
+    <div class="row text-center">
+      <div class="col-md-2" *ngFor="let diaData of diasDisponibles">
+        <!-- Mostrar el día y la fecha -->
+        <h5>{{ diaData.dia }} {{ diaData.fecha }}</h5>
+        <ul class="list-unstyled">
+          <li *ngFor="let turno of horariosDisponibles[diaData.dia] || []">
+            <button
+              class="btn btn-sm my-2"
+              [ngClass]="{ 'btn-primary': turno.estado, 'btn-secondary': !turno.estado }"
+              [disabled]="!turno.estado"
+              (click)="confirmarTurno(diaData.dia, turno.desde, turno.hasta, diaData.fecha)"
+            >
+              {{ turno.desde }} - {{ turno.hasta }}
+              <span *ngIf="!turno.estado" class="text-muted ocupado">(Ocupado)</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

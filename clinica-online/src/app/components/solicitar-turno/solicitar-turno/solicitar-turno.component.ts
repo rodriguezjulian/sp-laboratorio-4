@@ -18,7 +18,6 @@ export class SolicitarTurnoComponent implements OnInit {
   usuarioLogueado: User | null = null;
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
   diasDisponibles: { dia: string; fecha: string }[] = []; // Cambiado de string[] a objeto con día y fecha
-  turnoSeleccionado: { dia: string; desde: string; hasta: string; fecha: string } | null = null;
   mostrandoProximaSemana = false;
 
   constructor(
@@ -44,25 +43,23 @@ export class SolicitarTurnoComponent implements OnInit {
   configurarDiasDisponibles() {
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const hoy = new Date();
-    const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; // Convertir índice 0 (domingo) a 6 (sábado)
-    
-    // Determinar el inicio de los días a mostrar (semana actual o próxima semana)
+    const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1;
+
     const inicioDias = this.mostrandoProximaSemana
-      ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex))) // Próxima semana
-      : new Date(hoy); // Desde hoy (semana actual)
-  
-    // Generar días y fechas, excluyendo los domingos
+      ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex)))
+      : new Date(hoy);
+
     this.diasDisponibles = Array.from({ length: 7 }, (_, index) => {
       const fecha = new Date(inicioDias);
-      fecha.setDate(inicioDias.getDate() + index); // Incrementar los días desde el inicio
-      const dia = dias[(diaActualIndex + index) % dias.length]; // Ciclar los días de la semana
+      fecha.setDate(inicioDias.getDate() + index);
+      const dia = dias[(diaActualIndex + index) % dias.length];
       return {
         dia,
-        fecha: fecha.toISOString().split('T')[0], // Formato YYYY-MM-DD
+        fecha: fecha.toISOString().split('T')[0],
       };
-    }).filter(diaData => diaData.dia !== 'Domingo'); // Excluir los domingos
+    }).filter(diaData => diaData.dia !== 'Domingo');
   }
-  
+
   async cargarEspecialistaYEspecialidad() {
     const especialistaId = this.route.snapshot.paramMap.get('especialistaId');
     const especialidadId = this.route.snapshot.paramMap.get('especialidadId');
@@ -87,27 +84,15 @@ export class SolicitarTurnoComponent implements OnInit {
 
   async cargarHorariosDisponibles() {
     const horariosEspecialidad = this.especialista.horarios;
-  
-    // Validar que la especialidad seleccionada esté en el array de especialidades del especialista
     const especialidadSeleccionada = this.route.snapshot.paramMap.get('especialidadId');
-    if (!this.especialista.especialidad.includes(especialidadSeleccionada)) {
-      Swal.fire(
-        'Error',
-        'La especialidad seleccionada no corresponde a este especialista.',
-        'error'
-      );
-      return;
-    }
-  
-    // Obtén los turnos asignados desde la base de datos
+
     const turnosAsignados = await this.firestoreService.getCollection('turnos', {
       where: [
         { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
         { field: 'uidEspecialidad', op: '==', value: especialidadSeleccionada },
       ],
     });
-  
-    // Crear un mapa de turnos asignados por día y fecha
+
     const turnosAsignadosPorDia: { [key: string]: { desde: string; hasta: string }[] } = {};
     turnosAsignados.forEach((asignado: any) => {
       const claveDiaFecha = `${asignado.dia}_${asignado.fecha}`;
@@ -119,57 +104,58 @@ export class SolicitarTurnoComponent implements OnInit {
         hasta: asignado.hasta,
       });
     });
-  
-    // Generar horarios disponibles basados en los horarios del especialista y los turnos ocupados
+
     this.diasDisponibles.forEach(({ dia, fecha }) => {
       const horario = horariosEspecialidad[dia];
       if (horario && horario.especialidad.includes(especialidadSeleccionada)) {
         const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-  
-        // Marca como ocupado si coincide con un turno asignado
+
         const turnosConEstado = turnos.map((turno) => ({
           ...turno,
           estado: !turnosAsignadosPorDia[`${dia}_${fecha}`]?.some(
             (asignado) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
           ),
         }));
-  
-        // Almacena los turnos disponibles por día
+
         this.horariosDisponibles[dia] = turnosConEstado;
       } else {
-        // Si no hay horarios o no corresponden a la especialidad seleccionada, limpiamos los datos
         this.horariosDisponibles[dia] = [];
       }
     });
   }
-  
-async confirmarTurno() {
-  if (!this.turnoSeleccionado || !this.usuarioLogueado) {
-    Swal.fire('Error', 'Debe seleccionar un turno para confirmar.', 'error');
-    return;
+
+  async confirmarTurno(dia: string, desde: string, hasta: string, fecha: string) {
+    if (!this.usuarioLogueado) {
+      Swal.fire('Error', 'Debe iniciar sesión para reservar un turno.', 'error');
+      return;
+    }
+
+    const nuevoTurno = {
+      uidEspecialista: this.route.snapshot.paramMap.get('especialistaId'),
+      uidEspecialidad: this.route.snapshot.paramMap.get('especialidadId'),
+      uidPaciente: this.usuarioLogueado.uid,
+      dia,
+      desde,
+      hasta,
+      fecha,
+      estado: 'pendiente',
+      creadoEn: new Date(),
+      comentario: ""
+    };
+
+    try {
+      await this.firestoreService.createDocument('turnos', nuevoTurno);
+      Swal.fire(
+        'Turno Guardado',
+        `Tu turno ha sido guardado exitosamente para el ${dia}, ${fecha} de ${desde} a ${hasta}.`,
+        'success'
+      );
+      await this.cargarHorariosDisponibles();
+    } catch (error) {
+      console.error('Error al guardar el turno:', error);
+      Swal.fire('Error', 'No se pudo guardar el turno. Intente nuevamente.', 'error');
+    }
   }
-
-  const nuevoTurno = {
-    uidEspecialista: this.route.snapshot.paramMap.get('especialistaId'),
-    uidEspecialidad: this.route.snapshot.paramMap.get('especialidadId'),
-    uidPaciente: this.usuarioLogueado.uid,
-    ...this.turnoSeleccionado,
-    estado: 'pendiente',
-    creadoEn: new Date(),
-    comentario : ""
-  };
-
-  try {
-    await this.firestoreService.createDocument('turnos', nuevoTurno);
-    Swal.fire('Éxito', 'Turno generado exitosamente.', 'success');
-    this.router.navigate(['/home']);
-  } catch (error) {
-    console.error('Error al generar el turno:', error);
-    Swal.fire('Error', 'No se pudo generar el turno. Intente nuevamente.', 'error');
-  }
-}
-
-
 
   generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string; estado: boolean }[] {
     const intervalos: { desde: string; hasta: string; estado: boolean }[] = [];
@@ -196,16 +182,5 @@ async confirmarTurno() {
     this.mostrandoProximaSemana = proxima;
     this.configurarDiasDisponibles();
     this.cargarHorariosDisponibles();
-  }
-
-  seleccionarTurno(dia: string, desde: string, hasta: string, fecha: string) {
-    this.turnoSeleccionado = {
-      dia,
-      desde,
-      hasta,
-      fecha,
-    };
-
-    Swal.fire('Turno Seleccionado', `Día: ${dia}, Fecha: ${fecha}, Horario: ${desde} - ${hasta}`, 'info');
   }
 }
