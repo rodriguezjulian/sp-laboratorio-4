@@ -27,11 +27,12 @@
               @if(rol == 'paciente')
               {
                 <a class="nav-link" (click)="mostrarEspecialistas()" routerLinkActive="active">Solicitar turno</a>
+                <a class="nav-link" (click)="misTurnos()" routerLinkActive="active">Mis Turnos</a>
               }
               @if(rol == 'especialista')
               {
                 <a class="nav-link" (click)="perfilEspecialista()" routerLinkActive="active">Perfil</a>
-                <a class="nav-link" (click)="turnosAsignados()" routerLinkActive="active">Turnos asignados</a>
+                <a class="nav-link" (click)="turnosAsignados()" routerLinkActive="active">Mis Turnos</a>
               }
             </li>
           </ul>

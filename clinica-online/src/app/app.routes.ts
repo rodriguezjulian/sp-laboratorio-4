@@ -45,7 +45,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/solicitar-turno/mostrarespecialidades/mostrarespecialidades.component').then((m) =>m.MostrarEspecialidadesComponent ),
   },
   {
-    path: 'turnosAsignados',
+    path: 'misturnos-e',
     loadComponent: () => import('./components/turnos-asignados/turnos-asignados.component').then((m) => m.TurnosAsignadosComponent),
   }, 
   {
@@ -59,5 +59,11 @@ export const routes: Routes = [
   {
     path: 'crear-turno',
     loadComponent: () => import('./components/solicitar-turno/parent-admint/parent-admint.component').then((m) => m.ParentAdminComponent),
+  },
+  {
+    path: 'mis-turnos',
+    loadComponent: () => import('./components/mis-turnos/mis-turnos.component').then((m) => m.MisTurnosComponent),
   } 
+
+  
 ];

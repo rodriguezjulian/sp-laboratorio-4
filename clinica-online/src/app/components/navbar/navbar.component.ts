@@ -56,7 +56,7 @@ export class NavbarComponent implements OnInit {
   
   
   turnosAsignados() {
-    this.router.navigate(['/turnosAsignados']);
+    this.router.navigate(['/misturnos-e']);
   }
 
   perfilEspecialista() {
@@ -67,6 +67,9 @@ export class NavbarComponent implements OnInit {
   }
   mostrarEspecialistas() {
     this.router.navigate(['/solicitar-turno']);
+  }
+  misTurnos() {
+    this.router.navigate(['/mis-turnos']);
   }
 
   iniciarSesion() {

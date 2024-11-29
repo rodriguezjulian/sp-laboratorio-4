@@ -1,0 +1,14 @@
+.fondo {
+    min-height: 100vh;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    padding: 20px;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  
+  .form-control {
+    max-width: 500px;
+  }
+  
