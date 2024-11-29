@@ -136,7 +136,16 @@ export class MisTurnosComponent implements OnInit {
       }
     });
   }
-
+  verResenia(turno: any) {
+    console.log("ver resenia ", turno);
+    Swal.fire({
+      title: 'Reseña del Turno',
+      text: turno.comentario,
+      icon: 'info',
+      confirmButtonText: 'Cerrar',
+    });
+  }
+  
   calificarAtencion(turno: any) {
     Swal.fire({
       title: 'Calificar Atención',

@@ -61,6 +61,14 @@
             >
               Completar Encuesta
             </button>
+
+            <button
+            *ngIf="turno.comentario && (turno.estado === 'Realizado' || turno.estado === 'Cancelado' || turno.estado === 'Rechazado')"
+            class="btn btn-info btn-sm"
+            (click)="verResenia(turno)"
+          >
+            Ver Reseña
+          </button>
           </td>
         </tr>
         <tr *ngIf="aplicarFiltros().length === 0">
