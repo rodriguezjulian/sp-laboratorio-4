@@ -62,7 +62,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/home']);
   }
   mostrarEspecialistas() {
-    this.router.navigate(['/mostrarEspecialistas']);
+    this.router.navigate(['/solicitar-turno']);
   }
 
   iniciarSesion() {

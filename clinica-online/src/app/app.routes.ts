@@ -30,21 +30,19 @@ export const routes: Routes = [
     path: 'seccionUsuarios',
     loadComponent: () => import('./components/seccion-usuarios/seccion-usuarios.component').then((m) => m.SeccionUsuariosComponent),
   },
-  {
-    path: 'mostrarEspecialistas',
-    loadComponent: () => import('./components/solicitar-turno/mostrarespecialistas/mostrarespecialistas.component').then((m) => m.MostrarEspecialistasComponent),
-  },
-  {
-    path: 'mostrarEspecialidades/:id',
-    loadComponent: () => import('./components/solicitar-turno/mostrarespecialidades/mostrarespecialidades.component').then((m) =>m.MostrarEspecialidadesComponent ),
-  },
+
+
   {
     path: 'perfilEspecialista',
     loadComponent: () => import('./components/gestion-horarios/gestion-horarios.component').then((m) =>m.GestionHorariosComponent ),
   },
   {
-    path: 'solicitarTurno/:especialistaId/:especialidadId',
-    loadComponent: () => import('./components/solicitar-turno/solicitar-turno/solicitar-turno.component').then((m) => m.SolicitarTurnoComponent),
+    path: 'mostrarEspecialistas',
+    loadComponent: () => import('./components/solicitar-turno/mostrarespecialistas/mostrarespecialistas.component').then((m) => m.MostrarEspecialistasComponent),
+  },
+  {
+    path: 'mostrarEspecialidades',
+    loadComponent: () => import('./components/solicitar-turno/mostrarespecialidades/mostrarespecialidades.component').then((m) =>m.MostrarEspecialidadesComponent ),
   },
   {
     path: 'turnosAsignados',
@@ -53,8 +51,9 @@ export const routes: Routes = [
   {
     path: 'turnos',
     loadComponent: () => import('./components/turnos/turnos.component').then((m) => m.TurnosComponent),
+  },
+  {
+    path: 'solicitar-turno',
+    loadComponent: () => import('./components/solicitar-turno/parent-component/parent-component.component').then((m) => m.ParentComponent),
   } 
-
-
-  
 ];

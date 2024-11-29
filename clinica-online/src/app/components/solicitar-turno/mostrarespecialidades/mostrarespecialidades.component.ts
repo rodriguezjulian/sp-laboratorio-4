@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
 
@@ -11,107 +10,48 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class MostrarEspecialidadesComponent implements OnInit {
-  especialistaSeleccionado: any;
+  @Input() especialista: any; // Receive the selected specialist from the parent
+  @Output() selectEspecialidad = new EventEmitter<any>();
+
   especialidades: any[] = [];
   horariosDisponibles: { [key: string]: any[] } = {};
   diasDisponibles: string[] = [];
 
-  constructor(
-    private firestoreService: FirestoreService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private firestoreService: FirestoreService) {}
 
   ngOnInit(): void {
+    console.log('Especialista recibido en MostrarEspecialidades:', this.especialista);
     this.loadEspecialidades();
   }
 
   async loadEspecialidades() {
-    const especialistaId = this.route.snapshot.paramMap.get('id');
-    if (especialistaId) {
-      try {
-        const especialistaDoc = await this.firestoreService.getDocument<any>(`especialista/${especialistaId}`);
-        this.especialistaSeleccionado = especialistaDoc.data();
-
-        if (this.especialistaSeleccionado?.especialidad) {
-          const especialidadIds = this.especialistaSeleccionado.especialidad;
-          this.especialidades = [];
-
-          for (const id of especialidadIds) {
-            const especialidadDoc = await this.firestoreService.getDocument<any>(`especialidades/${id}`);
-            const especialidadData = especialidadDoc.exists() ? especialidadDoc.data() : null;
-
-            if (especialidadData) {
-              this.especialidades.push({ id, ...especialidadData });
-            }
-          }
-        }
-
-        // Generar la semana y cargar horarios disponibles
-        this.generarSemana();
-        this.cargarHorariosDisponibles();
-      } catch (error) {
-        console.error('Error al cargar las especialidades:', error);
+    try {
+      if (!this.especialista || !this.especialista.especialidad) {
+        console.warn('Especialista o especialidades no disponibles');
+        return;
       }
-    } else {
-      console.warn('ID del especialista no encontrado en la ruta');
-    }
-  }
 
-  generarSemana() {
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const hoy = new Date();
-    this.diasDisponibles = Array.from({ length: 7 }, (_, i) => {
-      const fecha = new Date(hoy);
-      fecha.setDate(hoy.getDate() + i);
-      const diaNombre = dias[fecha.getDay() - 1] || 'Sábado';
-      return `${diaNombre} (${fecha.toLocaleDateString()})`;
-    });
-  }
+      const especialidadIds = this.especialista.especialidad;
 
-  cargarHorariosDisponibles() {
-    const horariosEspecialidad = this.especialistaSeleccionado.horarios;
-    const diasMap: { [key: string]: any[] } = {};
-
-    this.diasDisponibles.forEach((diaCompleto) => {
-      const [dia] = diaCompleto.split(' ');
-      const horario = horariosEspecialidad[dia];
-
-      if (horario) {
-        const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-        diasMap[diaCompleto] = turnos.map((turno) => ({
-          dia: diaCompleto,
-          desde: turno.desde,
-          hasta: turno.hasta,
+      // Fetch all specialities and filter by the specialist's IDs
+      const especialidadesSnapshot = await this.firestoreService.getCollection('especialidades');
+      this.especialidades = especialidadesSnapshot
+        .filter((especialidad: any) => especialidadIds.includes(especialidad.id))
+        .map((especialidad: any) => ({
+          id: especialidad.id,
+          descripcion: especialidad.descripcion,
+          urlFotoPerfil: especialidad.urlFotoPerfil || null,
         }));
-      }
-    });
 
-    this.horariosDisponibles = diasMap;
-  }
+      console.log('Especialidades cargadas:', this.especialidades);
 
-  generarIntervalosDeMediaHora(desde: string, hasta: string): { desde: string; hasta: string }[] {
-    const intervalos: { desde: string; hasta: string }[] = [];
-    let [horas, minutos] = desde.split(':').map(Number);
-    const [horasFin, minutosFin] = hasta.split(':').map(Number);
-
-    while (horas < horasFin || (horas === horasFin && minutos < minutosFin)) {
-      const inicio = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      minutos += 30;
-      if (minutos === 60) {
-        minutos = 0;
-        horas++;
-      }
-      const fin = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      if (horas < horasFin || (horas === horasFin && minutos <= minutosFin)) {
-        intervalos.push({ desde: inicio, hasta: fin });
-      }
+    } catch (error) {
+      console.error('Error al cargar las especialidades:', error);
     }
-
-    return intervalos;
   }
 
   seleccionarEspecialidad(especialidad: any) {
-    this.router.navigate(['/solicitarTurno', this.especialistaSeleccionado.id, especialidad.id]);
+    console.log('Especialidad seleccionada:', especialidad);
+    this.selectEspecialidad.emit(especialidad); // Emit the selected speciality
   }
 }

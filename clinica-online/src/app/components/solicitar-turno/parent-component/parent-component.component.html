@@ -1,0 +1,16 @@
+<app-mostrar-especialistas *ngIf="!selectedEspecialista" (selectEspecialista)="onEspecialistaSelected($event)">
+</app-mostrar-especialistas>
+
+<app-mostrar-especialidades
+  *ngIf="selectedEspecialista && showEspecialidades"
+  [especialista]="selectedEspecialista"
+  (selectEspecialidad)="onEspecialidadSelected($event)"
+>
+</app-mostrar-especialidades>
+
+<app-generar-turno
+  *ngIf="selectedEspecialidad"
+  [especialista]="selectedEspecialista"
+  [especialidad]="selectedEspecialidad"
+>
+</app-generar-turno>

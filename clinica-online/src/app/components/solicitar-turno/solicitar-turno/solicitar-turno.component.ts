@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
@@ -13,29 +12,24 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class SolicitarTurnoComponent implements OnInit {
-  especialista: any;
-  especialidad: any;
+  @Input() especialista: any; // Received from parent
+  @Input() especialidad: any; // Received from parent
+
   usuarioLogueado: User | null = null;
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
-  diasDisponibles: { dia: string; fecha: string }[] = []; // Cambiado de string[] a objeto con día y fecha
+  diasDisponibles: { dia: string; fecha: string }[] = [];
   mostrandoProximaSemana = false;
 
-  constructor(
-    private firestoreService: FirestoreService,
-    private auth: Auth,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private firestoreService: FirestoreService, private auth: Auth) {}
 
   async ngOnInit() {
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
-        await this.cargarEspecialistaYEspecialidad();
         this.configurarDiasDisponibles();
         await this.cargarHorariosDisponibles();
       } else {
-        this.router.navigate(['/login']);
+        Swal.fire('Error', 'Debe iniciar sesión para continuar.', 'error');
       }
     });
   }
@@ -57,39 +51,21 @@ export class SolicitarTurnoComponent implements OnInit {
         dia,
         fecha: fecha.toISOString().split('T')[0],
       };
-    }).filter(diaData => diaData.dia !== 'Domingo');
-  }
-
-  async cargarEspecialistaYEspecialidad() {
-    const especialistaId = this.route.snapshot.paramMap.get('especialistaId');
-    const especialidadId = this.route.snapshot.paramMap.get('especialidadId');
-
-    if (!especialistaId || !especialidadId) {
-      Swal.fire('Error', 'Datos insuficientes para cargar los turnos.', 'error');
-      this.router.navigate(['/mostrarEspecialistas']);
-      return;
-    }
-
-    const especialistaDoc = await this.firestoreService.getDocument<any>(`especialista/${especialistaId}`);
-    this.especialista = especialistaDoc.exists() ? especialistaDoc.data() : null;
-
-    const especialidadDoc = await this.firestoreService.getDocument<any>(`especialidades/${especialidadId}`);
-    this.especialidad = especialidadDoc.exists() ? especialidadDoc.data() : null;
-
-    if (!this.especialista || !this.especialidad) {
-      Swal.fire('Error', 'Especialista o especialidad no encontrada.', 'error');
-      this.router.navigate(['/mostrarEspecialistas']);
-    }
+    }).filter((diaData) => diaData.dia !== 'Domingo');
   }
 
   async cargarHorariosDisponibles() {
+    if (!this.especialista || !this.especialidad) {
+      Swal.fire('Error', 'Datos insuficientes para cargar los horarios.', 'error');
+      return;
+    }
+
     const horariosEspecialidad = this.especialista.horarios;
-    const especialidadSeleccionada = this.route.snapshot.paramMap.get('especialidadId');
 
     const turnosAsignados = await this.firestoreService.getCollection('turnos', {
       where: [
-        { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
-        { field: 'uidEspecialidad', op: '==', value: especialidadSeleccionada },
+        { field: 'uidEspecialista', op: '==', value: this.especialista.id },
+        { field: 'uidEspecialidad', op: '==', value: this.especialidad.id },
       ],
     });
 
@@ -107,7 +83,7 @@ export class SolicitarTurnoComponent implements OnInit {
 
     this.diasDisponibles.forEach(({ dia, fecha }) => {
       const horario = horariosEspecialidad[dia];
-      if (horario && horario.especialidad.includes(especialidadSeleccionada)) {
+      if (horario && horario.especialidad.includes(this.especialidad.id)) {
         const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
 
         const turnosConEstado = turnos.map((turno) => ({
@@ -131,8 +107,8 @@ export class SolicitarTurnoComponent implements OnInit {
     }
 
     const nuevoTurno = {
-      uidEspecialista: this.route.snapshot.paramMap.get('especialistaId'),
-      uidEspecialidad: this.route.snapshot.paramMap.get('especialidadId'),
+      uidEspecialista: this.especialista.id,
+      uidEspecialidad: this.especialidad.id,
       uidPaciente: this.usuarioLogueado.uid,
       dia,
       desde,
@@ -140,7 +116,7 @@ export class SolicitarTurnoComponent implements OnInit {
       fecha,
       estado: 'pendiente',
       creadoEn: new Date(),
-      comentario: ""
+      comentario: '',
     };
 
     try {

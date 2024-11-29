@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output} from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-mostrar-especialistas',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class MostrarEspecialistasComponent implements OnInit {
   especialistas: any[] = [];
+  @Output() selectEspecialista = new EventEmitter<any>();
 
   constructor(private firestoreService: FirestoreService, private router: Router) {}
 
@@ -26,8 +28,12 @@ export class MostrarEspecialistasComponent implements OnInit {
       console.error('Error al cargar los especialistas:', error);
     }
   }
+
   seleccionarEspecialista(especialista: any) {
-    this.router.navigate(['/mostrarEspecialidades', especialista.id]);
+    console.log('Especialista seleccionado:', especialista);
+    this.selectEspecialista.emit(especialista);
   }
+  
+
   
 }
