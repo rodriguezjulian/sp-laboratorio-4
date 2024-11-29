@@ -17,7 +17,7 @@ export class SolicitarTurnoComponent implements OnInit {
   especialidad: any;
   usuarioLogueado: User | null = null;
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
-  diasDisponibles: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  diasDisponibles: string[] = []; // Se reordenarán dinámicamente
   turnoSeleccionado: { dia: string; desde: string; hasta: string } | null = null;
 
   constructor(
@@ -32,12 +32,22 @@ export class SolicitarTurnoComponent implements OnInit {
       if (user) {
         this.usuarioLogueado = user;
         await this.cargarEspecialistaYEspecialidad();
+        this.configurarDiasDisponibles(); // Reordenar los días disponibles
         this.cargarHorariosDisponibles();
       } else {
-  
         this.router.navigate(['/login']);
       }
     });
+  }
+
+  configurarDiasDisponibles() {
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const hoy = new Date();
+    const diaActual = hoy.toLocaleDateString('es-ES', { weekday: 'long' });
+    const indiceActual = dias.findIndex(dia => dia.toLowerCase() === diaActual.toLowerCase());
+
+    // Reordenar los días para que comiencen desde el día actual
+    this.diasDisponibles = [...dias.slice(indiceActual), ...dias.slice(0, indiceActual)];
   }
 
   async cargarEspecialistaYEspecialidad() {
