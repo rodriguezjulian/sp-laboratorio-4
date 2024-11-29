@@ -31,9 +31,7 @@ export class TurnosAsignadosComponent implements OnInit {
         await this.cargarEspecialidades();
         this.configurarDiasDisponibles();
         await this.cargarTurnosAsignados();
-      } else {
-        Swal.fire('Error', 'Debe iniciar sesión para ver los turnos asignados.', 'error');
-      }
+      } 
     });
   }
 
