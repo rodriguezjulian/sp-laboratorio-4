@@ -44,21 +44,25 @@ export class SolicitarTurnoComponent implements OnInit {
   configurarDiasDisponibles() {
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const hoy = new Date();
-    const diaActual = hoy.getDay(); // Obtiene el índice del día actual (0 = Domingo, 6 = Sábado)
+    const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; // Convertir índice 0 (domingo) a 6 (sábado)
+  
+    // Determinar el inicio de la semana actual o la próxima semana
     const inicioSemana = this.mostrandoProximaSemana
-      ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActual + 1))) // Inicio de la próxima semana
-      : new Date(hoy.setDate(hoy.getDate() - diaActual + 1)); // Inicio de la semana actual
-
-    this.diasDisponibles = dias.map((dia, index) => {
+      ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex))) // Próxima semana
+      : new Date(hoy.setDate(hoy.getDate())); // Desde hoy (semana actual)
+  
+    // Generar los días y fechas correspondientes
+    this.diasDisponibles = Array.from({ length: 7 }, (_, index) => {
       const fecha = new Date(inicioSemana);
       fecha.setDate(inicioSemana.getDate() + index);
+      const dia = dias[(diaActualIndex + index) % dias.length]; // Ciclar los días desde el día actual
       return {
         dia,
-        fecha: fecha.toISOString().split('T')[0], // Guardar la fecha como YYYY-MM-DD
+        fecha: fecha.toISOString().split('T')[0], // Formato YYYY-MM-DD
       };
     });
   }
-
+  
   async cargarEspecialistaYEspecialidad() {
     const especialistaId = this.route.snapshot.paramMap.get('especialistaId');
     const especialidadId = this.route.snapshot.paramMap.get('especialidadId');
