@@ -82,48 +82,63 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   async cargarHorariosDisponibles() {
-  const horariosEspecialidad = this.especialista.horarios;
-
-  // Obtén los turnos asignados desde la base de datos
-  const turnosAsignados = await this.firestoreService.getCollection('turnos', {
-    where: [
-      { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
-      { field: 'uidEspecialidad', op: '==', value: this.route.snapshot.paramMap.get('especialidadId') },
-    ],
-  });
-
-  // Crear un mapa de turnos asignados por día y fecha
-  const turnosAsignadosPorDia: { [key: string]: { desde: string; hasta: string }[] } = {};
-  turnosAsignados.forEach((asignado: any) => {
-    const claveDiaFecha = `${asignado.dia}_${asignado.fecha}`;
-    if (!turnosAsignadosPorDia[claveDiaFecha]) {
-      turnosAsignadosPorDia[claveDiaFecha] = [];
+    const horariosEspecialidad = this.especialista.horarios;
+  
+    // Validar que la especialidad seleccionada esté en el array de especialidades del especialista
+    const especialidadSeleccionada = this.route.snapshot.paramMap.get('especialidadId');
+    if (!this.especialista.especialidad.includes(especialidadSeleccionada)) {
+      Swal.fire(
+        'Error',
+        'La especialidad seleccionada no corresponde a este especialista.',
+        'error'
+      );
+      return;
     }
-    turnosAsignadosPorDia[claveDiaFecha].push({
-      desde: asignado.desde,
-      hasta: asignado.hasta,
+  
+    // Obtén los turnos asignados desde la base de datos
+    const turnosAsignados = await this.firestoreService.getCollection('turnos', {
+      where: [
+        { field: 'uidEspecialista', op: '==', value: this.route.snapshot.paramMap.get('especialistaId') },
+        { field: 'uidEspecialidad', op: '==', value: especialidadSeleccionada },
+      ],
     });
-  });
-
-  // Generar horarios disponibles basados en los horarios del especialista y los turnos ocupados
-  this.diasDisponibles.forEach(({ dia, fecha }) => {
-    const horario = horariosEspecialidad[dia];
-    if (horario) {
-      const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-
-      // Marca como ocupado si coincide con un turno asignado
-      const turnosConEstado = turnos.map((turno) => ({
-        ...turno,
-        estado: !turnosAsignadosPorDia[`${dia}_${fecha}`]?.some(
-          (asignado) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
-        ),
-      }));
-
-      // Almacena los turnos disponibles por día
-      this.horariosDisponibles[dia] = turnosConEstado;
-    }
-  });
-}
+  
+    // Crear un mapa de turnos asignados por día y fecha
+    const turnosAsignadosPorDia: { [key: string]: { desde: string; hasta: string }[] } = {};
+    turnosAsignados.forEach((asignado: any) => {
+      const claveDiaFecha = `${asignado.dia}_${asignado.fecha}`;
+      if (!turnosAsignadosPorDia[claveDiaFecha]) {
+        turnosAsignadosPorDia[claveDiaFecha] = [];
+      }
+      turnosAsignadosPorDia[claveDiaFecha].push({
+        desde: asignado.desde,
+        hasta: asignado.hasta,
+      });
+    });
+  
+    // Generar horarios disponibles basados en los horarios del especialista y los turnos ocupados
+    this.diasDisponibles.forEach(({ dia, fecha }) => {
+      const horario = horariosEspecialidad[dia];
+      if (horario && horario.especialidad.includes(especialidadSeleccionada)) {
+        const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
+  
+        // Marca como ocupado si coincide con un turno asignado
+        const turnosConEstado = turnos.map((turno) => ({
+          ...turno,
+          estado: !turnosAsignadosPorDia[`${dia}_${fecha}`]?.some(
+            (asignado) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
+          ),
+        }));
+  
+        // Almacena los turnos disponibles por día
+        this.horariosDisponibles[dia] = turnosConEstado;
+      } else {
+        // Si no hay horarios o no corresponden a la especialidad seleccionada, limpiamos los datos
+        this.horariosDisponibles[dia] = [];
+      }
+    });
+  }
+  
 async confirmarTurno() {
   if (!this.turnoSeleccionado || !this.usuarioLogueado) {
     Swal.fire('Error', 'Debe seleccionar un turno para confirmar.', 'error');
