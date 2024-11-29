@@ -2,7 +2,6 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-
     margin: 0;
     padding: 0;
     background: linear-gradient(45deg, #ffd700, #e48080);
@@ -10,7 +9,64 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
-
-  .fondotabla{
+  
+  .fondotabla {
     background-color: white;
+    margin: 0 15%; /* Márgenes laterales */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para la tabla */
   }
+  
+  .table-mis-horarios {
+    width: 100%;
+    border-collapse: collapse; /* Evita espacios entre bordes */
+    background-color: #fff;
+  }
+  
+  .table-mis-horarios th,
+  .table-mis-horarios td {
+    padding: 12px 15px; /* Espaciado interno en celdas */
+    border-bottom: 1px solid #ddd; /* Línea separadora */
+    text-align: center; /* Centrado del contenido */
+  }
+  
+  .table-mis-horarios tr:last-child td {
+    border-bottom: none; /* Elimina la línea del último turno */
+  }
+  
+  .table-mis-horarios th {
+    background-color: #f4f4f4; /* Color de fondo del encabezado */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    font-weight: bold;
+  }
+  
+  .table-mis-horarios tbody tr:hover {
+    background-color: #f9f9f9; /* Efecto hover */
+  }
+  
+  .h2-turnos-clinica {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #333;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+  }
+  
+  #input-buscar-esp {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 10px;
+    font-size: 1rem;
+    width: 30%;
+    transition: box-shadow 0.3s;
+  }
+  
+  #input-buscar-esp:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra al enfocarse */
+  }
+  
