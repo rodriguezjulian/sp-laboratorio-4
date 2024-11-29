@@ -2,6 +2,21 @@
     <div class="container">
       <h2 class="text-center mt-4">Turnos Asignados</h2>
   
+      <!-- Selector de especialidades -->
+      <div class="text-center mb-3" *ngIf="especialidades.length > 1">
+        <label for="especialidad">Filtrar por especialidad:</label>
+        <select
+          id="especialidad"
+          class="form-select d-inline-block w-auto"
+          [value]="especialidadSeleccionada"
+          (change)="cambiarEspecialidad($event)"
+        >
+          <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">
+            {{ especialidad.descripcion }}
+          </option>
+        </select>
+      </div>
+  
       <!-- Botones para cambiar de semana -->
       <div class="text-center mb-3">
         <button class="btn btn-secondary" (click)="cambiarSemana(false)">Semana Actual</button>

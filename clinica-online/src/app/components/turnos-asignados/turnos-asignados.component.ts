@@ -4,6 +4,7 @@ import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-turnos-asignados',
   templateUrl: './turnos-asignados.component.html',
@@ -14,9 +15,12 @@ import { CommonModule } from '@angular/common';
 export class TurnosAsignadosComponent implements OnInit {
   usuarioLogueado: User | null = null;
   turnosAsignados: any[] = []; // Lista de turnos asignados
-  diasDisponibles: { dia: string; fecha: string; turnos: any[] }[] = []; // Días con sus turnos
+  diasDisponibles: any [] = []; // Días con sus turnos
   mostrandoProximaSemana = false; // Controla si se muestra la próxima semana
   diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+  especialidades: any[] = []; // Lista de especialidades del especialista
+  especialidadSeleccionada: string | null = null; // Especialidad seleccionada para filtrar
 
   constructor(private firestoreService: FirestoreService, private auth: Auth) {}
 
@@ -24,12 +28,47 @@ export class TurnosAsignadosComponent implements OnInit {
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
+        await this.cargarEspecialidades();
         this.configurarDiasDisponibles();
         await this.cargarTurnosAsignados();
       } else {
         Swal.fire('Error', 'Debe iniciar sesión para ver los turnos asignados.', 'error');
       }
     });
+  }
+
+  async cargarEspecialidades() {
+    if (!this.usuarioLogueado) {
+      return;
+    }
+
+    try {
+      const especialistaDoc = await this.firestoreService.getDocument<any>(
+        `especialista/${this.usuarioLogueado.uid}`
+      );
+
+      const especialista = especialistaDoc.exists() ? especialistaDoc.data() : null;
+
+      if (especialista?.especialidad) {
+        // Obtén todas las especialidades disponibles
+        const especialidadesSnapshot = await this.firestoreService.getCollection('especialidades');
+        const todasEspecialidades = especialidadesSnapshot.map((doc: any) => ({
+          id: doc.id,
+          ...doc,
+        }));
+
+        this.especialidades = todasEspecialidades.filter((especialidad) =>
+          especialista.especialidad.includes(especialidad.id)
+        );
+
+        if (this.especialidades.length > 0) {
+          this.especialidadSeleccionada = this.especialidades[0].id; // Selecciona la primera especialidad por defecto
+        }
+        console.log("carga especia ", this.especialidades);
+      }
+    } catch (error) {
+      console.error('Error al cargar especialidades:', error);
+    }
   }
 
   configurarDiasDisponibles() {
@@ -58,7 +97,12 @@ export class TurnosAsignadosComponent implements OnInit {
     try {
       // Consultar los turnos asignados al especialista
       const turnosSnapshot = await this.firestoreService.getCollection('turnos', {
-        where: [{ field: 'uidEspecialista', op: '==', value: this.usuarioLogueado.uid }],
+        where: [
+          { field: 'uidEspecialista', op: '==', value: this.usuarioLogueado.uid },
+          ...(this.especialidadSeleccionada
+            ? [{ field: 'uidEspecialidad', op: '==', value: this.especialidadSeleccionada }]
+            : []),
+        ],
       });
 
       const turnos = turnosSnapshot.map((doc: any) => doc);
@@ -73,7 +117,7 @@ export class TurnosAsignadosComponent implements OnInit {
       });
 
       // Filtrar turnos según los días disponibles (semana actual o próxima)
-      this.diasDisponibles.forEach((dia) => {
+      this.diasDisponibles.forEach((dia : any) => {
         dia.turnos = turnosAgrupados[dia.fecha] || [];
       });
     } catch (error) {
@@ -82,13 +126,28 @@ export class TurnosAsignadosComponent implements OnInit {
     }
   }
 
-  cambiarSemana(proxima: boolean) {
-    this.mostrandoProximaSemana = proxima; // Cambia entre semana actual y próxima semana
-    this.configurarDiasDisponibles(); // Reconfigura los días basados en la semana seleccionada
-    this.cargarTurnosAsignados(); // Recarga los turnos para los días configurados
-  }
+  cambiarEspecialidad(especialidadId: Event) {
 
-  tieneTurnosAsignados(): boolean {
-    return this.diasDisponibles.some((dia) => dia.turnos.length > 0);
+    const selectedValue = (especialidadId.target as HTMLSelectElement).value;
+    console.log("acAAAAAAAAAAa " , especialidadId);
+    if (!selectedValue) {
+      console.warn('Especialidad no seleccionada.');
+      return;
+    }
+    this.cargarTurnosAsignados(); // Recarga los turnos filtrados por especialidad
   }
+  
+  cambiarSemana(proxima: boolean) {
+    this.mostrandoProximaSemana = proxima; // Cambia entre semana actual y próxima
+    this.configurarDiasDisponibles(); // Reconfigura los días de la semana
+    this.cargarTurnosAsignados(); // Recarga los turnos asignados
+  }
+  
+  tieneTurnosAsignados(): boolean {
+    return this.diasDisponibles.some((dia : any) => dia.turnos.length > 0);
+  }
+  
+  
+
+
 }
