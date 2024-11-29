@@ -18,7 +18,7 @@ export class SolicitarTurnoComponent implements OnInit {
   usuarioLogueado: User | null = null;
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
   diasDisponibles: string[] = []; // Se reordenarán dinámicamente
-  turnoSeleccionado: { dia: string; desde: string; hasta: string } | null = null;
+  turnoSeleccionado: { dia: string; desde: string; hasta: string; fecha: string } | null = null;
 
   constructor(
     private firestoreService: FirestoreService,
@@ -44,7 +44,7 @@ export class SolicitarTurnoComponent implements OnInit {
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const hoy = new Date();
     const diaActual = hoy.toLocaleDateString('es-ES', { weekday: 'long' });
-    const indiceActual = dias.findIndex(dia => dia.toLowerCase() === diaActual.toLowerCase());
+    const indiceActual = dias.findIndex((dia) => dia.toLowerCase() === diaActual.toLowerCase());
 
     // Reordenar los días para que comiencen desde el día actual
     this.diasDisponibles = [...dias.slice(indiceActual), ...dias.slice(0, indiceActual)];
@@ -129,8 +129,19 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   seleccionarTurno(dia: string, desde: string, hasta: string) {
-    this.turnoSeleccionado = { dia, desde, hasta };
-    Swal.fire('Turno Seleccionado', `Día: ${dia}, Horario: ${desde} - ${hasta}`, 'info');
+    const hoy = new Date();
+    const diaIndex = this.diasDisponibles.indexOf(dia);
+    const fechaTurno = new Date(hoy);
+    fechaTurno.setDate(hoy.getDate() + diaIndex);
+
+    this.turnoSeleccionado = {
+      dia,
+      desde,
+      hasta,
+      fecha: fechaTurno.toISOString().split('T')[0], // Formato YYYY-MM-DD
+    };
+
+    Swal.fire('Turno Seleccionado', `Día: ${dia}, Fecha: ${this.turnoSeleccionado.fecha}, Horario: ${desde} - ${hasta}`, 'info');
   }
 
   async confirmarTurno() {
