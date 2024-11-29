@@ -55,5 +55,9 @@ export const routes: Routes = [
   {
     path: 'solicitar-turno',
     loadComponent: () => import('./components/solicitar-turno/parent-component/parent-component.component').then((m) => m.ParentComponent),
+  } ,
+  {
+    path: 'crear-turno',
+    loadComponent: () => import('./components/solicitar-turno/lista-usuarios/lista-usuarios.component').then((m) => m.ListaUsuariosComponent),
   } 
 ];

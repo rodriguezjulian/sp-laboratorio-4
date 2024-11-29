@@ -50,6 +50,10 @@ export class NavbarComponent implements OnInit {
   turnos() {
     this.router.navigate(['/turnos']);
   }
+  crearTurno() {
+    this.router.navigate(['/crear-turno']);
+  }
+  
   
   turnosAsignados() {
     this.router.navigate(['/turnosAsignados']);
