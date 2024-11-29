@@ -79,6 +79,7 @@ export class RegistroEspecialistaComponent implements OnInit {
           document.body.classList.remove('swal2-height-auto');   
         }
       });
+      this.registroForm.reset('nuevaEspecialidad');
     }
   }
   executeRecaptchaVisible(token:any){
