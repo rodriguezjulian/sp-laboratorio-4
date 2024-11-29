@@ -147,6 +147,47 @@ cambiarEspecialidad(especialidadId: string) {
   tieneTurnosAsignados(): boolean {
     return this.diasDisponibles.some((dia : any) => dia.turnos.length > 0);
   }
+  abrirModal(accion: string, turno: any) {
+    Swal.fire({
+      title: `${accion} Turno`,
+      input: 'textarea',
+      inputLabel: `Escribe un comentario para ${accion.toLowerCase()} el turno`,
+      inputPlaceholder: 'Escribe tu comentario aquí...',
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const comentario = result.value.trim();
+        if (accion === 'Cancelar') {
+          this.actualizarEstadoTurno(turno, 'Cancelado', comentario);
+        } else if (accion === 'Rechazar') {
+          this.actualizarEstadoTurno(turno, 'Rechazado', comentario);
+        } else if (accion === 'Finalizar') {
+          this.actualizarEstadoTurno(turno, 'Realizado', comentario);
+        }
+      }
+    });
+  }
+  
+  async actualizarEstadoTurno(turno: any, nuevoEstado: string, comentario: string = '') {
+    try {
+      const actualizado = {
+        ...turno,
+        estado: nuevoEstado,
+        comentario: comentario || turno.comentario,
+      };
+      console.log("todo bien.", actualizado);
+      await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
+      console.log("despues del update.");
+      
+      Swal.fire('Éxito', `El turno fue ${nuevoEstado.toLowerCase()} exitosamente.`, 'success');
+      this.cargarTurnosAsignados(); // Recargar los turnos
+    } catch (error) {
+      console.error(`Error al ${nuevoEstado.toLowerCase()} el turno:`, error);
+      Swal.fire('Error', `No se pudo ${nuevoEstado.toLowerCase()} el turno. Intenta de nuevo.`, 'error');
+    }
+  }
   
   
 

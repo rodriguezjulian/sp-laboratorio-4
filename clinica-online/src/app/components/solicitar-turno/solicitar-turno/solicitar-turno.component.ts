@@ -156,6 +156,7 @@ async confirmarTurno() {
     ...this.turnoSeleccionado,
     estado: 'pendiente',
     creadoEn: new Date(),
+    comentario : ""
   };
 
   try {
