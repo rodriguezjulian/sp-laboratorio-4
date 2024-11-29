@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class MostrarEspecialidadesComponent implements OnInit {
-  @Input() especialista: any; // Receive the selected specialist from the parent
+  @Input() especialista: any;
   @Output() selectEspecialidad = new EventEmitter<any>();
 
   especialidades: any[] = [];

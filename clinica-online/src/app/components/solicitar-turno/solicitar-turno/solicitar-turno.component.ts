@@ -12,8 +12,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class SolicitarTurnoComponent implements OnInit {
-  @Input() especialista: any; // Received from parent
-  @Input() especialidad: any; // Received from parent
+  @Input() especialista: any;
+  @Input() especialidad: any;
+  @Input() paciente: any;
 
   usuarioLogueado: User | null = null;
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
@@ -28,8 +29,6 @@ export class SolicitarTurnoComponent implements OnInit {
         this.usuarioLogueado = user;
         this.configurarDiasDisponibles();
         await this.cargarHorariosDisponibles();
-      } else {
-        Swal.fire('Error', 'Debe iniciar sesión para continuar.', 'error');
       }
     });
   }
@@ -105,11 +104,11 @@ export class SolicitarTurnoComponent implements OnInit {
       Swal.fire('Error', 'Debe iniciar sesión para reservar un turno.', 'error');
       return;
     }
-
+    console.log("xd ", this.usuarioLogueado.uid);
     const nuevoTurno = {
       uidEspecialista: this.especialista.id,
       uidEspecialidad: this.especialidad.id,
-      uidPaciente: this.usuarioLogueado.uid,
+      uidPaciente: this.paciente?.id ?? this.usuarioLogueado.uid,
       dia,
       desde,
       hasta,

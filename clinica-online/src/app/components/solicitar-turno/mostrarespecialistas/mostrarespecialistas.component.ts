@@ -1,4 +1,4 @@
-import { Component, OnInit, Output} from '@angular/core';
+import { Component, OnInit, Output,Input} from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
