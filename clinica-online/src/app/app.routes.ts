@@ -49,8 +49,11 @@ export const routes: Routes = [
   {
     path: 'turnosAsignados',
     loadComponent: () => import('./components/turnos-asignados/turnos-asignados.component').then((m) => m.TurnosAsignadosComponent),
-  }  
-
+  }, 
+  {
+    path: 'turnos',
+    loadComponent: () => import('./components/turnos/turnos.component').then((m) => m.TurnosComponent),
+  } 
 
 
   

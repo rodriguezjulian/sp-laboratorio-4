@@ -1,0 +1,46 @@
+<div class="container-fluid cont-primary fondo">
+    <h2 class="h2-turnos-clinica">Turnos de la clínica</h2>
+    <div class="row d-flex justify-content-center align-items-center row-input mb-2">
+      <input
+        type="text"
+        placeholder="Buscar especialista o especialidad"
+        [(ngModel)]="BuscarEspecialistaEspecialidad"
+        id="input-buscar-esp"
+        class="mb-2"
+        style="width: 30%;"
+      />
+    </div>
+    <div class="row d-flex justify-content-center align-items-start row-table fondotabla">
+      <table class="table-mis-horarios">
+        <thead>
+          <tr>
+            <th>Especialista</th>
+            <th>Paciente</th>
+            <th>Día</th>
+            <th>Especialidad</th>
+            <th>Horario</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let turno of turnos | buscarEspecialistaEspecialidad: BuscarEspecialistaEspecialidad">
+            <td>{{ turno.especialista.nombre }} {{ turno.especialista.apellido }}</td>
+            <td>{{ turno.paciente.nombre }} {{ turno.paciente.apellido }}</td>
+            <td>{{ turno.dia }}</td>
+
+
+            <td>{{ turno.especialidad | titlecase }}</td>
+            <td>{{ turno.desde }}</td>
+            <td [EstadoTurnoColor]="turno.estado">{{ turno.estado | titlecase }}</td>
+            <td>
+              <button *ngIf="turno.estado === 'pendiente'" (click)="CancelarTurno(turno)" class="btn btn-danger btn-sm">
+                Cancelar Turno
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
