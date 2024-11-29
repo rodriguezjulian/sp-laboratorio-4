@@ -64,6 +64,15 @@
                   Ver Reseña
                 </button>
 
+                <!-- Ver Diagnóstico -->
+                <button
+                  *ngIf="turno.estado === 'Realizado' && turno.comentario?.length > 0"
+                  class="btn btn-success btn-sm"
+                  (click)="verDiagnostico(turno)"
+                >
+                  Diagnóstico
+                </button>
+
                 <!-- Acciones si el turno no está cancelado ni rechazado -->
                 <ng-container *ngIf="turno.estado !== 'Cancelado' && turno.estado !== 'Rechazado'">
                   <!-- Finalizar turno si ya está aceptado -->
@@ -76,7 +85,7 @@
                   </button>
 
                   <!-- Acciones para otros estados -->
-                  <ng-container *ngIf="turno.estado !== 'Aceptado'">
+                  <ng-container *ngIf="turno.estado !== 'Aceptado' && turno.estado !== 'Realizado'">
                     <!-- Cancelar turno -->
                     <button
                       *ngIf="turno.estado !== 'Realizado'"

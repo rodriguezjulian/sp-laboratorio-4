@@ -151,6 +151,14 @@ cambiarEspecialidad(especialidadId: string) {
       confirmButtonText: 'Cerrar',
     });
   }
+  verDiagnostico(turno: any) {
+    Swal.fire({
+      title: 'Diagnóstico',
+      text: turno.comentario,
+      icon: 'info',
+      confirmButtonText: 'Cerrar'
+    });
+  }
   
   tieneTurnosAsignados(): boolean {
     return this.diasDisponibles.some((dia : any) => dia.turnos.length > 0);
