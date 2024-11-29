@@ -55,41 +55,49 @@
           <td>
             <ul>
               <li *ngFor="let turno of diaData.turnos">
-                <!-- Cancelar turno -->
-                <button
-                  *ngIf="turno.estado !== 'Aceptado' && turno.estado !== 'Realizado' && turno.estado !== 'Rechazado'"
-                  class="btn btn-danger btn-sm"
-                  (click)="abrirModal('Cancelar', turno)"
-                >
-                  Cancelar
-                </button>
-                <!-- Rechazar turno -->
-                <button
-                  *ngIf="turno.estado !== 'Aceptado' && turno.estado !== 'Realizado' && turno.estado !== 'Cancelado'"
-                  class="btn btn-warning btn-sm mx-1"
-                  (click)="abrirModal('Rechazar', turno)"
-                >
-                  Rechazar
-                </button>
-                <!-- Aceptar turno -->
-                <button
-                  *ngIf="turno.estado !== 'Realizado' && turno.estado !== 'Cancelado' && turno.estado !== 'Rechazado'"
-                  class="btn btn-success btn-sm"
-                  (click)="actualizarEstadoTurno(turno, 'Aceptado')"
-                >
-                  Aceptar
-                </button>
-                <!-- Finalizar turno -->
-                <button
-                  *ngIf="turno.estado === 'Aceptado'"
-                  class="btn btn-primary btn-sm mx-1"
-                  (click)="abrirModal('Finalizar', turno)"
-                >
-                  Finalizar
-                </button>
+                <!-- Mostrar solo texto si el turno está cancelado o rechazado -->
+                <span *ngIf="turno.estado === 'Cancelado' || turno.estado === 'Rechazado'" class="text-muted">
+                  {{ turno.estado }}
+                </span>
+                <!-- Acciones si el turno no está cancelado ni rechazado -->
+                <ng-container *ngIf="turno.estado !== 'Cancelado' && turno.estado !== 'Rechazado'">
+                  <!-- Cancelar turno -->
+                  <button
+                    *ngIf="turno.estado !== 'Aceptado' && turno.estado !== 'Realizado'"
+                    class="btn btn-danger btn-sm"
+                    (click)="abrirModal('Cancelar', turno)"
+                  >
+                    Cancelar
+                  </button>
+                  <!-- Rechazar turno -->
+                  <button
+                    *ngIf="turno.estado !== 'Aceptado' && turno.estado !== 'Realizado'"
+                    class="btn btn-warning btn-sm mx-1"
+                    (click)="abrirModal('Rechazar', turno)"
+                  >
+                    Rechazar
+                  </button>
+                  <!-- Aceptar turno -->
+                  <button
+                    *ngIf="turno.estado !== 'Realizado'"
+                    class="btn btn-success btn-sm"
+                    (click)="actualizarEstadoTurno(turno, 'Aceptado')"
+                  >
+                    Aceptar
+                  </button>
+                  <!-- Finalizar turno -->
+                  <button
+                    *ngIf="turno.estado === 'Aceptado'"
+                    class="btn btn-primary btn-sm mx-1"
+                    (click)="abrirModal('Finalizar', turno)"
+                  >
+                    Finalizar
+                  </button>
+                </ng-container>
               </li>
             </ul>
           </td>
+          
         </tr>
 
         <!-- Mostrar mensaje si no hay turnos -->
