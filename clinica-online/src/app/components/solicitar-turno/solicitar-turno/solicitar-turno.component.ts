@@ -46,13 +46,13 @@ export class SolicitarTurnoComponent implements OnInit {
     const hoy = new Date();
     const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; // Convertir índice 0 (domingo) a 6 (sábado)
     
-    // Determinar el inicio de los 6 días a mostrar (semana actual o próxima semana)
+    // Determinar el inicio de los días a mostrar (semana actual o próxima semana)
     const inicioDias = this.mostrandoProximaSemana
       ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex))) // Próxima semana
       : new Date(hoy); // Desde hoy (semana actual)
   
-    // Generar los próximos 6 días con sus nombres y fechas correspondientes
-    this.diasDisponibles = Array.from({ length: 6 }, (_, index) => {
+    // Generar días y fechas, excluyendo los domingos
+    this.diasDisponibles = Array.from({ length: 7 }, (_, index) => {
       const fecha = new Date(inicioDias);
       fecha.setDate(inicioDias.getDate() + index); // Incrementar los días desde el inicio
       const dia = dias[(diaActualIndex + index) % dias.length]; // Ciclar los días de la semana
@@ -60,9 +60,8 @@ export class SolicitarTurnoComponent implements OnInit {
         dia,
         fecha: fecha.toISOString().split('T')[0], // Formato YYYY-MM-DD
       };
-    });
+    }).filter(diaData => diaData.dia !== 'Domingo'); // Excluir los domingos
   }
-  
   
   async cargarEspecialistaYEspecialidad() {
     const especialistaId = this.route.snapshot.paramMap.get('especialistaId');
