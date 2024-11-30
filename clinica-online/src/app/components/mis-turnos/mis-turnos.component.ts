@@ -6,15 +6,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from '../login/login.component';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
+import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialista-especialidad.pipe';
+
 @Component({
   selector: 'app-mis-turnos',
   templateUrl: './mis-turnos.component.html',
   styleUrls: ['./mis-turnos.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,EstadoTurnoColorDirective],
+  imports: [CommonModule, FormsModule,EstadoTurnoColorDirective,BuscarEspecialistaEspecialidadPipe],
 })
 export class MisTurnosComponent implements OnInit {
   usuarioLogueado: User | null = null;
+  BuscarEspecialistaEspecialidad: string = ''; // Input de búsqueda
   turnos: any[] = [];
   especialidadFiltro: string = '';
   especialistaFiltro: string = '';

@@ -19,3 +19,12 @@
     max-width: 500px;
   }
   
+  #input-buscar-esp {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 10px;
+    font-size: 1rem;
+    width: 30%;
+    transition: box-shadow 0.3s;
+  }
