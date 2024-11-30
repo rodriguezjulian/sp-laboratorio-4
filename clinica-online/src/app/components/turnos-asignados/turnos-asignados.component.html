@@ -66,7 +66,7 @@
 
                 <!-- Ver Diagnóstico -->
                 <button
-                  *ngIf="turno.estado === 'Realizado' && turno.comentario?.length > 0"
+                  *ngIf="turno.estado === 'Realizado'"
                   class="btn btn-success btn-sm"
                   (click)="verDiagnostico(turno)"
                 >

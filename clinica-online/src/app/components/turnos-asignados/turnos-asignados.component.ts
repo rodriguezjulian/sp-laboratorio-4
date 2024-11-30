@@ -154,7 +154,7 @@ cambiarEspecialidad(especialidadId: string) {
   verDiagnostico(turno: any) {
     Swal.fire({
       title: 'Diagnóstico',
-      text: turno.comentario,
+      text: turno.diagonostico,
       icon: 'info',
       confirmButtonText: 'Cerrar'
     });
@@ -188,11 +188,24 @@ cambiarEspecialidad(especialidadId: string) {
   
   async actualizarEstadoTurno(turno: any, nuevoEstado: string, comentario: string = '') {
     try {
-      const actualizado = {
-        ...turno,
-        estado: nuevoEstado,
-        comentario: comentario || turno.comentario,
-      };
+      let actualizado : any;
+      if(nuevoEstado == "Realizado")
+      {
+         actualizado = {
+          ...turno,
+          estado: nuevoEstado,
+          diagonostico: comentario,
+        };
+      }
+      else
+      {
+         actualizado = {
+          ...turno,
+          estado: nuevoEstado,
+          comentario:comentario || turno.comentario,
+        };
+      }
+
       console.log("todo bien.", actualizado);
       await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
       console.log("despues del update.");
@@ -204,8 +217,4 @@ cambiarEspecialidad(especialidadId: string) {
       Swal.fire('Error', `No se pudo ${nuevoEstado.toLowerCase()} el turno. Intenta de nuevo.`, 'error');
     }
   }
-  
-  
-
-
 }
