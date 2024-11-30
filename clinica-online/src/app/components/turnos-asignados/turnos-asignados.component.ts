@@ -252,7 +252,7 @@ export class TurnosAsignadosComponent implements OnInit {
             <input type="number" id="temperatura" class="form-control" />
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Presión (mmHg):</label>
+            <label class="form-label fw-bold">Presión arterial:</label>
             <input type="text" id="presion" class="form-control" />
           </div>
           <div id="datos-dinamicos-container">
@@ -266,6 +266,7 @@ export class TurnosAsignadosComponent implements OnInit {
         </div>
       `,
       showCancelButton: true,
+      cancelButtonText: 'Cancelar',
       confirmButtonText: 'Guardar',
       preConfirm: () => {
         altura = (document.getElementById('altura') as HTMLInputElement).value;
