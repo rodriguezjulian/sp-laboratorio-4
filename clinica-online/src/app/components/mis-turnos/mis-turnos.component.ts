@@ -53,13 +53,11 @@ export class MisTurnosComponent implements OnInit {
       // Mapear los turnos y recolectar datos adicionales
       this.turnos = await Promise.all(
         turnosSnapshot.map(async (doc: any) => {
-          // Obtener datos del especialista
           const especialistaDoc = await this.firestoreService.getDocument<any>(
             `especialista/${doc.uidEspecialista}`
           );
           const especialistaData = especialistaDoc.exists() ? especialistaDoc.data() : { nombre: 'Desconocido', apellido: '' };
   
-          // Obtener datos de la especialidad
           const especialidadDoc = await this.firestoreService.getDocument<any>(
             `especialidades/${doc.uidEspecialidad}`
           );
@@ -69,6 +67,7 @@ export class MisTurnosComponent implements OnInit {
             ...doc,
             especialista: especialistaData,
             especialidad: especialidadData.descripcion,
+            comentario: doc.comentario || '', // Asegurar que siempre haya un campo comentario
           };
         })
       );
@@ -78,7 +77,6 @@ export class MisTurnosComponent implements OnInit {
       console.error('Error al cargar los turnos:', error);
     }
   }
-  
 
   aplicarFiltros(): any[] {
     return this.turnos.filter((turno) => {
@@ -107,7 +105,7 @@ export class MisTurnosComponent implements OnInit {
         
         const comentario = result.value.trim();
         console.log("comentarioss ", comentario)
-        await this.actualizarEstadoTurno(turno, 'Cancelado', comentario);
+        await this.actualizarEstadoTurno(turno, 'Realizado', comentario);
       }
     });
   }
@@ -134,8 +132,9 @@ export class MisTurnosComponent implements OnInit {
       confirmButtonText: 'Enviar Encuesta',
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
-        const comentario = result.value.trim();
-        await this.actualizarEstadoTurno(turno, 'realizado', comentario);
+        const encuesta = result.value.trim();
+        const actualizado = { ...turno, estado: "Realizado", encuesta };
+        await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
       }
     });
   }
