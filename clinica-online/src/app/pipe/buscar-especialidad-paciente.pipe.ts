@@ -9,8 +9,7 @@ export class BuscarPacienteEspecialidadPipe implements PipeTransform {
     if (!buscar) return turnos;
     const lowerBuscar = buscar.toLowerCase();
     return turnos.filter((turno) =>
-      turno.paciente.nombre.toLowerCase().includes(lowerBuscar) ||
-      turno.paciente.apellido.toLowerCase().includes(lowerBuscar) ||
+      turno.nombre.toLowerCase().includes(lowerBuscar) ||
       turno.especialidad.toLowerCase().includes(lowerBuscar)
     );
   }
