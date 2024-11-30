@@ -116,7 +116,8 @@ export class SolicitarTurnoComponent implements OnInit {
       estado: 'pendiente',
       creadoEn: new Date(),
       comentario: '',
-      encuesta: ''
+      encuesta: '',
+      calificacion: ""
     };
 
     try {

@@ -122,6 +122,8 @@ export class MisTurnosComponent implements OnInit {
     }
   }
 
+
+
   completarEncuesta(turno: any) {
     Swal.fire({
       title: 'Completar Encuesta',
@@ -134,6 +136,24 @@ export class MisTurnosComponent implements OnInit {
       if (result.isConfirmed && result.value) {
         const encuesta = result.value.trim();
         const actualizado = { ...turno, estado: "Realizado", encuesta };
+        await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
+        await this.cargarTurnos();
+      }
+    });
+  }
+
+  completarCalificacion(turno: any) {
+    Swal.fire({
+      title: 'Completar Calificacion',
+      input: 'textarea',
+      inputLabel: 'Déjanos tu calificacion sobre el especialista:',
+      inputPlaceholder: 'Escribe aquí...',
+      showCancelButton: true,
+      confirmButtonText: 'Enviar Calificacion',
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value) {
+        const calificacion = result.value.trim();
+        const actualizado = { ...turno, estado: "Realizado", calificacion };
         await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
         await this.cargarTurnos();
       }

@@ -41,6 +41,15 @@
               Cancelar
             </button>
 
+
+
+
+
+
+
+
+
+
             @if(turno.estado.trim() === "Realizado")
             {
               @if(turno.encuesta === "")
@@ -49,22 +58,38 @@
                 class="btn btn-primary btn-sm"
                 (click)="completarEncuesta(turno)"
               >
+                Encuesta
+              </button>
+              }@else
+              {
+                <button
+                class="btn btn-secondary btn-sm"
+                disabled
+              >
+                Encuesta completada
+              </button>
+              }
+            }
+            @if(turno.estado.trim() === "Realizado")
+            {
+              @if(turno.calificacion === "")
+              {
+                <button
+                class="btn btn-primary btn-sm mx-2"
+                (click)="completarCalificacion(turno)"
+              >
                 Calificar
               </button>
               }@else
               {
-                <label for="">Calificado</label>
+                <button
+                class="btn btn-secondary btn-sm mx-2"
+                disabled
+              >
+                Calificado
+              </button>
               }
             }
-            <!-- Completar Encuesta -->
-            <button
-              *ngIf="turno.estado === 'Realizado' && turno.comentario"
-              class="btn btn-success btn-sm mx-1"
-              (click)="completarEncuesta(turno)"
-            >
-              Completar Encuesta
-            </button>
-
             <!-- Ver Reseña -->
             <button 
               *ngIf="turno.comentario && (turno.estado === 'Realizado' || turno.estado === 'Cancelado' || turno.estado === 'Rechazado')"
