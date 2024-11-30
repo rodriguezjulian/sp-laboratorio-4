@@ -227,4 +227,114 @@ export class TurnosAsignadosComponent implements OnInit {
       Swal.fire('Error', `No se pudo ${nuevoEstado.toLowerCase()} el turno. Intenta de nuevo.`, 'error');
     }
   }
+
+  abrirHistoriaClinica(turno: any) {
+    let altura = '';
+    let peso = '';
+    let temperatura = '';
+    let presion = '';
+    const datosDinamicos: { clave: string; valor: string }[] = [];
+  
+    Swal.fire({
+      title: 'Historia Clínica',
+      html: `
+        <div class="container">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Altura (cm):</label>
+            <input type="number" id="altura" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Peso (kg):</label>
+            <input type="number" id="peso" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Temperatura (°C):</label>
+            <input type="number" id="temperatura" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Presión (mmHg):</label>
+            <input type="text" id="presion" class="form-control" />
+          </div>
+          <div id="datos-dinamicos-container">
+            <label class="form-label fw-bold">Datos Dinámicos (máximo 3):</label>
+            <div class="input-group mb-2">
+              <input type="text" placeholder="Clave" class="form-control clave-dinamico" />
+              <input type="text" placeholder="Valor" class="form-control valor-dinamico" />
+            </div>
+          </div>
+          <button id="add-dynamic" class="btn btn-primary btn-sm w-100 mb-3">Agregar Dato Dinámico</button>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      preConfirm: () => {
+        altura = (document.getElementById('altura') as HTMLInputElement).value;
+        peso = (document.getElementById('peso') as HTMLInputElement).value;
+        temperatura = (document.getElementById('temperatura') as HTMLInputElement).value;
+        presion = (document.getElementById('presion') as HTMLInputElement).value;
+  
+        const claves = Array.from(document.querySelectorAll('.clave-dinamico')).map(
+          (input: any) => input.value.trim()
+        );
+        const valores = Array.from(document.querySelectorAll('.valor-dinamico')).map(
+          (input: any) => input.value.trim()
+        );
+  
+        claves.forEach((clave, index) => {
+          if (clave && valores[index]) {
+            datosDinamicos.push({ clave, valor: valores[index] });
+          }
+        });
+  
+        // Validaciones
+        if (!altura || !peso || !temperatura || !presion) {
+          Swal.showValidationMessage('Por favor completa todos los campos obligatorios.');
+          return;
+        }
+  
+        if (claves.length > 3 || valores.length > 3) {
+          Swal.showValidationMessage('Solo puedes agregar hasta 3 datos dinámicos.');
+          return;
+        }
+  
+        if (claves.some((clave, index) => (clave && !valores[index]) || (!clave && valores[index]))) {
+          Swal.showValidationMessage('Cada clave debe tener un valor correspondiente.');
+          return;
+        }
+  
+        return { altura, peso, temperatura, presion, datosDinamicos };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const historiaClinica = result.value;
+        turno.historiaClinica = historiaClinica;
+  
+        // Guardar en la base de datos
+        this.firestoreService.updateDocument(`turnos/${turno.id}`, { historiaClinica }).then(() => {
+          Swal.fire('Guardado', 'Historia clínica guardada con éxito.', 'success');
+        });
+      }
+    });
+  
+    // Controlar el límite de datos dinámicos
+    document.getElementById('add-dynamic')?.addEventListener('click', () => {
+      const container = document.getElementById('datos-dinamicos-container');
+      const count = container?.querySelectorAll('.clave-dinamico').length || 0;
+  
+      if (count >= 3) {
+        Swal.fire('Límite alcanzado', 'Solo puedes agregar hasta 3 datos dinámicos.', 'error');
+        return;
+      }
+  
+      const newInputGroup = document.createElement('div');
+      newInputGroup.className = 'input-group mb-2';
+      newInputGroup.innerHTML = `
+        <input type="text" placeholder="Clave" class="form-control clave-dinamico" />
+        <input type="text" placeholder="Valor" class="form-control valor-dinamico" />
+      `;
+      container?.appendChild(newInputGroup);
+    });
+  }
+  
+  
 }
