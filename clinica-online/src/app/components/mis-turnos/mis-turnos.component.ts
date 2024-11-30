@@ -105,7 +105,7 @@ export class MisTurnosComponent implements OnInit {
         
         const comentario = result.value.trim();
         console.log("comentarioss ", comentario)
-        await this.actualizarEstadoTurno(turno, 'Realizado', comentario);
+        await this.actualizarEstadoTurno(turno, 'Cancelado', comentario);
       }
     });
   }

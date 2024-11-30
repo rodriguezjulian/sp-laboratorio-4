@@ -41,15 +41,21 @@
               Cancelar
             </button>
 
-            <!-- Calificar Atención -->
-            <button
-              *ngIf="turno.estado === 'Realizado'"
-              class="btn btn-primary btn-sm"
-              (click)="completarEncuesta  (turno)"
-            >
-              Calificar
-            </button>
-
+            @if(turno.estado.trim() === "Realizado")
+            {
+              @if(turno.encuesta === "")
+              {
+                <button
+                class="btn btn-primary btn-sm"
+                (click)="completarEncuesta(turno)"
+              >
+                Calificar
+              </button>
+              }@else
+              {
+                <label for="">Calificado</label>
+              }
+            }
             <!-- Completar Encuesta -->
             <button
               *ngIf="turno.estado === 'Realizado' && turno.comentario"
