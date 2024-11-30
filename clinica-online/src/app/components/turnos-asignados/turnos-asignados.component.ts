@@ -4,18 +4,24 @@ import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
+import { BuscarPacienteEspecialidadPipe } from '../../pipe/buscar-especialidad-paciente.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-turnos-asignados',
   templateUrl: './turnos-asignados.component.html',
   styleUrls: ['./turnos-asignados.component.scss'],
   standalone: true,
-  imports: [CommonModule,EstadoTurnoColorDirective],
+  imports: [CommonModule,EstadoTurnoColorDirective,BuscarPacienteEspecialidadPipe,FormsModule],
 })
 export class TurnosAsignadosComponent implements OnInit {
   usuarioLogueado: User | null = null;
+  buscar: string = '';
+  turnos: any[] = []; // Lista de turno
   turnosAsignados: any[] = []; // Lista de turnos asignados
+  BuscarEspecialistaEspecialidad: string = ''; // Input de búsqueda
   diasDisponibles: any [] = []; // Días con sus turnos
+
   mostrandoProximaSemana = false; // Controla si se muestra la próxima semana
   diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 

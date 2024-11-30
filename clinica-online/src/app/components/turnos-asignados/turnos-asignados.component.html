@@ -2,19 +2,13 @@
   <div class="container">
     <h2 class="text-center mt-4">Turnos Asignados</h2>
 
-    <!-- Lista de especialidades -->
-    <div class="text-center mb-3" *ngIf="especialidades.length > 1">
-      <p><strong>Especialidades:</strong></p>
-      <div class="btn-group">
-        <button
-          class="btn btn-outline-primary"
-          *ngFor="let especialidad of especialidades"
-          [class.active]="especialidadSeleccionada === especialidad.id"
-          (click)="cambiarEspecialidad(especialidad.id)"
-        >
-          {{ especialidad.descripcion }}
-        </button>
-      </div>
+    <div class="row d-flex justify-content-center align-items-center row-input mb-2">
+      <input
+      type="text"
+      placeholder="Buscar paciente o especialidad"
+      [(ngModel)]="buscar"
+      class="form-control"
+    />
     </div>
 
     <!-- Botones para cambiar de semana -->
@@ -35,7 +29,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let diaData of diasDisponibles">
+        <tr *ngFor="let diaData of diasDisponibles | buscarPacienteEspecialidad: buscar">
+       
           <td>{{ diaData.dia }}</td>
           <td>{{ diaData.fecha }}</td>
           <td>
