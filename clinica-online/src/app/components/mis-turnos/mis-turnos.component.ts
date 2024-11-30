@@ -20,6 +20,11 @@ export class MisTurnosComponent implements OnInit {
   BuscarEspecialistaEspecialidad: string = ''; // Input de búsqueda
   turnos: any[] = [];
   especialidadFiltro: string = '';
+  calificacion: number = 0; // Estrellas
+  comentario: string = ''; // Cuadro de texto
+  opinion: string = ''; // Radio button
+  preferencia: string[] = []; // Checkboxes
+  satisfaccion: number = 50; // Control de rango
   especialistaFiltro: string = '';
   estadosTurnos: { [key: string]: string } = {
     pendiente: 'Pendiente',
@@ -124,7 +129,7 @@ export class MisTurnosComponent implements OnInit {
 
 
 
-  completarEncuesta(turno: any) {
+  /*completarEncuesta(turno: any) {
     Swal.fire({
       title: 'Completar Encuesta',
       input: 'textarea',
@@ -140,7 +145,7 @@ export class MisTurnosComponent implements OnInit {
         await this.cargarTurnos();
       }
     });
-  }
+  }*/
 
   completarCalificacion(turno: any) {
     Swal.fire({
@@ -184,4 +189,75 @@ export class MisTurnosComponent implements OnInit {
       }
     });
   }
+  completarEncuesta(turno: any) {
+    Swal.fire({
+      title: 'Encuesta de Satisfacción',
+      html: `
+        <div class="container">
+          <div class="mb-3">
+            <label class="form-label fw-bold">¿Nos recomendarías?</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="opinion" value="Si" id="opinionSi">
+              <label class="form-check-label" for="opinionSi">Sí</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="opinion" value="No" id="opinionNo">
+              <label class="form-check-label" for="opinionNo">No</label>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold">Satisfacción (1-10):</label>
+            <input type="range" min="1" max="10" value="5" id="satisfaccionRange" class="form-range">
+            <span id="satisfaccionValue" class="badge bg-primary">5</span>
+          </div>
+  
+          <div class="mb-3">
+            <label class="form-label fw-bold">Estrellas (0-5):</label>
+            <input type="number" min="0" max="5" id="calificacionInput" class="form-control">
+          </div>
+  
+          <div class="mb-3">
+            <label class="form-label fw-bold">Comentario:</label>
+            <textarea id="comentarioInput" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Enviar',
+      preConfirm: () => {
+        const opinion = (document.querySelector('input[name="opinion"]:checked') as HTMLInputElement)?.value || '';
+        const preferencia = Array.from(
+          document.querySelectorAll('input[type="checkbox"]:checked')
+        ).map((checkbox: any) => checkbox.value);
+        const satisfaccion = (document.getElementById('satisfaccionRange') as HTMLInputElement)?.value;
+        const calificacion = (document.getElementById('calificacionInput') as HTMLInputElement)?.value;
+        const comentario = (document.getElementById('comentarioInput') as HTMLTextAreaElement)?.value;
+  
+        const datos = {
+          opinion,
+          preferencia,
+          satisfaccion: Number(satisfaccion),
+          calificacion: Number(calificacion),
+          comentario,
+        };
+  
+        if (!opinion || !calificacion) {
+          Swal.showValidationMessage('Por favor completa todos los campos obligatorios.');
+          return;
+        }
+  
+        console.log('Datos de la encuesta:', datos);
+        return datos;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        turno.encuesta = result.value;
+        this.firestoreService.updateDocument(`turnos/${turno.id}`, { encuesta: result.value });
+        Swal.fire('¡Gracias!', 'Encuesta enviada con éxito', 'success');
+      }
+    });
+  }
+  
+  
 }
