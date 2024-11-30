@@ -102,14 +102,23 @@ export class TurnosAsignadosComponent implements OnInit {
       // Consultar los turnos asignados al especialista
       const turnosSnapshot = await this.firestoreService.getCollection('turnos', {
         where: [
-          { field: 'uidEspecialista', op: '==', value: this.usuarioLogueado.uid },
-          ...(this.especialidadSeleccionada
-            ? [{ field: 'uidEspecialidad', op: '==', value: this.especialidadSeleccionada }]
-            : []),
+          { field: 'uidEspecialista', op: '==', value: this.usuarioLogueado.uid }, 
         ],
       });
 
       const turnos = turnosSnapshot.map((doc: any) => doc);
+      //aca tengo que traerme a los pacientes, me traigo a todos, y arranco a filtar
+      const pacientes = await this.firestoreService.getPacientes();
+      turnos.forEach(turno => {
+        pacientes.forEach(paciente => {
+          if(turno.uidPaciente == paciente.id)
+          {
+            turno.nombre = paciente.nombre + " " +  paciente.apellido;
+          }
+        });
+      });
+
+      console.log("a ver como quedan asi los turnos :", turnos)
 
       // Agrupar turnos por fecha para simplificar el HTML
       const turnosAgrupados: { [fecha: string]: any[] } = {};
@@ -120,28 +129,22 @@ export class TurnosAsignadosComponent implements OnInit {
         turnosAgrupados[turno.fecha].push(turno);
       });
 
+
+
+
       // Filtrar turnos según los días disponibles (semana actual o próxima)
       this.diasDisponibles.forEach((dia : any) => {
         dia.turnos = turnosAgrupados[dia.fecha] || [];
       });
+      turnos.forEach(turno => {
+        console.log("nombres :", turno.nombre )
+      });
+      
     } catch (error) {
       console.error('Error al cargar turnos asignados:', error);
       Swal.fire('Error', 'Hubo un problema al cargar los turnos asignados.', 'error');
     }
   }//: string | null = null;
-
-
-cambiarEspecialidad(especialidadId: string) {
-  if (!especialidadId) {
-    console.warn('Especialidad no seleccionada.');
-    return;
-  }
-
-  this.especialidadSeleccionada = especialidadId;
-  console.log('Especialidad seleccionada:', this.especialidadSeleccionada);
-
-  this.cargarTurnosAsignados(); // Recarga los turnos filtrados por especialidad
-}
 
   
   cambiarSemana(proxima: boolean) {

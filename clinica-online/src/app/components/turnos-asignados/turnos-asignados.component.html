@@ -21,6 +21,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>Paciente</th>
           <th>Día</th>
           <th>Fecha</th>
           <th>Horarios</th>
@@ -30,7 +31,13 @@
       </thead>
       <tbody>
         <tr *ngFor="let diaData of diasDisponibles | buscarPacienteEspecialidad: buscar">
-       
+          <td>
+            <ul>
+              <li *ngFor="let turno of diaData.turnos">
+                <td >{{ turno.nombre }} </td>
+              </li>
+            </ul>
+          </td>
           <td>{{ diaData.dia }}</td>
           <td>{{ diaData.fecha }}</td>
           <td>
@@ -114,7 +121,7 @@
 
         <!-- Mostrar mensaje si no hay turnos -->
         <tr *ngIf="!tieneTurnosAsignados()">
-          <td colspan="5" class="text-center">No hay turnos asignados para esta semana.</td>
+          <td colspan="6" class="text-center">No hay turnos asignados para esta semana.</td>
         </tr>
       </tbody>
     </table>
