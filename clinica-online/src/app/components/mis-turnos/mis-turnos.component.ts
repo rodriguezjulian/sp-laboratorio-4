@@ -135,6 +135,7 @@ export class MisTurnosComponent implements OnInit {
         const encuesta = result.value.trim();
         const actualizado = { ...turno, estado: "Realizado", encuesta };
         await this.firestoreService.updateDocument(`turnos/${turno.id}`, actualizado);
+        await this.cargarTurnos();
       }
     });
   }
