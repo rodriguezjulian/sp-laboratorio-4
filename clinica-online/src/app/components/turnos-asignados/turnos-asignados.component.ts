@@ -3,14 +3,14 @@ import { FirestoreService } from '../../servicios/firestore.service';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-
+import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 
 @Component({
   selector: 'app-turnos-asignados',
   templateUrl: './turnos-asignados.component.html',
   styleUrls: ['./turnos-asignados.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,EstadoTurnoColorDirective],
 })
 export class TurnosAsignadosComponent implements OnInit {
   usuarioLogueado: User | null = null;

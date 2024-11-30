@@ -48,7 +48,7 @@
           <td>
             <ul>
               <li *ngFor="let turno of diaData.turnos">
-                {{ turno.estado }}
+                <td [EstadoTurnoColor]="turno.estado">{{ turno.estado | titlecase }}</td>
               </li>
             </ul>
           </td>
