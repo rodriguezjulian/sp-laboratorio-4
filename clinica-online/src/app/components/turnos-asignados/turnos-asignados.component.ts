@@ -109,12 +109,20 @@ export class TurnosAsignadosComponent implements OnInit {
       const turnos = turnosSnapshot.map((doc: any) => doc);
       //aca tengo que traerme a los pacientes, me traigo a todos, y arranco a filtar
       const pacientes = await this.firestoreService.getPacientes();
+      const especialidades = await this.firestoreService.getEspecialidades();
       turnos.forEach(turno => {
         pacientes.forEach(paciente => {
           if(turno.uidPaciente == paciente.id)
           {
             turno.nombre = paciente.nombre + " " +  paciente.apellido;
           }
+        });
+
+        especialidades.forEach(especialidad => {
+          if(turno.uidEspecialidad == especialidad.id)
+            {
+              turno.especialidad = especialidad.descripcion;
+            }
         });
       });
 
@@ -128,16 +136,9 @@ export class TurnosAsignadosComponent implements OnInit {
         }
         turnosAgrupados[turno.fecha].push(turno);
       });
-
-
-
-
       // Filtrar turnos según los días disponibles (semana actual o próxima)
       this.diasDisponibles.forEach((dia : any) => {
         dia.turnos = turnosAgrupados[dia.fecha] || [];
-      });
-      turnos.forEach(turno => {
-        console.log("nombres :", turno.nombre )
       });
       
     } catch (error) {

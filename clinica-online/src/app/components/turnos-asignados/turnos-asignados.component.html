@@ -22,6 +22,7 @@
       <thead>
         <tr>
           <th>Paciente</th>
+          <th>Especialidad</th>
           <th>Día</th>
           <th>Fecha</th>
           <th>Horarios</th>
@@ -35,6 +36,13 @@
             <ul>
               <li *ngFor="let turno of diaData.turnos">
                 <td >{{ turno.nombre }} </td>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let turno of diaData.turnos">
+                <td >{{ turno.especialidad }} </td>
               </li>
             </ul>
           </td>
