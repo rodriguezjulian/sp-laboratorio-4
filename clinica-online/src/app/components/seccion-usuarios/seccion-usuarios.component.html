@@ -9,70 +9,49 @@
 
     <!-- Listado de Pacientes -->
     <h3 class="text-center mt-5"><strong>PACIENTES</strong></h3>
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let paciente of pacientes">
-        <div class="card h-100">
-          <img [src]="paciente.urlFotoPerfil" class="card-img-top" alt="Foto del paciente" />
-          <div class="card-body">
-            <h5 class="card-title">{{ paciente.nombre }} {{ paciente.apellido }}</h5>
-            <p class="card-text">
-              <strong>Edad:</strong> {{ paciente.edad }} <br />
-              <strong>Correo:</strong> {{ paciente.correo }}
-            </p>
-          </div>
-        </div>
+    <div class="row text-center">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let paciente of pacientes">
+        <button class="btn-usuario" style="border: none;">
+          <img
+            [src]="paciente.urlFotoPerfil"
+            class="rounded-circle img-fluid"
+            alt="Foto del paciente"
+          />
+          <p class="mt-2">{{ paciente.nombre }} {{ paciente.apellido }}</p>
+        </button>
       </div>
     </div>
 
     <!-- Listado de Especialistas -->
-    <h3 class="text-center mt-5"><strong>ESPECIALISTAS</strong> </h3>
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let especialista of especialistas">
-        <div
-          class="card h-100"
-          [ngClass]="especialista.habilitado ? 'habilitado' : 'deshabilitado'"
-        >
-          <img [src]="especialista.urlFotoPerfil" class="card-img-top" alt="Foto del especialista" />
-          <div class="card-body">
-            <h5 class="card-title">{{ especialista.nombre }} {{ especialista.apellido }}</h5>
-            <p class="card-text">
-              <strong>Edad:</strong> {{ especialista.edad }} <br />
-              <strong>Correo:</strong> {{ especialista.correo }}
-            </p>
-            <p>
-              <strong>Estado: </strong>
-              <span
-                class="badge"
-                [ngClass]="especialista.habilitado ? 'bg-success' : 'bg-danger'"
-                (click)="toggleHabilitado(especialista)"
-                style="cursor: pointer;"
-              >
-                {{ especialista.habilitado ? 'Habilitado' : 'Deshabilitado' }}
-              </span>
-            </p>
-          </div>
-        </div>
+    <h3 class="text-center mt-5"><strong>ESPECIALISTAS</strong></h3>
+    <div class="row text-center">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let especialista of especialistas">
+        <button class="btn-usuario" style="border: none;">
+          <img
+            [src]="especialista.urlFotoPerfil"
+            class="rounded-circle img-fluid"
+            alt="Foto del especialista"
+            [ngClass]="especialista.habilitado ? 'border-success' : 'border-danger'"
+            style="border: 3px solid;"
+            (click)="toggleHabilitado(especialista)"
+          />
+          <p class="mt-2">{{ especialista.nombre }} {{ especialista.apellido }}</p>
+        </button>
       </div>
     </div>
 
     <!-- Listado de Administradores -->
     <h3 class="text-center mt-5"><strong>ADMINISTRADORES</strong></h3>
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let administrador of administradores">
-        <div class="card h-100">
+    <div class="row text-center">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let administrador of administradores">
+        <button class="btn-usuario" style="border: none;">
           <img
             [src]="administrador.urlFotoPerfil"
-            class="card-img-top"
+            class="rounded-circle img-fluid"
             alt="Foto del administrador"
           />
-          <div class="card-body">
-            <h5 class="card-title">{{ administrador.nombre }} {{ administrador.apellido }}</h5>
-            <p class="card-text">
-              <strong>Edad:</strong> {{ administrador.edad }} <br />
-              <strong>Correo:</strong> {{ administrador.correo }}
-            </p>
-          </div>
-        </div>
+          <p class="mt-2">{{ administrador.nombre }} {{ administrador.apellido }}</p>
+        </button>
       </div>
     </div>
   </div>

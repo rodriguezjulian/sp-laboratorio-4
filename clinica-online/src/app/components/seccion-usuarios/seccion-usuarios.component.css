@@ -80,16 +80,43 @@
   }
   
   .habilitado {
-    border: 2px solid #28a745;
+    border: 8px solid #28a745;
   }
   
   .deshabilitado {
-    border: 2px solid #dc3545;
+    border: 8px solid #dc3545;
   }
+  
   
   .badge {
     padding: 5px 10px;
     font-size: 0.9rem;
     cursor: pointer;
+  }
+  .btn-usuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+  }
+  
+  .btn-usuario img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .btn-usuario p {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .border-success {
+    border-color: #28a745 !important;
+  }
+  
+  .border-danger {
+    border-color: #dc3545 !important;
   }
   
