@@ -1,11 +1,10 @@
-<section class="pacientes-seccion">
+<div class="fondo">
+  <section class="pacientes-seccion">
     <div class="container">
       <h2 class="text-center">Pacientes Atendidos</h2>
-  
-      <!-- Pacientes listados -->
       <div class="row">
         <div
-          class="col-12 col-sm-6 col-md-4 mb-4"
+          class="col-12 col-sm-6 col-md-6 mb-4"
           *ngFor="let paciente of pacientes"
         >
           <div class="card">
@@ -36,7 +35,6 @@
         </div>
       </div>
     </div>
-  
     <!-- Modal de historia clínica -->
     <app-ver-historia-clinica
       *ngIf="pacienteSeleccionado"
@@ -44,4 +42,4 @@
       (cerrarModal)="cerrarHistoriaClinica()"
     ></app-ver-historia-clinica>
   </section>
-  
+</div>
