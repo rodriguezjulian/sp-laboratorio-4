@@ -53,6 +53,19 @@ export class SolicitarTurnoComponent implements OnInit {
     });
   }
 
+ /* seleccionarDia(fecha: string): void {
+    // Si el día seleccionado es el mismo, se deselecciona
+    this.diaSeleccionado = this.diaSeleccionado === fecha ? null : fecha;
+  }*/
+  
+  
+    async seleccionarDia(fecha: string) {
+    await this.cargarHorariosDisponibles();
+    this.diaSeleccionado = fecha;
+    this.cargarHorariosDisponibles(); // Recargar horarios según el día seleccionado
+  }
+  
+  
   configurarDiasDisponibles() {
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const hoy = new Date();
@@ -120,10 +133,7 @@ export class SolicitarTurnoComponent implements OnInit {
       }
     });
   }
-  seleccionarDia(fecha: string) {
-    this.diaSeleccionado = fecha;
-    this.cargarHorariosDisponibles(); // Recargar horarios según el día seleccionado
-  }
+
   
 
   async confirmarTurno(dia: string, desde: string, hasta: string, fecha: string) {
