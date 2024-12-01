@@ -1,0 +1,37 @@
+<section class="pacientes-seccion">
+    <div class="container">
+      <h2 class="text-center">Pacientes Atendidos</h2>
+      <div class="row">
+        <div
+          class="col-12 col-sm-6 col-md-4 mb-4"
+          *ngFor="let paciente of pacientes"
+        >
+          <div class="card">
+            <img
+              [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'"
+              class="card-img-top"
+              alt="Foto del paciente"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ paciente.nombre }} {{ paciente.apellido }}</h5>
+              <p class="card-text">
+                <strong>Últimos turnos:</strong>
+                <ul>
+                  <li *ngFor="let turno of paciente.ultimosTurnos">
+                    {{ turno.fecha | date: 'shortDate' }} - {{ turno.desde }}
+                  </li>
+                </ul>
+              <button
+                class="btn btn-primary"
+                *ngIf="paciente.historiaClinica"
+                (click)="verHistoriaClinica(paciente)"
+              >
+                Ver Historia Clínica
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

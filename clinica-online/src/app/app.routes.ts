@@ -63,7 +63,9 @@ export const routes: Routes = [
   {
     path: 'mis-turnos',
     loadComponent: () => import('./components/mis-turnos/mis-turnos.component').then((m) => m.MisTurnosComponent),
+  },
+  {
+    path: 'pacientes-en-especialista',
+    loadComponent: () => import('./components/pacientes-para-especialistas/pacientes-para-especialistas.component').then((m) => m.PacientesParaEspecialistasComponent),
   } 
-
-  
 ];

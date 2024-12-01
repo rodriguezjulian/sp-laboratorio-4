@@ -74,8 +74,11 @@ export class NavbarComponent implements OnInit {
 
   iniciarSesion() {
     this.router.navigate(['/login']);
+  } 
+  redireccion(ruta : string)
+  {
+    this.router.navigate([ruta]);
   }
-
   cerrarSesion() {
     signOut(this.auth).then(() => {
       this.router.navigate(['/login']);
