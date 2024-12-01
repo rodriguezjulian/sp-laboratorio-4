@@ -149,12 +149,24 @@ export class TurnosAsignadosComponent implements OnInit {
 
       // Agrupar turnos por fecha para simplificar el HTML
       const turnosAgrupados: { [fecha: string]: any[] } = {};
+
+      // Agrupar los turnos por fecha
       turnos.forEach((turno: any) => {
-        if (!turnosAgrupados[turno.fecha]) {
-          turnosAgrupados[turno.fecha] = [];
-        }
-        turnosAgrupados[turno.fecha].push(turno);
+          if (!turnosAgrupados[turno.fecha]) {
+              turnosAgrupados[turno.fecha] = [];
+          }
+          turnosAgrupados[turno.fecha].push(turno);
       });
+      
+      // Ordenar los turnos dentro de cada grupo por horario
+      Object.keys(turnosAgrupados).forEach((fecha) => {
+          turnosAgrupados[fecha].sort((a: any, b: any) => {
+              const horaA = a.desde; // Asume formato HH:mm
+              const horaB = b.desde;
+              return horaA.localeCompare(horaB); // Orden ascendente por hora
+          });
+      });
+      
       // Filtrar turnos según los días disponibles (semana actual o próxima)
       this.diasDisponibles.forEach((dia : any) => {
         dia.turnos = turnosAgrupados[dia.fecha] || [];

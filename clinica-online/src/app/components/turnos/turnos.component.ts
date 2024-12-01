@@ -54,12 +54,21 @@ export class TurnosComponent implements OnInit {
           };
         })
       );
-      console.log("antes de ordenar por fecha ", this.turnos[0].fecha)
+
       this.turnos.sort((a: any, b: any) => {
+        // Ordenar por fecha
         const fechaA = new Date(a.fecha).getTime();
         const fechaB = new Date(b.fecha).getTime();
-        return fechaA - fechaB; // Orden ascendente
-      });
+        if (fechaA !== fechaB) {
+            return fechaA - fechaB; // Orden ascendente por fecha
+        }
+    
+        // Si las fechas son iguales, ordenar por hora
+        const horaA = a.desde; // Asume formato HH:mm
+        const horaB = b.desde;
+        return horaA.localeCompare(horaB); // Orden ascendente por hora
+    });
+    
   
       console.log('Turnos obtenidos: ', this.turnos);
     } catch (error) {
