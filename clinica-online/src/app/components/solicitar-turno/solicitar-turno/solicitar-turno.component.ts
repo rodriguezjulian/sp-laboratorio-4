@@ -52,13 +52,6 @@ export class SolicitarTurnoComponent implements OnInit {
       }
     });
   }
-
- /* seleccionarDia(fecha: string): void {
-    // Si el día seleccionado es el mismo, se deselecciona
-    this.diaSeleccionado = this.diaSeleccionado === fecha ? null : fecha;
-  }*/
-  
-  
     async seleccionarDia(fecha: string) {
       let aux = fecha;
       this.diaSeleccionado = null;
@@ -85,27 +78,28 @@ export class SolicitarTurnoComponent implements OnInit {
     const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1;
   
     const inicioDias = this.mostrandoProximaSemana
-      ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex)))
+      ? new Date(hoy.setDate(hoy.getDate() + (7)))
       : new Date(hoy);
   
-    // Filter the days the specialist attends the selected specialty
+    // Filtrar los días en los que el especialista atiende la especialidad seleccionada
     const diasEspecialista = Object.keys(this.especialista.horarios).filter((dia) =>
       this.especialista.horarios[dia].especialidad === this.especialidad.id
     );
   
-    // Generate the available days based on the filtered days
-    this.diasDisponibles = diasEspecialista.map((dia) => {
-      const index = dias.indexOf(dia); // Get the index of the day
-      const fecha = new Date(inicioDias);
-      fecha.setDate(fecha.getDate() + (index - diaActualIndex + 7) % 7); // Adjust the date based on the index
-      return {
-        dia,
-        fecha: fecha.toISOString().split('T')[0],
-      };
-    });
+    // Generar los días disponibles basados en el filtro y ordenar por fecha
+    this.diasDisponibles = diasEspecialista
+      .map((dia) => {
+        const index = dias.indexOf(dia); // Obtener el índice del día
+        const fecha = new Date(inicioDias);
+        fecha.setDate(fecha.getDate() + (index - diaActualIndex + 7) % 7); // Ajustar la fecha según el índice
+        return {
+          dia,
+          fecha: fecha.toISOString().split('T')[0], // Convertir a formato YYYY-MM-DD
+        };
+      })
+      .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()); // Ordenar por fecha
   }
   
-
   async cargarHorariosDisponibles() {
     if (!this.especialista || !this.especialidad) {
       Swal.fire('Error', 'Datos insuficientes para cargar los horarios.', 'error');
