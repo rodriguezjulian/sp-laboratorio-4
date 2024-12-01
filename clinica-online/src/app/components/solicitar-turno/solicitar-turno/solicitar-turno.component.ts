@@ -3,6 +3,7 @@ import { FirestoreService } from '../../../servicios/firestore.service';
 import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-generar-turno',
@@ -10,6 +11,24 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./solicitar-turno.component.scss'],
   standalone: true,
   imports: [CommonModule],
+  animations: [
+    trigger('flipIn', [
+      transition(':enter', [
+        style({ transform: 'rotateY(-90deg)', opacity: 0 }),
+        animate(
+          '1000ms ease-out',
+          style({ transform: 'rotateY(0)', opacity: 1 })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '800ms ease-in',
+          style({ transform: 'rotateY(90deg)', opacity: 0 })
+        )
+      ])
+    ])
+  ]
+  
 })
 export class SolicitarTurnoComponent implements OnInit {
   @Input() especialista: any;
@@ -20,6 +39,7 @@ export class SolicitarTurnoComponent implements OnInit {
   horariosDisponibles: { [key: string]: { desde: string; hasta: string; estado: boolean }[] } = {};
   diasDisponibles: { dia: string; fecha: string }[] = [];
   mostrandoProximaSemana = false;
+  diaSeleccionado: string | null = null;
 
   constructor(private firestoreService: FirestoreService, private auth: Auth) {}
 
@@ -58,16 +78,16 @@ export class SolicitarTurnoComponent implements OnInit {
       Swal.fire('Error', 'Datos insuficientes para cargar los horarios.', 'error');
       return;
     }
-
+  
     const horariosEspecialidad = this.especialista.horarios;
-
+  
     const turnosAsignados = await this.firestoreService.getCollection('turnos', {
       where: [
         { field: 'uidEspecialista', op: '==', value: this.especialista.id },
         { field: 'uidEspecialidad', op: '==', value: this.especialidad.id },
       ],
     });
-
+  
     const turnosAsignadosPorDia: { [key: string]: { desde: string; hasta: string }[] } = {};
     turnosAsignados.forEach((asignado: any) => {
       const claveDiaFecha = `${asignado.dia}_${asignado.fecha}`;
@@ -79,25 +99,32 @@ export class SolicitarTurnoComponent implements OnInit {
         hasta: asignado.hasta,
       });
     });
-
+  
     this.diasDisponibles.forEach(({ dia, fecha }) => {
-      const horario = horariosEspecialidad[dia];
-      if (horario && horario.especialidad.includes(this.especialidad.id)) {
-        const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
-
-        const turnosConEstado = turnos.map((turno) => ({
-          ...turno,
-          estado: !turnosAsignadosPorDia[`${dia}_${fecha}`]?.some(
-            (asignado) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
-          ),
-        }));
-
-        this.horariosDisponibles[dia] = turnosConEstado;
-      } else {
-        this.horariosDisponibles[dia] = [];
+      if (this.diaSeleccionado === fecha) { // Filtrar solo el día seleccionado
+        const horario = horariosEspecialidad[dia];
+        if (horario && horario.especialidad.includes(this.especialidad.id)) {
+          const turnos = this.generarIntervalosDeMediaHora(horario.desde, horario.hasta);
+  
+          const turnosConEstado = turnos.map((turno) => ({
+            ...turno,
+            estado: !turnosAsignadosPorDia[`${dia}_${fecha}`]?.some(
+              (asignado) => asignado.desde === turno.desde && asignado.hasta === turno.hasta
+            ),
+          }));
+  
+          this.horariosDisponibles[dia] = turnosConEstado;
+        } else {
+          this.horariosDisponibles[dia] = [];
+        }
       }
     });
   }
+  seleccionarDia(fecha: string) {
+    this.diaSeleccionado = fecha;
+    this.cargarHorariosDisponibles(); // Recargar horarios según el día seleccionado
+  }
+  
 
   async confirmarTurno(dia: string, desde: string, hasta: string, fecha: string) {
     if (!this.usuarioLogueado) {
