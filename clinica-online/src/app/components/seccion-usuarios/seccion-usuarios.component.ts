@@ -29,6 +29,7 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 export class SeccionUsuariosComponent {
   pacientes: any[] = [];
   especialistas: any[] = [];
+  turnos: any[] = []; 
   administradores: any[] = [];
   constructor(private router: Router,private firestoreService: FirestoreService) {}
 
@@ -49,6 +50,7 @@ export class SeccionUsuariosComponent {
   }
   ngOnInit(): void {
     this.loadUsers();
+    this.loadTurnos(); // Cargar los turnos desde la base de dato
   }
   async toggleHabilitado(especialista: any) {
     especialista.habilitado = !especialista.habilitado;
@@ -61,6 +63,69 @@ export class SeccionUsuariosComponent {
       console.error('Error al actualizar el estado:', error);
     }
   }
+  async loadTurnos() {
+    try {
+      this.turnos = await this.firestoreService.getCollection('turnos'); // Suponiendo que la colección se llama 'turnos'
+    } catch (error) {
+      console.error('Error al cargar los turnos:', error);
+    }
+  }
+
+  async descargarTurnosPaciente(paciente: any) {
+    // Filtrar los turnos del paciente seleccionado
+    const turnosDelPaciente = this.turnos.filter(
+      (turno) => turno.uidPaciente === paciente.id
+    );
+
+    if (turnosDelPaciente.length === 0) {
+      console.warn('No se encontraron turnos para este paciente.');
+      return;
+    }
+    /*console.log("por aca ",turnosDelPaciente.uidEspecialista);
+    return;*/
+
+    const especialidades = await this.firestoreService.getEspecialidades();
+    const especialistas = await this.firestoreService.getEspecialistas();
+
+    turnosDelPaciente.forEach(turno => {
+      let descripcionEspecialidad ;
+      let nombreEspecialista;
+      especialidades.forEach(especialidad => {
+        if(turno.uidEspecialidad == especialidad.id)
+        {
+          descripcionEspecialidad =  especialidad.descripcion;
+        }
+      });
+      especialistas.forEach(especialista => {
+        if(turno.uidEspecialista == especialista.id)
+          {
+            nombreEspecialista = `${especialista.nombre} ${especialista.apellido}`;
+          }
+      });
+      turno.especialidadNombre = descripcionEspecialidad;
+      turno.especialistaNombre = nombreEspecialista;
+
+    });
+
+    // Formatear los datos para el archivo Excel
+    const data = turnosDelPaciente.map((turno) => ({
+      Fecha: turno.fecha,
+      Hora: `${turno.desde} - ${turno.hasta}`,
+      Especialista: `${turno.especialistaNombre}`,
+      Especialidad: turno.especialidadNombre,
+      Estado: turno.estado,
+    }));
+
+    // Crear el archivo Excel
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'TurnosPaciente');
+    XLSX.writeFile(
+      wb,
+      `Turnos_${paciente.nombre}_${paciente.apellido}.xlsx`
+    );
+  }
+
   async loadUsers() {
     try {
       this.pacientes = await this.firestoreService.getPacientes();
