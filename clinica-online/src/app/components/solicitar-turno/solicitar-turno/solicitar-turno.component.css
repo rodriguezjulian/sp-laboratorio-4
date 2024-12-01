@@ -31,4 +31,8 @@
     background-color: #0056b3;
     font-weight: bold;
   }
+  .pointer
+  {
+    cursor: pointer;
+  }
   

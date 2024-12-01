@@ -10,8 +10,17 @@
 
     <!-- Botones para cambiar de semana -->
     <div class="text-center mb-3">
-      <button class="btn btn-secondary mx-2" (click)="cambiarSemana(false)">Semana Actual</button>
-      <button class="btn btn-secondary" (click)="cambiarSemana(true)">Próxima Semana</button>
+      @if(!mostrandoProximaSemana)
+      {
+        <button disabled class=" btn btn-primary  mx-2" (click)="cambiarSemana(false)">Semana Actual</button>
+        <button class="pointer btn btn-secondary" (click)="cambiarSemana(true)">Próxima Semana</button>
+      }
+      @else
+      {
+        <button class="pointer btn btn-secondary  mx-2" (click)="cambiarSemana(false)">Semana Actual</button>
+        <button  disabled class="btn btn-primary" (click)="cambiarSemana(true)">Próxima Semana</button>
+      }
+
     </div>
 
     <!-- Horarios por día -->
