@@ -19,12 +19,12 @@
       <div class="col-md-2" *ngFor="let diaData of diasDisponibles">
         <!-- Mostrar el día y la fecha -->
         <button
-  class="btn btn-dia"
-  [ngClass]="{ 'btn-selected': diaSeleccionado === diaData.fecha }"
-  (click)="seleccionarDia(diaData.fecha)"
->
-  {{ diaData.dia }} {{ diaData.fecha }}
-</button>
+      class="btn btn-dia"
+      [ngClass]="{ 'btn-selected': diaSeleccionado === diaData.fecha }"
+      (click)="seleccionarDia(diaData.fecha)"
+    >
+      {{ diaData.dia }} {{ diaData.fecha }}
+    </button>
 
         <ul class="list-unstyled">
           <li *ngFor="let turno of horariosDisponibles[diaData.dia] || []">

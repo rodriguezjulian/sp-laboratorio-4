@@ -48,7 +48,7 @@ export class SolicitarTurnoComponent implements OnInit {
       if (user) {
         this.usuarioLogueado = user;
         this.configurarDiasDisponibles();
-        await this.cargarHorariosDisponibles();
+        //await this.cargarHorariosDisponibles();
       }
     });
   }
@@ -60,9 +60,17 @@ export class SolicitarTurnoComponent implements OnInit {
   
   
     async seleccionarDia(fecha: string) {
+      let aux = fecha;
+      this.diaSeleccionado = null;
+
     await this.cargarHorariosDisponibles();
-    this.diaSeleccionado = fecha;
+    
     this.cargarHorariosDisponibles(); // Recargar horarios según el día seleccionado
+    this.diaSeleccionado = aux;
+    await this.cargarHorariosDisponibles();
+    
+    this.cargarHorariosDisponibles(); // Recargar horarios según el día seleccionado
+
   }
   
   
@@ -205,6 +213,8 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   cambiarSemana(proxima: boolean) {
+    this.diaSeleccionado = null;
+    this.horariosDisponibles = {};
     this.mostrandoProximaSemana = proxima;
     this.configurarDiasDisponibles();
     this.cargarHorariosDisponibles();
