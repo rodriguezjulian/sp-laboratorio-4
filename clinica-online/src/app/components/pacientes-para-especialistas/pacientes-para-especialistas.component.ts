@@ -32,13 +32,18 @@ export class PacientesParaEspecialistasComponent implements OnInit {
       });
 
       console.log("Como trajo los turnos ", turnos);
+      const todosPacientes = await this.firestoreService.getPacientes();
 
-      // Agrupar pacientes basados en los turnos realizados
       const pacientesMap: { [key: string]: any } = {};
       turnos.forEach((turno: any) => {
         if (!pacientesMap[turno.uidPaciente]) {
+          // Buscar los datos del paciente en todosPacientes
+          const pacienteData = todosPacientes.find(
+            (paciente: any) => paciente.id === turno.uidPaciente
+          );
+      
           pacientesMap[turno.uidPaciente] = {
-            ...turno.paciente,
+            ...pacienteData, // Agregar los datos encontrados del paciente
             ultimosTurnos: [],
             historiaClinica: turno.historiaClinica || null,
           };
@@ -48,6 +53,8 @@ export class PacientesParaEspecialistasComponent implements OnInit {
           desde: turno.desde,
         });
       });
+      
+      console.log("Pacientes map ", pacientesMap);
 
       // Convertir el mapa a una lista ordenada por último turno
       this.pacientes = Object.values(pacientesMap).map((paciente: any) => {
@@ -58,6 +65,7 @@ export class PacientesParaEspecialistasComponent implements OnInit {
           .slice(0, 3); // Mostrar solo los últimos tres turnos
         return paciente;
       });
+      
     } catch (error) {
       console.error('Error al cargar los pacientes:', error);
       Swal.fire('Error', 'No se pudieron cargar los pacientes.', 'error');

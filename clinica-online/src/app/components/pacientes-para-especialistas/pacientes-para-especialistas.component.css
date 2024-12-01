@@ -1,0 +1,8 @@
+.pacientes-seccion .card-img-top {
+    width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
+    height: 200px; /* Ajusta la altura fija */
+    object-fit: cover; /* Mantén la proporción de la imagen, recortando si es necesario */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: agrega sombra para un mejor diseño */
+  }
+  
