@@ -25,8 +25,8 @@
         <tbody>
           <tr *ngFor="let turno of turnos | buscarEspecialistaEspecialidad: BuscarEspecialistaEspecialidad">
             <td>{{ turno.especialista.nombre }} {{ turno.especialista.apellido }}</td>
-            <td>{{ turno.paciente.nombre }} {{ turno.paciente.apellido }}</td>
-            <td>{{ turno.dia | date:'dd/MM/yyyy' }}</td>
+            <td>{{ turno.paciente.nombre}} {{ turno.paciente.apellido }}</td>
+            <td>{{ turno.fecha }}</td>
             <td>{{ turno.especialidad | titlecase }}</td>
             <td>{{ turno.desde }}</td>
             <td [EstadoTurnoColor]="turno.estado"><strong>{{ turno.estado | titlecase }}</strong></td>

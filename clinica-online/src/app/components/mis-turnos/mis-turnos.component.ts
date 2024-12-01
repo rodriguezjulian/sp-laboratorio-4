@@ -99,6 +99,12 @@ export class MisTurnosComponent implements OnInit {
           };
         })
       );
+      console.log("antes de ordenar por fecha ", this.turnos[0].fecha)
+      this.turnos.sort((a: any, b: any) => {
+        const fechaA = new Date(a.fecha).getTime();
+        const fechaB = new Date(b.fecha).getTime();
+        return fechaA - fechaB; // Orden ascendente
+      });
   
       console.log('Turnos obtenidos: ', this.turnos);
     } catch (error) {

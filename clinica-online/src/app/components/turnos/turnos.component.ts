@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialista-especialidad.pipe';
 import { FormsModule } from '@angular/forms';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
+import { getDownloadURL } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-turnos',
@@ -26,6 +27,49 @@ export class TurnosComponent implements OnInit {
   async cargarTurnos() {
     try {
       const turnosSnapshot = await this.firestoreService.getCollection('turnos');
+  
+      // Mapear los turnos y recolectar datos adicionales
+      this.turnos = await Promise.all(
+        turnosSnapshot.map(async (doc: any) => {
+          const especialistaDoc = await this.firestoreService.getDocument<any>(
+            `especialista/${doc.uidEspecialista}`
+          );
+          const especialistaData = especialistaDoc.exists() ? especialistaDoc.data() : { nombre: 'Desconocido', apellido: '' };
+  
+          const especialidadDoc = await this.firestoreService.getDocument<any>(
+            `especialidades/${doc.uidEspecialidad}`
+          );
+          const especialidadData = especialidadDoc.exists() ? especialidadDoc.data() : { descripcion: 'Desconocida' };
+
+          const pacientes = await this.firestoreService.getDocument<any>(
+            `paciente/${doc.uidPaciente}`
+          );
+          const pacientesdata = pacientes.exists() ? pacientes.data() : { nombre: 'Desconocida' , apellido : 'Desconocido'};
+//turnosSnapshot
+          return {
+            ...doc,
+            especialista: especialistaData,
+            especialidad: especialidadData.descripcion,
+            paciente : pacientesdata,
+          };
+        })
+      );
+      console.log("antes de ordenar por fecha ", this.turnos[0].fecha)
+      this.turnos.sort((a: any, b: any) => {
+        const fechaA = new Date(a.fecha).getTime();
+        const fechaB = new Date(b.fecha).getTime();
+        return fechaA - fechaB; // Orden ascendente
+      });
+  
+      console.log('Turnos obtenidos: ', this.turnos);
+    } catch (error) {
+      console.error('Error al cargar los turnos:', error);
+    }
+  }
+/*
+  async cargarTurnos() {
+    try {
+      const turnosSnapshot = await this.firestoreService.getCollection('turnos');
       this.turnos = await Promise.all(
         turnosSnapshot.map(async (turno: any) => {
           const especialistaDoc = await this.firestoreService.getDocument<any>(`especialista/${turno.uidEspecialista}`);
@@ -37,7 +81,7 @@ export class TurnosComponent implements OnInit {
           const especialidadDoc = await this.firestoreService.getDocument<any>(`especialidades/${turno.uidEspecialidad}`);
           const especialidadData = especialidadDoc.exists() ? especialidadDoc.data() : null;
   
-          // Convertir turno.dia a una fecha válida
+           Convertir turno.dia a una fecha válida
           const fechaBase = new Date(); // Fecha actual como base
           const diaMap: { [key: string]: number } = {
             Lunes: 1,
@@ -52,9 +96,8 @@ export class TurnosComponent implements OnInit {
           if (diaIndex !== undefined) {
             fechaBase.setDate(fechaBase.getDate() + (diaIndex - fechaBase.getDay() + 7) % 7);
             turno.dia = fechaBase.toISOString(); // Convertir a ISO string
-          }
-  
-          return {
+          }*/
+         /* return {
             ...turno,
             especialista: especialistaData || { nombre: 'Desconocido', apellido: '' },
             paciente: pacienteData || { nombre: 'Desconocido', apellido: '' },
@@ -62,13 +105,21 @@ export class TurnosComponent implements OnInit {
           };
         })
       );
+
+    console.log("antes de ordenar por fecha ", this.turnos[0].fecha)
+    
+    this.turnos.sort((a: any, b: any) => {
+      const fechaA = new Date(a.dia).getTime();
+      const fechaB = new Date(b.dia).getTime();
+      return fechaA - fechaB; // Orden ascendente
+    });
+    console.log("aca ", this.turnos);
     } catch (error) {
       console.error('Error al cargar los turnos:', error);
       Swal.fire('Error', 'No se pudieron cargar los turnos.', 'error');
     }
-  }
+  }*/
   
-
   CancelarTurno(turno: any) {
     Swal.fire({
       title: 'Cancelar Turno',

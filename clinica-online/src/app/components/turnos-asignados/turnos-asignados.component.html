@@ -38,7 +38,7 @@
             <td>{{ diaData.dia }}</td>
             <td>{{ diaData.fecha }}</td>
             <td>{{ turno.desde }} - {{ turno.hasta }}</td>
-            <td [EstadoTurnoColor]="turno.estado">{{ turno.estado | titlecase }}</td>
+            <td [EstadoTurnoColor]="turno.estado"> <strong> {{ turno.estado | titlecase }} </strong> </td>
             <td>
             @if(turno.estado === 'Realizado')
             {
