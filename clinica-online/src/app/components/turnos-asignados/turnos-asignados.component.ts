@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 import { BuscarPacienteEspecialidadPipe } from '../../pipe/buscar-especialidad-paciente.pipe';
 import { FormsModule } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-turnos-asignados',
@@ -13,6 +14,24 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./turnos-asignados.component.scss'],
   standalone: true,
   imports: [CommonModule,EstadoTurnoColorDirective,BuscarPacienteEspecialidadPipe,FormsModule],
+  animations: [
+    trigger('slideFlip', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%) rotateY(90deg)', opacity: 0 }),
+        animate(
+          '1000ms ease-out',
+          style({ transform: 'translateX(0) rotateY(0)', opacity: 1 })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '1000ms ease-in',
+          style({ transform: 'translateX(100%) rotateY(-90deg)', opacity: 0 })
+        )
+      ])
+    ])
+  ]
+  
 })
 export class TurnosAsignadosComponent implements OnInit {
   usuarioLogueado: User | null = null;

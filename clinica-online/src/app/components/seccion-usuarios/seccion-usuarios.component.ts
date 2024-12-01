@@ -2,12 +2,26 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirestoreService } from '../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-seccion-usuarios',
   templateUrl: './seccion-usuarios.component.html',
   styleUrls: ['./seccion-usuarios.component.scss'],
   imports : [CommonModule],
-  standalone : true
+  standalone : true,
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(20px)', opacity: 0 }),
+        animate('500ms ease-in', style({ transform: 'translateY(0)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-out', style({ transform: 'translateY(20px)', opacity: 0 }))
+      ])
+    ])
+  ]
+
 })
 export class SeccionUsuariosComponent {
   pacientes: any[] = [];

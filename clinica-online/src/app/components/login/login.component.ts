@@ -6,12 +6,32 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FirestoreService } from '../../servicios/firestore.service';
 import { Router, RouterLink } from '@angular/router';
 import { signOut } from '@angular/fire/auth';
+import {pasaPorArriba} from '../../directivas/app-tooltip-directive.directive'
+import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink,CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,pasaPorArriba],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  animations: [
+    trigger('slideUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(50px)', opacity: 0 }),
+        animate(
+          '1400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({ transform: 'translateY(0)', opacity: 1 })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '1400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({ transform: 'translateY(50px)', opacity: 0 })
+        )
+      ])
+    ])
+  ]
+  
 })
 export class LoginComponent {
   loginForm: FormGroup;

@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginComponent } from '../login/login.component';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialista-especialidad.pipe';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-mis-turnos',
@@ -14,6 +15,28 @@ import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialis
   styleUrls: ['./mis-turnos.component.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule,EstadoTurnoColorDirective,BuscarEspecialistaEspecialidadPipe],
+  animations: [
+    trigger('pulseZoom', [
+      transition(':enter', [
+        style({ transform: 'scale(0)', opacity: 0 }),
+        animate(
+          '1000ms ease-in-out',
+          style({ transform: 'scale(1.1)', opacity: 1 })
+        ),
+        animate(
+          '300ms ease-in-out',
+          style({ transform: 'scale(1)' })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '1000ms ease-in-out',
+          style({ transform: 'scale(0)', opacity: 0 })
+        )
+      ])
+    ])
+  ]
+  
 })
 export class MisTurnosComponent implements OnInit {
   usuarioLogueado: User | null = null;

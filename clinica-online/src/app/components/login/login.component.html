@@ -1,7 +1,7 @@
-<div class="login-container">
+<div @slideUp class="login-container">
     <div class="usuarios-rapidos">
       <div class="usuarios">
-        <button
+        <button pasaPorArriba = "Click para autocompletar"
           *ngFor="let usuario of usuariosRapidos"
           class="usuario-boton"
           (click)="rellenarUsuario(usuario)">

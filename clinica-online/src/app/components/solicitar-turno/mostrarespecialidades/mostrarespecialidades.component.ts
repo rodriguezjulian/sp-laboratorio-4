@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-mostrar-especialidades',
@@ -8,6 +9,24 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./mostrarespecialidades.component.scss'],
   standalone: true,
   imports: [CommonModule],
+  animations: [
+    trigger('zoomInFade', [
+      transition(':enter', [
+        style({ transform: 'scale(0.5)', opacity: 0 }),
+        animate(
+          '600ms ease-out',
+          style({ transform: 'scale(1)', opacity: 1 })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '450ms ease-in',
+          style({ transform: 'scale(0.5)', opacity: 0 })
+        )
+      ])
+    ])
+  ]
+  
 })
 export class MostrarEspecialidadesComponent implements OnInit {
   @Input() especialista: any;
