@@ -1,0 +1,24 @@
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Altura</th>
+        <th>Peso</th>
+        <th>Presión</th>
+        <th>Temperatura</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!paciente?.historiaClinica?.length">
+        <td colspan="5" class="text-center">No hay registros de historia clínica</td>
+      </tr>
+      <tr *ngFor="let historia of paciente?.historiaClinica || []">
+        <td>{{ historia.fecha | date: 'shortDate' }}</td>
+        <td>{{ historia.altura }}</td>
+        <td>{{ historia.peso }}</td>
+        <td>{{ historia.presion }}</td>
+        <td>{{ historia.temperatura }}</td>
+      </tr>
+    </tbody>
+  </table>
+  

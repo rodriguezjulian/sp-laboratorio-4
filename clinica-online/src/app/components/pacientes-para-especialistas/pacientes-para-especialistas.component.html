@@ -1,12 +1,14 @@
 <section class="pacientes-seccion">
     <div class="container">
       <h2 class="text-center">Pacientes Atendidos</h2>
+  
+      <!-- Pacientes listados -->
       <div class="row">
         <div
           class="col-12 col-sm-6 col-md-4 mb-4"
           *ngFor="let paciente of pacientes"
         >
-          <div class=".pacientes-seccion .card-img-top">
+          <div class="card">
             <img
               [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'"
               class="card-img-top"
@@ -14,13 +16,14 @@
             />
             <div class="card-body">
               <h5 class="card-title">{{ paciente.nombre }} {{ paciente.apellido }}</h5>
-              <p class="card-text">
+              <div class="card-text">
                 <strong>Últimos turnos:</strong>
                 <ul>
                   <li *ngFor="let turno of paciente.ultimosTurnos">
-                    {{ turno.fecha}} - {{ turno.desde }}
+                    {{ turno.fecha | date: 'shortDate' }} - {{ turno.desde }}
                   </li>
                 </ul>
+              </div>
               <button
                 class="btn btn-primary"
                 *ngIf="paciente.historiaClinica"
@@ -33,5 +36,12 @@
         </div>
       </div>
     </div>
+  
+    <!-- Modal de historia clínica -->
+    <app-ver-historia-clinica
+      *ngIf="pacienteSeleccionado"
+      [paciente]="pacienteSeleccionado"
+      (cerrarModal)="cerrarHistoriaClinica()"
+    ></app-ver-historia-clinica>
   </section>
   
