@@ -65,10 +65,9 @@ export class PacientesParaEspecialistasComponent implements OnInit {
           .slice(0, 3); // Mostrar solo los últimos tres turnos
         return paciente;
       });
-      
+
     } catch (error) {
       console.error('Error al cargar los pacientes:', error);
-      Swal.fire('Error', 'No se pudieron cargar los pacientes.', 'error');
     }
   }
 

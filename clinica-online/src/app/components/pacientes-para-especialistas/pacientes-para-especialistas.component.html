@@ -18,7 +18,7 @@
                 <strong>Últimos turnos:</strong>
                 <ul>
                   <li *ngFor="let turno of paciente.ultimosTurnos">
-                    {{ turno.fecha | date: 'shortDate' }} - {{ turno.desde }}
+                    {{ turno.fecha}} - {{ turno.desde }}
                   </li>
                 </ul>
               <button
