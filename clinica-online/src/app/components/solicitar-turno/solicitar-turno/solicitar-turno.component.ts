@@ -67,24 +67,36 @@ export class SolicitarTurnoComponent implements OnInit {
   
   
   configurarDiasDisponibles() {
+    if (!this.especialista || !this.especialidad) {
+      console.error('Especialista o especialidad no definidos');
+      return;
+    }
+  
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const hoy = new Date();
     const diaActualIndex = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1;
-
+  
     const inicioDias = this.mostrandoProximaSemana
       ? new Date(hoy.setDate(hoy.getDate() + (7 - diaActualIndex)))
       : new Date(hoy);
-
-    this.diasDisponibles = Array.from({ length: 7 }, (_, index) => {
+  
+    // Filter the days the specialist attends the selected specialty
+    const diasEspecialista = Object.keys(this.especialista.horarios).filter((dia) =>
+      this.especialista.horarios[dia].especialidad === this.especialidad.id
+    );
+  
+    // Generate the available days based on the filtered days
+    this.diasDisponibles = diasEspecialista.map((dia) => {
+      const index = dias.indexOf(dia); // Get the index of the day
       const fecha = new Date(inicioDias);
-      fecha.setDate(inicioDias.getDate() + index);
-      const dia = dias[(diaActualIndex + index) % dias.length];
+      fecha.setDate(fecha.getDate() + (index - diaActualIndex + 7) % 7); // Adjust the date based on the index
       return {
         dia,
         fecha: fecha.toISOString().split('T')[0],
       };
-    }).filter((diaData) => diaData.dia !== 'Domingo');
+    });
   }
+  
 
   async cargarHorariosDisponibles() {
     if (!this.especialista || !this.especialidad) {
