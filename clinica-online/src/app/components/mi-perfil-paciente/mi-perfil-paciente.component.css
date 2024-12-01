@@ -1,0 +1,52 @@
+.fondo {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #ffd700, #e48080);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .perfil-container {
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .perfil-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .perfil-images {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .perfil-images img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffd700;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .perfil-info {
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+    width: 100%;
+  }
+  

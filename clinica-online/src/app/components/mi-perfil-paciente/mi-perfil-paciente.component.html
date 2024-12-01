@@ -1,0 +1,20 @@
+<div class="fondo">
+    <div class="perfil-container">
+      <h1>Mi Perfil</h1>
+      <div class="perfil-card">
+        <div class="perfil-images">
+          <img [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'" alt="Foto 1" />
+          <img [src]="paciente.urlFotoPerfilDos || 'assets/default-avatar.png'" alt="Foto 2" />
+        </div>
+        <div class="perfil-info">
+          <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+          <p><strong>Apellido:</strong> {{ paciente.apellido }}</p>
+          <p><strong>Correo:</strong> {{ paciente.correo }}</p>
+          <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+          <p><strong>Edad:</strong> {{ paciente.edad }}</p>
+          <p><strong>Obra Social:</strong> {{ paciente.obraSocial || 'No especificado' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -67,5 +67,9 @@ export const routes: Routes = [
   {
     path: 'pacientes-en-especialista',
     loadComponent: () => import('./components/pacientes-para-especialistas/pacientes-para-especialistas.component').then((m) => m.PacientesParaEspecialistasComponent),
-  } 
+  },
+  {
+    path: 'mi-perfil-paciente',
+    loadComponent: () => import('./components/mi-perfil-paciente/mi-perfil-paciente.component').then((m) => m.MiPerfilPacienteComponent),
+  }
 ];
