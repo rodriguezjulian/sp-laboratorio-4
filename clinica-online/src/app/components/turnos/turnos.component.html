@@ -9,7 +9,7 @@
         class="mb-2"
       />
     </div>
-    <div class="row d-flex justify-content-center align-items-start row-table fondotabla">
+    <div class="mb-5 row d-flex justify-content-center align-items-start row-table fondotabla">
       <table class="table-mis-horarios">
         <thead>
           <tr>
@@ -29,7 +29,7 @@
             <td>{{ turno.dia | date:'dd/MM/yyyy' }}</td>
             <td>{{ turno.especialidad | titlecase }}</td>
             <td>{{ turno.desde }}</td>
-            <td [EstadoTurnoColor]="turno.estado">{{ turno.estado | titlecase }}</td>
+            <td [EstadoTurnoColor]="turno.estado"><strong>{{ turno.estado | titlecase }}</strong></td>
             <td>
               <button *ngIf="turno.estado === 'pendiente'" (click)="CancelarTurno(turno)" class="btn btn-danger btn-sm">
                 Cancelar Turno

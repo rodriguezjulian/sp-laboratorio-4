@@ -19,6 +19,7 @@ export class EstadoTurnoColorDirective implements OnChanges {
     switch (this.EstadoTurnoColor.toLowerCase()) {
       case 'pendiente':
         color = 'orange';
+        
         break;
       case 'cancelado':
         color = 'red';
@@ -27,7 +28,7 @@ export class EstadoTurnoColorDirective implements OnChanges {
         color = 'green';
         break;
       case 'rechazado':
-        color = 'gray';
+        color = 'black';
         break;
       default:
         color = 'blue';
