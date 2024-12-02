@@ -11,12 +11,13 @@ import Chart from 'chart.js/auto';
 })
 export class EstadisticasComponent {
   constructor(private firestoreService: FirestoreService) {}
-
+  barrasChart: Chart | undefined;
   cantidadDeTurnosPorEspecialidad: { [key: string]: number } = {};
   tortaChart: Chart | undefined; // Declarar la propiedad
-
+  cantidadDeTurnosPorDia: { [key: string]: number } = {};
   async ngOnInit() {
     await this.obtenerTurnosPorEspecialidad();
+    await this.calcularTurnosPorDia();
   }
 
   async obtenerTurnosPorEspecialidad() {
@@ -116,6 +117,95 @@ export class EstadisticasComponent {
       });
     }
   }
+
+
+async calcularTurnosPorDia() {
+  const turnos = await this.firestoreService.getTurnos();
+
+  // Contar turnos por día
+  turnos.forEach((turno: any) => {
+    const fecha = turno.fecha; // Suponiendo que `fecha` es el campo con la cadena de la fecha
+    if (!this.cantidadDeTurnosPorDia[fecha]) {
+      this.cantidadDeTurnosPorDia[fecha] = 0;
+    }
+    this.cantidadDeTurnosPorDia[fecha]++;
+  });
+
+  console.log('Cantidad de turnos por día:', this.cantidadDeTurnosPorDia);
+
+  // Crear el gráfico
+  this.crearGraficoBarrasPorDia();
+}
+crearGraficoBarrasPorDia() {
+  if (Object.keys(this.cantidadDeTurnosPorDia).length === 0) {
+    console.warn('No hay datos para mostrar en el gráfico.');
+    return;
+  }
+
+  const labels = Object.keys(this.cantidadDeTurnosPorDia); // Fechas
+  const data = Object.values(this.cantidadDeTurnosPorDia); // Cantidades
+
+  const ctx = document.getElementById('barrasDiaChart') as HTMLCanvasElement;
+  if (ctx) {
+    if (this.barrasChart) {
+      this.barrasChart.destroy(); // Destruir gráfico previo si existe
+    }
+
+    this.barrasChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Cantidad de Turnos por Día',
+            data: data,
+            backgroundColor: '#36A2EB',
+            borderColor: '#003F7D',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              font: {
+                size: 18,
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: 'Cantidad de Turnos por Día',
+            font: {
+              size: 24,
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              font: {
+                size: 18,
+              },
+            },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: {
+                size: 18,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+}
+
 
   async descargarLogins() {
     try {
