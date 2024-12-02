@@ -69,4 +69,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Cantidad de turnos finalizados por médico en un lapso de tiempo -->
+    <div class="section">
+        <h3>Turnos finalizados por médico (periodo)</h3>
+        <div class="d-flex justify-content-evenly align-items-center mb-4">
+            <div>
+                <label class="lbl-desde-hasta">Desde:</label>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Selecciona una fecha</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="pickerDesdeFinalizados"
+                        [(ngModel)]="FechaDesdeMedicoDos"
+                        (dateChange)="MostrarTurnosFinalizadosPorMedico()"
+                    />
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerDesdeFinalizados">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerDesdeFinalizados></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <label class="lbl-desde-hasta">Hasta:</label>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Selecciona una fecha</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="pickerHastaFinalizados"
+                        [(ngModel)]="FechaHastaMedicoDos"
+                        (dateChange)="MostrarTurnosFinalizadosPorMedico()"
+                    />
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerHastaFinalizados">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerHastaFinalizados></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div *ngIf="!FechaDesdeMedicoDos || !FechaHastaMedicoDos" class="col-8">
+            <h3>Seleccione las fechas.</h3>
+        </div>
+
+        <div *ngIf="FechaDesdeMedicoDos && FechaHastaMedicoDos">
+            <div class="col-6 d-flex justify-content-center align-items-center">
+                <canvas id="turnosFinalizadosPorMedicoChart" width="800" height="400"></canvas>
+            </div>
+            <div class="col-6 mt-3 d-flex justify-content-center">
+                <button class="action-button" >Exportar a PDF</button>
+            </div>
+        </div>
+    </div>
 </div>

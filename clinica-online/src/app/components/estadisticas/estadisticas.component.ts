@@ -43,12 +43,18 @@ export class EstadisticasComponent {
   barrasChart: Chart | undefined;
   turnos : any [] =[];
   cantidadDeTurnosPorEspecialidad: { [key: string]: number } = {};
-  tortaChart: Chart | undefined; // Declarar la propiedad
-  FechaDesdeMedico: any;
+  turnosFinalizadosPorMedicoChart: Chart | undefined; 
   
-FechaHastaMedico: any;
-cantidadDeTurnosPorMedicoEnPeriodo: Record<string, number> = {};
-turnosPorMedicoChart: Chart | undefined;
+  tortaChart: Chart | undefined;
+  
+  cantidadDeTurnosFinalizadosPorMedico : Record<string, number> = {};
+  FechaDesdeMedico: any;
+  FechaHastaMedico: any;
+
+  FechaDesdeMedicoDos: any;
+  FechaHastaMedicoDos: any;
+  cantidadDeTurnosPorMedicoEnPeriodo: Record<string, number> = {};
+  turnosPorMedicoChart: Chart | undefined;
 
   cantidadDeTurnosPorDia: { [key: string]: number } = {};
   async ngOnInit() {
@@ -450,4 +456,121 @@ crearGraficoBarrasPorDia() {
       console.error('Error al generar el informe de logins:', error);
     }
   }
+
+  async MostrarTurnosFinalizadosPorMedico() {
+    if (!this.FechaDesdeMedicoDos || !this.FechaHastaMedicoDos) {
+      console.warn('Por favor, selecciona ambas fechasAAAAAAAAAAAAAAAAAAAAAAAAAAAA.');
+      return;
+    }
+  
+    const fechaDesde = new Date(this.FechaDesdeMedicoDos).toISOString();
+    const fechaHasta = new Date(this.FechaHastaMedicoDos).toISOString();
+  
+    // Filtrar turnos finalizados en el rango de fechas
+    this.turnos = await this.firestoreService.getTurnos();
+    const turnosFinalizados = this.turnos.filter((turno: any) => {
+      const fechaTurno = turno.fecha;
+      return (
+        fechaTurno >= fechaDesde &&
+        fechaTurno <= fechaHasta &&
+        turno.estado === 'Realizado'
+      );
+    });
+  
+    // Obtener los especialistas para mapear nombres
+    const especialistas = await this.firestoreService.getEspecialistas();
+    const especialistaMap: Record<string, { nombre: string; apellido: string }> = {};
+  
+    especialistas.forEach((especialista: any) => {
+      especialistaMap[especialista.id] = {
+        nombre: especialista.nombre,
+        apellido: especialista.apellido,
+      };
+    });
+  
+    // Contar turnos por médico
+    this.cantidadDeTurnosFinalizadosPorMedico = {};
+    turnosFinalizados.forEach((turno: any) => {
+      const uidEspecialista = turno.uidEspecialista;
+      const especialista = especialistaMap[uidEspecialista];
+  
+      if (especialista) {
+        const medicoNombre = `${especialista.nombre} ${especialista.apellido}`;
+        if (!this.cantidadDeTurnosFinalizadosPorMedico[medicoNombre]) {
+          this.cantidadDeTurnosFinalizadosPorMedico[medicoNombre] = 0;
+        }
+        this.cantidadDeTurnosFinalizadosPorMedico[medicoNombre]++;
+      } else {
+        console.warn(`No se encontró el especialista con UID: ${uidEspecialista}`);
+      }
+    });
+  
+    console.log(
+      'Cantidad de turnos finalizados por médico en el período:',
+      this.cantidadDeTurnosFinalizadosPorMedico
+    );
+  
+    this.crearGraficoTurnosFinalizadosPorMedico();
+  }
+  
+  crearGraficoTurnosFinalizadosPorMedico() {
+    if (Object.keys(this.cantidadDeTurnosFinalizadosPorMedico).length === 0) {
+      console.warn('No hay datos para mostrar en el gráfico.');
+      return;
+    }
+  
+    const labels = Object.keys(this.cantidadDeTurnosFinalizadosPorMedico);
+    const data = Object.values(this.cantidadDeTurnosFinalizadosPorMedico);
+  
+    setTimeout(() => {
+      const ctx = document.getElementById('turnosFinalizadosPorMedicoChart') as HTMLCanvasElement;
+  
+      if (!ctx) {
+        console.error('No se encontró el canvas con ID turnosFinalizadosPorMedicoChart en el DOM.');
+        return;
+      }
+  
+      if (this.turnosFinalizadosPorMedicoChart) {
+        
+        
+      }
+  
+      this.turnosFinalizadosPorMedicoChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Turnos Finalizados',
+              data: data,
+              backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF',
+                '#FF9F40',
+              ],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      console.log('Gráfico de turnos finalizados creado con éxito.');
+    }, 100);
+  }
+  
 }
