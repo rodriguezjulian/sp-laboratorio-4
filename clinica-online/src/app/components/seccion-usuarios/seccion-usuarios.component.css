@@ -28,7 +28,17 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
   }
-  
+  .x{
+    font-size: 1rem !important;
+    border-radius: 6px;
+    background-color: black;
+    color : white;
+  }
+
+  .x:hover
+  {
+    background-color: green;
+  }
   .action-button:hover {
     background-color: fuchsia;
     color : black;
@@ -48,7 +58,10 @@
     color : red;
     transform: scale(1.1);
   }
-
+.descargaGral:hover
+{
+  background-color: aqua;
+}
   .action-button:active {
     transform: scale(1);
   }

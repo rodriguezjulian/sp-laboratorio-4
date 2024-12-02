@@ -52,6 +52,11 @@ export class SeccionUsuariosComponent {
     this.loadUsers();
     this.loadTurnos(); // Cargar los turnos desde la base de dato
   }
+
+  verHistoria(paciente : any)
+  {
+    console.log("solo quiero ver que me esta llegando ", paciente);
+  }
   async toggleHabilitado(especialista: any) {
     especialista.habilitado = !especialista.habilitado;
     try {
