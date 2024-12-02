@@ -4,26 +4,13 @@ import { Component } from '@angular/core';
 import Chart from 'chart.js/auto';
 import jsPDF from 'jspdf';
 import { CommonModule } from '@angular/common';
-
-
-
-
-
-import { OnInit ,ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
-
-import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-
 import {} from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
-
-
-
 
 @Component({
   selector: 'app-estadisticas',
@@ -572,5 +559,51 @@ crearGraficoBarrasPorDia() {
       console.log('Gráfico de turnos finalizados creado con éxito.');
     }, 100);
   }
+  exportarTurnosFinalizadosPorMedico() {
+    const canvas = document.getElementById('turnosFinalizadosPorMedicoChart') as HTMLCanvasElement;
+  
+    if (!canvas) {
+      console.warn('No se encontró el canvas del gráfico de turnos finalizados.');
+      return;
+    }
+  
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'px',
+      format: 'a4',
+    });
+  
+    // Dimensiones de la página
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 40;
+  
+    // Título del PDF
+    const title = 'Turnos Finalizados por Médico';
+    doc.setFontSize(18);
+    doc.text(title, margin, margin);
+  
+    // Calcular el tamaño ajustado del gráfico
+    const chartWidth = pageWidth - margin * 2; // Ancho dentro del margen
+    const chartHeight = (canvas.height / canvas.width) * chartWidth; // Mantener proporción
+  
+    // Verificar si el gráfico cabe en la página
+    const maxHeight = pageHeight - margin * 2; // Altura disponible
+    const finalHeight = chartHeight > maxHeight ? maxHeight : chartHeight; // Limitar altura
+  
+    // Centrar el gráfico verticalmente si sobra espacio
+    const yPosition = (pageHeight - finalHeight) / 2;
+  
+    // Convertir el gráfico a imagen
+    const chartImage = canvas.toDataURL('image/png');
+  
+    // Agregar el gráfico al PDF
+    doc.addImage(chartImage, 'PNG', margin, yPosition, chartWidth, finalHeight);
+  
+    // Guardar el archivo
+    doc.save('Turnos_Finalizados_Por_Medico.pdf');
+  }
+  
+  
   
 }
