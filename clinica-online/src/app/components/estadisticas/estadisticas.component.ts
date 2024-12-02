@@ -100,7 +100,7 @@ export class EstadisticasComponent {
               position: 'top',
               labels: {
                 font: {
-                  size: 18,
+                  size: 24,
                 },
               },
             },
@@ -108,7 +108,7 @@ export class EstadisticasComponent {
               display: true,
               text: 'Cantidad de Turnos por Especialidad',
               font: {
-                size: 24,
+                size: 40,
               },
             },
           },

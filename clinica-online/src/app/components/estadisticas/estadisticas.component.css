@@ -30,4 +30,8 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
+  #tortaEspecialidadChart {
+    width: 800px;
+    height: 800px;
+  }
   
