@@ -37,5 +37,18 @@
   canvas {
     margin: auto;
     display: block;
+    width: 100%; /* Ocupa el ancho completo del contenedor */
+    max-width: 800px; /* Permite un ancho máximo */
+    height: auto; /* Ajusta la altura proporcionalmente */
   }
-    
+  #barrasDiaChart {
+    width: 800px;
+    height: 500px; /* Ajusta según el diseño deseado */
+    margin: auto;
+  }
+  .estadisticas-container {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+  }
+  
