@@ -42,7 +42,23 @@ export class MiPerfilPacienteComponent implements OnInit {
           { field: 'estado', op: '==', value: 'Realizado' },
         ],
       });
-  
+      const especialidadesSet = new Set<string>();
+      turnos.forEach((turno: any) => {
+        if (turno.uidEspecialidad) {
+          especialidadesSet.add(turno.uidEspecialidad);
+        }
+      });
+      const aux = Array.from(especialidadesSet);
+      const especias = await this.firestoreService.getEspecialidades();
+      const especialidad = new Set<string>();
+      aux.forEach((element) => {
+        especias.forEach((especia) => {
+          if (element === especia.id) {
+            especialidad.add(especia.descripcion);
+          }
+        });
+      });
+      this.especialidades = Array.from(especialidad);
       this.historiaClinicaCompleta = turnos.map((turno: any) => {
         const datosDinamicos = turno.historiaClinica?.datosDinamicos || []; // Default to an empty array
         
