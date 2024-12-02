@@ -15,6 +15,13 @@ export class VerHistoriaClinicaComponent {
   async ngOnInit() {
 
     console.log("Desde ver historia clinica " ,  this.paciente);
+   // console.log("Desde ver historia clinica " ,  this.paciente.historiaClinica.datosDinamicos); 
+
+    this.paciente.historiaClinica.forEach((historias: any) => {
+      historias.datosDinamicos.forEach((historia: any) => {
+        console.log(`esto: ${historia.clave} ${historia.valor}`);
+      });
+    });
   }
   cerrar() {
       this.cerrarModal.emit();
