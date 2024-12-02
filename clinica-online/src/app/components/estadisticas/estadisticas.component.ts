@@ -11,6 +11,50 @@ import { Component } from '@angular/core';
 export class EstadisticasComponent {
   constructor(private firestoreService: FirestoreService) {}
 
+  async ngOnInit()
+  {
+    await this.obtenerTurnosPorEspecialidad();
+  }
+
+
+  async obtenerTurnosPorEspecialidad() {
+    const turnos = await this.firestoreService.getTurnos();
+    const especialidades = await this.firestoreService.getEspecialidades();
+  
+    let especialidadesConRepeticion: string[] = [];
+    console.log("Turnos generales: ", turnos);
+  
+    // Crear una lista con las descripciones de las especialidades
+    turnos.forEach(turno => {
+      especialidades.forEach(especialidad => {
+        if (turno.uidEspecialidad == especialidad.id) {
+          especialidadesConRepeticion.push(especialidad.descripcion);
+        }
+      });
+    });
+  
+    // Calcular la cantidad de repeticiones por especialidad
+    const especialidadesContador: { [key: string]: number } = {};
+  
+    especialidadesConRepeticion.forEach(especialidad => {
+      if (especialidadesContador[especialidad]) {
+        especialidadesContador[especialidad]++;
+      } else {
+        especialidadesContador[especialidad] = 1;
+      }
+    });
+  
+    // Mostrar los resultados
+    Object.entries(especialidadesContador).forEach(([especialidad, cantidad]) => {
+      console.log(`${especialidad}: ${cantidad}`);
+    });
+  
+    // Retornar el diccionario si lo necesitas
+    return especialidadesContador;
+  }
+  
+
+
   async descargarLogins() {
     try {
       // Obtener los logins desde Firestore
