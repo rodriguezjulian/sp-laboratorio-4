@@ -20,7 +20,22 @@
     width: 100%;
     padding: 20px;
   }
-
+  .select-black {
+    height: auto;
+    min-height: 150px; /* Altura mínima */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+    color: black;
+  }
+  
+  .select-black option {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
 .select-black {
     color: black;
     background-color: white;
@@ -122,5 +137,14 @@
   
   .submit-button:hover {
     background-color: #45a045;
+  }
+  .mat-form-field {
+    width: 100%;
+    color : white;
+  }
+  
+  .mat-option {
+    text-align: left;
+    color : white;
   }
   

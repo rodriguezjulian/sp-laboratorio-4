@@ -32,14 +32,23 @@
               </div>
   
               <div class="form-group">
-                <label for="especialidad">Especialidad</label>
-                <select id="especialidad" formControlName="especialidad" class="form-input select-black">
-                  <option value="" disabled selected>Seleccione una especialidad</option>
-                  <option *ngFor="let especialidad of especialidades" [value]="especialidad">
-                    {{ especialidad }}
-                  </option>
-                </select>
+                <label for="especialidad">Especialidades</label>
+                <mat-form-field appearance="outline" class="form-full-width">
+                  <mat-label>Seleccionar Especialidades</mat-label>
+                  <mat-select 
+                    formControlName="especialidad" 
+                    multiple 
+                    [disableOptionCentering]="true">
+                    <mat-option *ngFor="let especialidad of especialidades" [value]="especialidad">
+                      {{ especialidad }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
+              
+              
+              
+              
               
               <!-- Nueva Especialidad -->
               <div class="form-group new-specialty">

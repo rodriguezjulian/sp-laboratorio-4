@@ -2,20 +2,26 @@ import { AuthService } from './../../../servicios/auth.service';
 import { ImagenService } from './../../../servicios/imagen.service'; 
 import { FirestoreService } from './../../../servicios/firestore.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormRecord, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { FormArray, FormControl } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-registro-especialista',
   templateUrl: './registro-especialista.component.html',
   styleUrls: ['./registro-especialista.component.scss'],
   standalone : true,
-  imports : [ReactiveFormsModule,CommonModule,RecaptchaModule,RecaptchaFormsModule]
+  imports : [ReactiveFormsModule,CommonModule,RecaptchaModule,RecaptchaFormsModule,    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,]
 })
 export class RegistroEspecialistaComponent implements OnInit {
   especialidades: string[] = [''];
@@ -126,7 +132,39 @@ export class RegistroEspecialistaComponent implements OnInit {
       });
     }
   }
+  onCheckboxChange(event: any) {
+    const especialidadArray: FormArray = this.registroForm.get('especialidad') as FormArray;
+  
+    if (event.target.checked) {
+      // Agrega la especialidad seleccionada al array
+      especialidadArray.push(new FormControl(event.target.value));
+    } else {
+      // Remueve la especialidad si se desmarca
+      const index = especialidadArray.controls.findIndex(
+        (control : any) => control.value === event.target.value
+      );
+      if (index !== -1) {
+        especialidadArray.removeAt(index);
+      }
+    }
+  
+    console.log(this.registroForm.get('especialidad')?.value); // Para verificar en la consola
+  }
+  
   async crearEspecialista() {
+
+    let especialidadesAGuardar : string []= [];
+    let todasEspecialidades = await this.firestoreService.getEspecialidades();  
+
+    this.registroForm.get('especialidad')?.value.forEach((e : any) => {
+      todasEspecialidades.forEach( especialidad => {
+        if(especialidad.descripcion == e)
+          {
+            especialidadesAGuardar.push(especialidad.id);
+          }
+      });
+    });
+
     console.log("antes de subir la imagen");
     let url = await this.imagenService.subirImg(this.file);
     console.log("despues de subir la img");
@@ -135,11 +173,12 @@ export class RegistroEspecialistaComponent implements OnInit {
       apellido : this.registroForm.get('apellido')?.value,
       edad : this.registroForm.get('edad')?.value,
       dni : this.registroForm.get('dni')?.value,
-      especialidad : this.registroForm.get('especialidad')?.value,
+      especialidad : especialidadesAGuardar,
       correo : this.registroForm.get('correo')?.value,
       contrasena : this.registroForm.get('contrasena')?.value,
-      autorizado : "no",
-      urlFotoPerfil : url
+      habilitado : false,
+      urlFotoPerfil : url,
+      rol : "especialista"
     };
     console.log("cree la constante del cliente");
     console.log(especialista);

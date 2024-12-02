@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
       if (user?.uid) {
         try {
           const usuarioInfo = await this.firestoreService.getUsuarioInfo(user.uid);
-          this.nombreUsuario = usuarioInfo?.nombre + usuarioInfo?.apellido;
+          this.nombreUsuario = `${usuarioInfo?.nombre}  ${usuarioInfo?.apellido}` 
             if (usuarioInfo?.rol) {
             this.rol = usuarioInfo.rol;
             console.log("Rol del usuario:", this.rol);
