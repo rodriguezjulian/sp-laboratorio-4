@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import { FirestoreService } from '../../servicios/firestore.service'; // Ajusta la ruta de tu servicio
 import { Component } from '@angular/core';
 import Chart from 'chart.js/auto';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-estadisticas',
@@ -50,7 +51,37 @@ export class EstadisticasComponent {
     // Crear el gráfico
     this.crearGraficoTortaPorEspecialidad();
   }
-
+  descargarTortaPorEspecialidad() {
+    const canvas = document.getElementById('tortaEspecialidadChart') as HTMLCanvasElement;
+    if (!canvas) {
+      console.warn('No se encontró el gráfico de torta.');
+      return;
+    }
+  
+    const doc = new jsPDF();
+    doc.text('Gráfico de Turnos por Especialidad', 10, 10); // Título
+  
+    const chartImage = canvas.toDataURL('image/png');
+    doc.addImage(chartImage, 'PNG', 10, 20, 180, 100); // Agrega el gráfico al PDF
+  
+    doc.save('Turnos_por_Especialidad.pdf');
+  }
+  
+  descargarBarrasPorDia() {
+    const canvas = document.getElementById('barrasDiaChart') as HTMLCanvasElement;
+    if (!canvas) {
+      console.warn('No se encontró el gráfico de barras.');
+      return;
+    }
+  
+    const doc = new jsPDF();
+    doc.text('Gráfico de Turnos por Día', 10, 10); // Título
+  
+    const chartImage = canvas.toDataURL('image/png');
+    doc.addImage(chartImage, 'PNG', 10, 20, 180, 100); // Agrega el gráfico al PDF
+  
+    doc.save('Turnos_por_Dia.pdf');
+  }
   crearGraficoTortaPorEspecialidad() {
     if (Object.keys(this.cantidadDeTurnosPorEspecialidad).length === 0) {
       console.warn('No hay datos para mostrar en el gráfico.');

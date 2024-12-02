@@ -1,9 +1,9 @@
 <div class="estadisticas-container fondo">
-    <h2>Estadísticas del Sistema</h2>
-    <button class="btn btn-primary" (click)="descargarLogins()">Descargar reporte de inicios de sesión</button>
+    <h2>ESTADÍSTICAS DEL SISTEMA</h2>
+    <button class="action-button" (click)="descargarLogins()">Descargar reporte de inicios de sesión</button>
     <canvas id="tortaEspecialidadChart" style="max-width: 400px; margin: auto;"></canvas>
-
-  
+    <button class="action-button" (click)="descargarTortaPorEspecialidad()">Descargar gráfico (PDF)</button>
     <canvas id="barrasDiaChart" style="max-width: 600px; margin: auto;"></canvas>
+    <button class="action-button" (click)="descargarBarrasPorDia()">Descargar gráfico (PDF)</button>
   </div>
   
