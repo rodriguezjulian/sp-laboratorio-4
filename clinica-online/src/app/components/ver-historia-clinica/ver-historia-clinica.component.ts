@@ -19,4 +19,14 @@ export class VerHistoriaClinicaComponent {
   cerrar() {
       this.cerrarModal.emit();
   }
+  pacienteSeleccionado: any = null;
+
+verHistoriaClinica(paciente: any) {
+  this.pacienteSeleccionado = paciente;
+}
+
+cerrarHistoriaClinica() {
+  this.pacienteSeleccionado = null;
+}
+
 }
