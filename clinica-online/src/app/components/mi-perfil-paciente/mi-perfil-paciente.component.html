@@ -1,5 +1,6 @@
 <div class="fondo">
   <div class="perfil-container">
+    <!-- Encabezado: Imágenes a la izquierda, Información a la derecha -->
     <div class="perfil-header">
       <div class="perfil-images">
         <img [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'" alt="Foto 1" />
@@ -16,6 +17,7 @@
       </div>
     </div>
 
+    <!-- Contenido: Tabla a la izquierda, Descarga a la derecha -->
     <div class="perfil-content">
       <div class="historia-clinica-section">
         <h2>Historia Clínica Completa</h2>
@@ -44,7 +46,7 @@
         </table>
       </div>
 
-      <div class="especialidad-section">
+      <div class="descargar-section">
         <h2>Descargar Historia Clínica</h2>
         <div class="especialidad-selector">
           <label for="especialidad"><strong>Seleccionar Especialidad:</strong></label>
