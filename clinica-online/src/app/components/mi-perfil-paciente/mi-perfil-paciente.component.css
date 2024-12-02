@@ -35,8 +35,8 @@
 }
 
 .perfil-images img {
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #ffd700;
@@ -44,7 +44,7 @@
 }
 
 .perfil-info {
-  font-size: 24px;
+  font-size: 16px;
   line-height: 1.5;
   text-align: left;
   width: 100%;
