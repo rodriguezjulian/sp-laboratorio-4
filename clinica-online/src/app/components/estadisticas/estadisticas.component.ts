@@ -1,59 +1,121 @@
 import * as XLSX from 'xlsx';
 import { FirestoreService } from '../../servicios/firestore.service'; // Ajusta la ruta de tu servicio
 import { Component } from '@angular/core';
+import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-estadisticas',
   templateUrl: './estadisticas.component.html',
   styleUrls: ['./estadisticas.component.scss'],
-  standalone : true
+  standalone: true,
 })
 export class EstadisticasComponent {
   constructor(private firestoreService: FirestoreService) {}
 
-  async ngOnInit()
-  {
+  cantidadDeTurnosPorEspecialidad: { [key: string]: number } = {};
+  tortaChart: Chart | undefined; // Declarar la propiedad
+
+  async ngOnInit() {
     await this.obtenerTurnosPorEspecialidad();
   }
-
 
   async obtenerTurnosPorEspecialidad() {
     const turnos = await this.firestoreService.getTurnos();
     const especialidades = await this.firestoreService.getEspecialidades();
-  
+
     let especialidadesConRepeticion: string[] = [];
-    console.log("Turnos generales: ", turnos);
-  
+    console.log('Turnos generales: ', turnos);
+
     // Crear una lista con las descripciones de las especialidades
-    turnos.forEach(turno => {
-      especialidades.forEach(especialidad => {
+    turnos.forEach((turno) => {
+      especialidades.forEach((especialidad) => {
         if (turno.uidEspecialidad == especialidad.id) {
           especialidadesConRepeticion.push(especialidad.descripcion);
         }
       });
     });
-  
+
     // Calcular la cantidad de repeticiones por especialidad
-    const especialidadesContador: { [key: string]: number } = {};
-  
-    especialidadesConRepeticion.forEach(especialidad => {
-      if (especialidadesContador[especialidad]) {
-        especialidadesContador[especialidad]++;
+    especialidadesConRepeticion.forEach((especialidad) => {
+      if (this.cantidadDeTurnosPorEspecialidad[especialidad]) {
+        this.cantidadDeTurnosPorEspecialidad[especialidad]++;
       } else {
-        especialidadesContador[especialidad] = 1;
+        this.cantidadDeTurnosPorEspecialidad[especialidad] = 1;
       }
     });
-  
-    // Mostrar los resultados
-    Object.entries(especialidadesContador).forEach(([especialidad, cantidad]) => {
-      console.log(`${especialidad}: ${cantidad}`);
-    });
-  
-    // Retornar el diccionario si lo necesitas
-    return especialidadesContador;
-  }
-  
 
+    console.log(this.cantidadDeTurnosPorEspecialidad);
+
+    // Crear el gráfico
+    this.crearGraficoTortaPorEspecialidad();
+  }
+
+  crearGraficoTortaPorEspecialidad() {
+    if (Object.keys(this.cantidadDeTurnosPorEspecialidad).length === 0) {
+      console.warn('No hay datos para mostrar en el gráfico.');
+      return;
+    }
+
+    const labels = Object.keys(this.cantidadDeTurnosPorEspecialidad);
+    const data = Object.values(this.cantidadDeTurnosPorEspecialidad);
+
+    const ctx = document.getElementById(
+      'tortaEspecialidadChart'
+    ) as HTMLCanvasElement;
+    if (ctx) {
+      if (this.tortaChart) {
+        this.tortaChart.destroy(); // Destruye el gráfico anterior si existe
+      }
+
+      this.tortaChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+              backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF',
+                '#FF9F40',
+              ],
+              hoverBackgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF',
+                '#FF9F40',
+              ],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 18,
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: 'Cantidad de Turnos por Especialidad',
+              font: {
+                size: 24,
+              },
+            },
+          },
+        },
+      });
+    }
+  }
 
   async descargarLogins() {
     try {
