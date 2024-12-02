@@ -29,21 +29,30 @@
               <th>Peso</th>
               <th>Presión</th>
               <th>Temperatura</th>
+              <th>Dato 1</th>
+              <th>Dato 2</th>
+              <th>Dato 3</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="!historiaClinicaCompleta.length">
-              <td colspan="5" class="text-center">No hay registros de historia clínica</td>
+              <td [attr.colspan]="5 + clavesDinamicas.length" class="text-center">
+                No hay registros de historia clínica
+              </td>
             </tr>
             <tr *ngFor="let historia of historiaClinicaCompleta">
-              <td>{{ historia.fecha | date: 'shortDate' }}</td>
+              <td>{{ historia.fecha }}</td>
               <td>{{ historia.altura }}</td>
               <td>{{ historia.peso }}</td>
               <td>{{ historia.presion }}</td>
               <td>{{ historia.temperatura }}</td>
+              <td *ngFor="let clave of clavesDinamicas">
+                {{ historia.datosDinamicos?.[clave] || 'N/A' }}
+              </td>
             </tr>
           </tbody>
         </table>
+        
       </div>
 
       <div class="descargar-section">

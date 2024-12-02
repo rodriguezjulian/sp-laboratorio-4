@@ -15,6 +15,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class MiPerfilPacienteComponent implements OnInit {
   paciente: any = {}; // Objeto para almacenar los datos del paciente logueado
+  clavesDinamicas: string[] = []; // Arreglo para las claves dinámicas
   especialidades: string[] =[];// Ejemplo
   especialidadSeleccionada: string | null = null;
   turnosConEspecialidad: any[] = [];
@@ -41,36 +42,38 @@ export class MiPerfilPacienteComponent implements OnInit {
           { field: 'estado', op: '==', value: 'Realizado' },
         ],
       });
+  
+      this.historiaClinicaCompleta = turnos.map((turno: any) => {
+        const datosDinamicos = turno.historiaClinica?.datosDinamicos || []; // Default to an empty array
+        
+        const datosDinamicosObj = datosDinamicos.reduce((acc: any, item: any) => {
+          acc[item.clave] = `${item.clave} ${item.valor}`  || 'N/A';
+          
 
-      this.historiaClinicaCompleta = turnos.map((turno: any) => ({
-        fecha: turno.fecha || 'N/A',
-        altura: turno.historiaClinica?.altura || 'N/A',
-        peso: turno.historiaClinica?.peso || 'N/A',
-        presion: turno.historiaClinica?.presion || 'N/A',
-        temperatura: turno.historiaClinica?.temperatura || 'N/A',
-      }));
+          return acc;
+        }, {});
+        
+        console.log("datos dinamicos", datosDinamicosObj);
 
-      // Cargar especialidades disponibles
-      const especialidadesSet = new Set<string>();
-      turnos.forEach((turno: any) => {
-        if (turno.uidEspecialidad) {
-          especialidadesSet.add(turno.uidEspecialidad);
-        }
+        return {
+          fecha: turno.fecha || 'N/A',
+          altura: turno.historiaClinica?.altura || 'N/A',
+          peso: turno.historiaClinica?.peso || 'N/A',
+          presion: turno.historiaClinica?.presion || 'N/A',
+          temperatura: turno.historiaClinica?.temperatura || 'N/A',
+          datosDinamicos: datosDinamicosObj,
+        };
       });
+  
+      // Obtener todas las claves dinámicas únicas
+      const allClavesDinamicas = turnos
+        .flatMap((turno: any) =>
+          turno.historiaClinica?.datosDinamicos?.map((d: any) => d.clave) || []
+        );
+      this.clavesDinamicas = Array.from(new Set(allClavesDinamicas));
 
-      const aux = Array.from(especialidadesSet);
-      const especias = await this.firestoreService.getEspecialidades();
-      const especialidad = new Set<string>();
-
-      aux.forEach((element) => {
-        especias.forEach((especia) => {
-          if (element === especia.id) {
-            especialidad.add(especia.descripcion);
-          }
-        });
-      });
-
-      this.especialidades = Array.from(especialidad);
+      console.log("claves dinamicas" , this.clavesDinamicas);
+  
     } catch (error) {
       console.error('Error al obtener los datos del paciente:', error);
     }
