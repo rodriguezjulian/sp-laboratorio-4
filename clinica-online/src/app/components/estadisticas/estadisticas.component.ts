@@ -176,13 +176,7 @@ crearGraficoBarrasPorDia() {
               },
             },
           },
-          title: {
-            display: true,
-            text: 'Cantidad de Turnos por Día',
-            font: {
-              size: 24,
-            },
-          },
+
         },
         scales: {
           x: {
