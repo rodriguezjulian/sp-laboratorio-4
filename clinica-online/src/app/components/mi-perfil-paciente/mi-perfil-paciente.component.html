@@ -14,9 +14,22 @@
           <p><strong>Edad:</strong> {{ paciente.edad }}</p>
           <p><strong>Obra Social:</strong> {{ paciente.obraSocial || 'No especificado' }}</p>
         </div>
-        <!-- Botón para descargar historia clínica -->
-        <button class="btn-descargar"><strong> DESCARGAR HISTORIA CLÍNICA </strong> </button>
       </div>
+  
+      <!-- Selector de especialidad -->
+      <div class="especialidad-selector">
+        <label for="especialidad"><strong>Seleccionar Especialidad:</strong></label>
+        <select id="especialidad" [(ngModel)]="especialidadSeleccionada" class="form-control">
+          <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+            {{ especialidad }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Botón de descarga -->
+      <button class="btn-descargar" (click)="descargarHistoriaClinica()" [disabled]="!especialidadSeleccionada">
+        DESCARGAR HISTORIA CLÍNICA
+      </button>
     </div>
   </div>
   

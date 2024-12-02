@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DocumentSnapshot, Firestore, QuerySnapshot, collection, QueryConstraint,
-  collectionGroup, deleteDoc, doc, getDoc, getDocs, serverTimestamp, where, query,
+  collectionGroup, deleteDoc, doc, getDoc, getDocs, serverTimestamp, where, query,CollectionReference ,
   setDoc, updateDoc} from '@angular/fire/firestore';
 import {  onSnapshot } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 })
 export class FirestoreService {
 
-  constructor(private firestore: Firestore) { }
-  
+  constructor(private firestore: Firestore) {this.turnosCollection = collection(this.firestore, 'turnos'); }
+  private turnosCollection: CollectionReference;
   //---| CREATE |---//
   async createDocument<tipo>(path: string, data: tipo, id: string | null = null) {
     let refDoc;
@@ -107,6 +107,28 @@ export class FirestoreService {
       return adminDocs.docs.map(doc => doc.data()); // Retorna un array con todos los administradores
     } catch (error) {
       console.error("Error al obtener la colección de administradores:", error);
+      throw error;
+    }
+  }
+  async getTurnos(options?: { where?: { field: string; op: any; value: any }[] }): Promise<any[]> {
+    try {
+      // Construcción de la consulta
+      let turnosQuery = this.turnosCollection;
+
+      if (options?.where) {
+        let q = query(turnosQuery);
+        options.where.forEach((filter) => {
+          q = query(q, where(filter.field, filter.op, filter.value));
+        });
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      }
+
+      // Si no hay filtros, obtener todos los turnos
+      const querySnapshot = await getDocs(turnosQuery);
+      return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      console.error('Error al obtener turnos:', error);
       throw error;
     }
   }
