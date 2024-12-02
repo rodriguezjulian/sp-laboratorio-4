@@ -71,5 +71,11 @@ export const routes: Routes = [
   {
     path: 'mi-perfil-paciente',
     loadComponent: () => import('./components/mi-perfil-paciente/mi-perfil-paciente.component').then((m) => m.MiPerfilPacienteComponent),
+  },
+  {
+    path: 'estadisticas',
+    loadComponent: () => import('./components/estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent),
   }
+
+  
 ];
