@@ -3,18 +3,53 @@ import { FirestoreService } from '../../servicios/firestore.service'; // Ajusta 
 import { Component } from '@angular/core';
 import Chart from 'chart.js/auto';
 import jsPDF from 'jspdf';
+import { CommonModule } from '@angular/common';
+
+
+
+
+
+import { OnInit ,ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
+
+import { formatDate } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+
+import {} from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatNativeDateModule } from '@angular/material/core';
+
+
+
 
 @Component({
   selector: 'app-estadisticas',
   templateUrl: './estadisticas.component.html',
   styleUrls: ['./estadisticas.component.scss'],
   standalone: true,
+  imports : [CommonModule ,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatNativeDateModule,]
 })
 export class EstadisticasComponent {
   constructor(private firestoreService: FirestoreService) {}
   barrasChart: Chart | undefined;
+  turnos : any [] =[];
   cantidadDeTurnosPorEspecialidad: { [key: string]: number } = {};
   tortaChart: Chart | undefined; // Declarar la propiedad
+  FechaDesdeMedico: any;
+  
+FechaHastaMedico: any;
+cantidadDeTurnosPorMedicoEnPeriodo: Record<string, number> = {};
+turnosPorMedicoChart: Chart | undefined;
+
   cantidadDeTurnosPorDia: { [key: string]: number } = {};
   async ngOnInit() {
     await this.obtenerTurnosPorEspecialidad();
@@ -46,11 +81,169 @@ export class EstadisticasComponent {
       }
     });
 
-    console.log(this.cantidadDeTurnosPorEspecialidad);
+
 
     // Crear el gráfico
     this.crearGraficoTortaPorEspecialidad();
   }
+
+
+  crearGraficoTurnosPorMedico() {
+    if (Object.keys(this.cantidadDeTurnosPorMedicoEnPeriodo).length === 0) {
+      console.warn('No hay datos para mostrar en el gráfico.');
+      return;
+    }
+  
+    console.log('Creando gráfico con los siguientes datos:', this.cantidadDeTurnosPorMedicoEnPeriodo);
+  
+    const labels = Object.keys(this.cantidadDeTurnosPorMedicoEnPeriodo);
+    const data = Object.values(this.cantidadDeTurnosPorMedicoEnPeriodo);
+  
+    // Esperar a que el canvas esté en el DOM
+    setTimeout(() => {
+      const ctx = document.getElementById('turnosPorMedicoChart') as HTMLCanvasElement;
+  
+      if (!ctx) {
+        console.error('No se encontró el canvas con ID turnosPorMedicoChart en el DOM.');
+        return;
+      }
+  
+      if (this.turnosPorMedicoChart) {
+        this.turnosPorMedicoChart.destroy(); // Destruir el gráfico anterior si existe
+      }
+  
+      this.turnosPorMedicoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Turnos Solicitados',
+              data: data,
+              backgroundColor: '#36A2EB',
+              borderColor: '#003F7D',
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 18,
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 18,
+                },
+              },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: {
+                  size: 18,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      console.log('Gráfico creado con éxito.');
+    }, 100);
+  }
+  
+  
+  
+
+  async MostrarTurnosPorMedico() {
+    console.log("por aca");
+    if (!this.FechaDesdeMedico || !this.FechaHastaMedico) {
+      console.warn('Por favor, selecciona ambas fechas.');
+      return;
+    }
+  
+    const fechaDesde = new Date(this.FechaDesdeMedico).toISOString();
+    const fechaHasta = new Date(this.FechaHastaMedico).toISOString();
+  
+    // Filtrar turnos en el rango de fechas
+    this.turnos = await this.firestoreService.getTurnos();
+    console.log("que vale this.turnos " ,this.turnos);
+
+    const turnosEnPeriodo = this.turnos.filter((turno: any) => {
+      const fechaTurno = turno.fecha; // La fecha ya está en formato cadena
+      return fechaTurno >= fechaDesde && fechaTurno <= fechaHasta;
+    });
+  
+    console.log('Turnos en el período:', turnosEnPeriodo);
+  
+    // Obtener los especialistas para mapear nombres
+    const especialistas = await this.firestoreService.getEspecialistas();
+    const especialistaMap: Record<string, { nombre: string; apellido: string }> = {};
+  
+    especialistas.forEach((especialista: any) => {
+      especialistaMap[especialista.id] = {
+        nombre: especialista.nombre,
+        apellido: especialista.apellido,
+      };
+    });
+  
+    console.log('Mapa de especialistas:', especialistaMap);
+  
+    // Contar turnos por médico
+    this.cantidadDeTurnosPorMedicoEnPeriodo = {};
+    turnosEnPeriodo.forEach((turno: any) => {
+      const uidEspecialista = turno.uidEspecialista;
+      const especialista = especialistaMap[uidEspecialista];
+  
+      if (especialista) {
+        const medicoNombre = `${especialista.nombre} ${especialista.apellido}`;
+        if (!this.cantidadDeTurnosPorMedicoEnPeriodo[medicoNombre]) {
+          this.cantidadDeTurnosPorMedicoEnPeriodo[medicoNombre] = 0;
+        }
+        this.cantidadDeTurnosPorMedicoEnPeriodo[medicoNombre]++;
+      } else {
+        console.warn(`No se encontró el especialista con UID: ${uidEspecialista}`);
+      }
+    });
+  
+    console.log(
+      'Cantidad de turnos por médico en el período:',
+      this.cantidadDeTurnosPorMedicoEnPeriodo
+    );
+  
+    this.crearGraficoTurnosPorMedico();
+  }
+  
+
+  
+  exportarTurnosPorMedico() {
+    const canvas = document.getElementById('turnosPorMedicoChart') as HTMLCanvasElement;
+    if (!canvas) {
+      console.warn('No se encontró el gráfico.');
+      return;
+    }
+  
+    const doc = new jsPDF();
+    doc.text('Turnos Solicitados por Médico', 10, 10);
+  
+    const chartImage = canvas.toDataURL('image/png');
+    doc.addImage(chartImage, 'PNG', 10, 20, 180, 100);
+  
+    doc.save('Turnos_Por_Medico.pdf');
+  }
+  
+  
   descargarTortaPorEspecialidad() {
     const canvas = document.getElementById('tortaEspecialidadChart') as HTMLCanvasElement;
     if (!canvas) {

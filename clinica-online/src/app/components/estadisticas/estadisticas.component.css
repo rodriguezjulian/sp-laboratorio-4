@@ -68,3 +68,25 @@
     color : black;
     transform: scale(1.1);
   }
+  canvas {
+    margin: 20px auto;
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: auto; /* Ajusta la altura proporcionalmente */
+    background-color: white; /* Fondo blanco para asegurar visibilidad */
+    border: 1px solid #ccc; /* Para identificar su contenedor */
+  }
+  .col-6.d-flex {
+    width: 100%; /* Ajusta el ancho */
+    max-width: 800px;
+    height: auto; /* Asegura proporciones adecuadas */
+    justify-content: center;
+  }
+  
+  .chart {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+  }
+  
