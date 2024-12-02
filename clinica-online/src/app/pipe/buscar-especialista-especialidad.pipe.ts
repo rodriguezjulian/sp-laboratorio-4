@@ -16,7 +16,10 @@ export class BuscarEspecialistaEspecialidadPipe implements PipeTransform {
 
       // Filtrar por especialidad
       const matchesEspecialidad = turno.especialidad?.toLowerCase().includes(lowerBuscar);
-
+      const matchAltura = turno.historiaClinica?.altura.toLowerCase().includes(lowerBuscar);
+      const peso  = turno.historiaClinica?.peso.toLowerCase().includes(lowerBuscar);
+      const presion  = turno.historiaClinica?.presion.toLowerCase().includes(lowerBuscar);
+      const temperatura  = turno.historiaClinica?.temperatura.toLowerCase().includes(lowerBuscar);
       // Filtrar por datosDinamicos en historia clínica
       const matchesDatosDinamicos = turno.historiaClinica?.datosDinamicos?.some((dato: any) => 
         dato.clave?.toLowerCase().includes(lowerBuscar) || 
@@ -24,7 +27,7 @@ export class BuscarEspecialistaEspecialidadPipe implements PipeTransform {
       );
 
       // Combinación de criterios
-      return matchesNombre || matchesApellido || matchesEspecialidad || matchesDatosDinamicos;
+      return matchesNombre || matchesApellido || matchesEspecialidad || matchesDatosDinamicos || matchAltura || peso || presion || temperatura;;
     });
   }
 }
