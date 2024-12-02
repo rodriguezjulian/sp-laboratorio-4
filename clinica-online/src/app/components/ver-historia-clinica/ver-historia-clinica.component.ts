@@ -11,18 +11,20 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class VerHistoriaClinicaComponent {
   @Input() paciente: any; // Paciente con su historia clínica
   @Output() cerrarModal = new EventEmitter<void>();
-
+  datosDinamicosProcesados: string[][] = [];
   async ngOnInit() {
+    console.log("Desde ver historia clinica", this.paciente);
 
-    console.log("Desde ver historia clinica " ,  this.paciente);
-   // console.log("Desde ver historia clinica " ,  this.paciente.historiaClinica.datosDinamicos); 
+    // Procesar los datos dinámicos
+    this.datosDinamicosProcesados = this.paciente.historiaClinica.map((historias: any) =>
+      historias.datosDinamicos.map(
+        (historia: any) => `${historia.clave}: ${historia.valor}`
+      )
+    );
 
-    this.paciente.historiaClinica.forEach((historias: any) => {
-      historias.datosDinamicos.forEach((historia: any) => {
-        console.log(`esto: ${historia.clave} ${historia.valor}`);
-      });
-    });
+    console.log("Datos dinámicos procesados:", this.datosDinamicosProcesados);
   }
+
   cerrar() {
       this.cerrarModal.emit();
   }

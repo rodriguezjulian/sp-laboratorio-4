@@ -1,6 +1,6 @@
 <div class="historia-clinica-container">
   <h3>Historia Clínica</h3>
-  <table class="table table-bordered table-custom a">
+  <table class="table table-bordered table-custom">
     <thead>
       <tr>
         <th>Fecha</th>
@@ -15,14 +15,17 @@
     </thead>
     <tbody>
       <tr *ngIf="!paciente?.historiaClinica?.length">
-        <td colspan="5" class="text-center">No hay registros de historia clínica</td>
+        <td colspan="8" class="text-center">No hay registros de historia clínica</td>
       </tr>
-      <tr *ngFor="let historia of paciente?.historiaClinica || []">
+      <tr *ngFor="let historia of paciente?.historiaClinica || []; let i = index">
         <td>{{ historia.fecha | date: 'shortDate' }}</td>
         <td>{{ historia.altura }}</td>
         <td>{{ historia.peso }}</td>
         <td>{{ historia.presion }}</td>
         <td>{{ historia.temperatura }}</td>
+        <td>{{ datosDinamicosProcesados[i]?.[0] || 'N/A' }}</td>
+        <td>{{ datosDinamicosProcesados[i]?.[1] || 'N/A' }}</td>
+        <td>{{ datosDinamicosProcesados[i]?.[2] || 'N/A' }}</td>
       </tr>
     </tbody>
   </table>
