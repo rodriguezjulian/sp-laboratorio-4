@@ -2,64 +2,71 @@
     <h2>ESTADÍSTICAS DEL SISTEMA</h2>
     
     <!-- Reporte de logins -->
-    <button class="action-button" (click)="descargarLogins()">Descargar reporte de inicios de sesión</button>
+    <div class="section">
+        <button class="action-button" (click)="descargarLogins()">Descargar reporte de inicios de sesión</button>
+    </div>
     
     <!-- Gráfico de turnos por especialidad -->
-    <canvas id="tortaEspecialidadChart" style="max-width: 400px; margin: auto;"></canvas>
-    <button class="action-button" (click)="descargarTortaPorEspecialidad()">Descargar gráfico (PDF)</button>
+    <div class="section">
+        <canvas id="tortaEspecialidadChart" style="max-width: 400px; margin: auto;"></canvas>
+        <button class="action-button mt-3" (click)="descargarTortaPorEspecialidad()">Descargar gráfico (PDF)</button>
+    </div>
     
     <!-- Gráfico de turnos por día -->
-    <canvas id="barrasDiaChart" style="max-width: 600px; margin: auto;"></canvas>
-    <button class="action-button" (click)="descargarBarrasPorDia()">Descargar gráfico (PDF)</button>
+    <div class="section">
+        <canvas id="barrasDiaChart" style="max-width: 600px; margin: auto;"></canvas>
+        <button class="action-button mt-3" (click)="descargarBarrasPorDia()">Descargar gráfico (PDF)</button>
+    </div>
   
     <!-- Cantidad de turnos solicitados por médico en un lapso de tiempo -->
-    <h3>Turnos Solicitados Por Médico</h3>
-    <div class="d-flex justify-content-evenly align-items-center">
-      <div>
-        <label class="lbl-desde-hasta">Desde:</label>
-        <mat-form-field class="example-full-width">
-          <mat-label>Selecciona una fecha</mat-label>
-          <input
-            matInput
-            [matDatepicker]="pickerDesdeMedico"
-            [(ngModel)]="FechaDesdeMedico"
-            (dateChange)="MostrarTurnosPorMedico()"
-          />
-          <mat-datepicker-toggle matIconSuffix [for]="pickerDesdeMedico">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #pickerDesdeMedico></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div>
-        <label class="lbl-desde-hasta">Hasta:</label>
-        <mat-form-field class="example-full-width">
-          <mat-label>Selecciona una fecha</mat-label>
-          <input
-            matInput
-            [matDatepicker]="pickerHastaMedico"
-            [(ngModel)]="FechaHastaMedico"
-            (dateChange)="MostrarTurnosPorMedico()"
-          />
-          <mat-datepicker-toggle matIconSuffix [for]="pickerHastaMedico">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #pickerHastaMedico></mat-datepicker>
-        </mat-form-field>
-      </div>
+    <div class="section">
+        <h3>Turnos solicitados por médico (periodo)</h3>
+        <div class="d-flex justify-content-evenly align-items-center mb-4">
+            <div>
+                <label class="lbl-desde-hasta">Desde:</label>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Selecciona una fecha</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="pickerDesdeMedico"
+                        [(ngModel)]="FechaDesdeMedico"
+                        (dateChange)="MostrarTurnosPorMedico()"
+                    />
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerDesdeMedico">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerDesdeMedico></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <label class="lbl-desde-hasta">Hasta:</label>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Selecciona una fecha</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="pickerHastaMedico"
+                        [(ngModel)]="FechaHastaMedico"
+                        (dateChange)="MostrarTurnosPorMedico()"
+                    />
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerHastaMedico">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #pickerHastaMedico></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div *ngIf="!FechaDesdeMedico || !FechaHastaMedico" class="col-8">
+            <h3>Seleccione las fechas.</h3>
+        </div>
+
+        <div *ngIf="FechaDesdeMedico && FechaHastaMedico">
+            <div class="col-6 d-flex justify-content-center align-items-center">
+                <canvas id="turnosPorMedicoChart" width="800" height="400"></canvas>
+            </div>
+            <div class="col-6 mt-3 d-flex justify-content-center">
+                <button class="action-button" (click)="exportarTurnosPorMedico()">Exportar a PDF</button>
+            </div>
+        </div>
     </div>
-  
-    <div *ngIf="!FechaDesdeMedico || !FechaHastaMedico" class="col-8">
-      <h3>Seleccione las fechas.</h3>
-    </div>
-  
-    <div *ngIf="FechaDesdeMedico && FechaHastaMedico">
-      <div class="col-6 d-flex justify-content-center align-items-center">
-        <canvas id="turnosPorMedicoChart" width="800" height="400"></canvas>
-      </div>
-      <div class="col-6 mt-3 d-flex justify-content-center">
-        <button class="action-button" (click)="exportarTurnosPorMedico()">Exportar a PDF</button>
-      </div>
-    </div>
-  </div>
-  
+</div>

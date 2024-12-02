@@ -2,7 +2,7 @@
     text-align: center;
     margin-top: 50px;
   }
-  
+
   button {
     padding: 10px 20px;
     font-size: 1.2rem;
@@ -34,6 +34,18 @@
     width: 800px;
     height: 800px;
   }
+  .section {
+    margin-bottom: 40px; /* Espacio entre secciones */
+}
+
+.section canvas {
+    margin-bottom: 20px; /* Espacio entre el gráfico y el botón */
+}
+
+.action-button {
+    margin-top: 20px; /* Espacio adicional si es necesario */
+}
+
   canvas {
     margin: auto;
     display: block;
