@@ -1,35 +1,62 @@
 <div class="fondo">
-    <div class="perfil-container">
-      <h1>Mi Perfil</h1>
-      <div class="perfil-card">
-        <div class="perfil-images">
-          <img [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'" alt="Foto 1" />
-          <img [src]="paciente.urlFotoPerfilDos || 'assets/default-avatar.png'" alt="Foto 2" />
-        </div>
-        <div class="perfil-info">
-          <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
-          <p><strong>Apellido:</strong> {{ paciente.apellido }}</p>
-          <p><strong>Correo:</strong> {{ paciente.correo }}</p>
-          <p><strong>DNI:</strong> {{ paciente.dni }}</p>
-          <p><strong>Edad:</strong> {{ paciente.edad }}</p>
-          <p><strong>Obra Social:</strong> {{ paciente.obraSocial || 'No especificado' }}</p>
-        </div>
+  <div class="perfil-container">
+    <h1>Mi Perfil</h1>
+    <div class="perfil-card">
+      <div class="perfil-images">
+        <img [src]="paciente.urlFotoPerfil || 'assets/default-avatar.png'" alt="Foto 1" />
+        <img [src]="paciente.urlFotoPerfilDos || 'assets/default-avatar.png'" alt="Foto 2" />
       </div>
-  
-      <!-- Selector de especialidad -->
-      <div class="especialidad-selector">
-        <label for="especialidad"><strong>Seleccionar Especialidad:</strong></label>
-        <select id="especialidad" [(ngModel)]="especialidadSeleccionada" class="form-control">
-          <option *ngFor="let especialidad of especialidades" [value]="especialidad">
-            {{ especialidad }}
-          </option>
-        </select>
+      <div class="perfil-info">
+        <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+        <p><strong>Apellido:</strong> {{ paciente.apellido }}</p>
+        <p><strong>Correo:</strong> {{ paciente.correo }}</p>
+        <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+        <p><strong>Edad:</strong> {{ paciente.edad }}</p>
+        <p><strong>Obra Social:</strong> {{ paciente.obraSocial || 'No especificado' }}</p>
       </div>
-  
-      <!-- Botón de descarga -->
-      <button class="btn-descargar" (click)="descargarHistoriaClinica()" [disabled]="!especialidadSeleccionada">
-        DESCARGAR HISTORIA CLÍNICA
-      </button>
     </div>
+
+    <!-- Tabla de Historia Clínica -->
+    <div class="tabla-historia-clinica">
+      <h2>Historia Clínica Completa</h2>
+      <table class="table table-bordered table-custom">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Altura</th>
+            <th>Peso</th>
+            <th>Presión</th>
+            <th>Temperatura</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!historiaClinicaCompleta.length">
+            <td colspan="5" class="text-center">No hay registros de historia clínica</td>
+          </tr>
+          <tr *ngFor="let historia of historiaClinicaCompleta">
+            <td>{{ historia.fecha | date: 'shortDate' }}</td>
+            <td>{{ historia.altura }}</td>
+            <td>{{ historia.peso }}</td>
+            <td>{{ historia.presion }}</td>
+            <td>{{ historia.temperatura }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Selector de especialidad -->
+    <div class="especialidad-selector">
+      <label for="especialidad"><strong>Seleccionar Especialidad:</strong></label>
+      <select id="especialidad" [(ngModel)]="especialidadSeleccionada" class="form-control">
+        <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+          {{ especialidad }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Botón de descarga -->
+    <button class="btn-descargar" (click)="descargarHistoriaClinica()" [disabled]="!especialidadSeleccionada">
+      DESCARGAR HISTORIA CLÍNICA
+    </button>
   </div>
-  
+</div>

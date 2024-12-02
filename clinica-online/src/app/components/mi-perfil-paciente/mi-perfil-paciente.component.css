@@ -90,3 +90,41 @@
   cursor: not-allowed;
   transform: none;
 }
+.tabla-historia-clinica {
+  margin: 20px 0;
+}
+
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 8px;
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.table-custom thead th {
+  background-color: #4caf50;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.table-custom tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.table-custom tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #e0f7fa;
+}

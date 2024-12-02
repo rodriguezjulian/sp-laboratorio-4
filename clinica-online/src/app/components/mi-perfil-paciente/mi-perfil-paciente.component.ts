@@ -6,10 +6,6 @@ import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-
-
-
-
 @Component({
   selector: 'app-mi-perfil-paciente',
   templateUrl: './mi-perfil-paciente.component.html',
@@ -22,55 +18,59 @@ export class MiPerfilPacienteComponent implements OnInit {
   especialidades: string[] =[];// Ejemplo
   especialidadSeleccionada: string | null = null;
   turnosConEspecialidad: any[] = [];
-
+  historiaClinicaCompleta: any[] = []; // Agrega esta propiedad
   constructor(
     private auth: AuthService,
     private firestoreService: FirestoreService
   ) {}
 
+  
   async ngOnInit() {
     try {
       // Obtener el usuario logueado
       const usuarioLogueado = await this.auth.obtenerUsuarioActual();
-      console.log('Usuario logueado:', usuarioLogueado);
-
-      // Obtener los datos del paciente desde Firestore
       const pacienteDoc = await this.firestoreService.getDocument(
         `paciente/${usuarioLogueado?.uid}`
       );
       this.paciente = pacienteDoc.exists() ? pacienteDoc.data() : {};
-      console.log('Datos del paciente:', this.paciente);
 
+      // Cargar historia clínica completa
       const turnos = await this.firestoreService.getTurnos({
         where: [
           { field: 'uidPaciente', op: '==', value: this.paciente.id },
           { field: 'estado', op: '==', value: 'Realizado' },
         ],
       });
+
+      this.historiaClinicaCompleta = turnos.map((turno: any) => ({
+        fecha: turno.fecha || 'N/A',
+        altura: turno.historiaClinica?.altura || 'N/A',
+        peso: turno.historiaClinica?.peso || 'N/A',
+        presion: turno.historiaClinica?.presion || 'N/A',
+        temperatura: turno.historiaClinica?.temperatura || 'N/A',
+      }));
+
+      // Cargar especialidades disponibles
       const especialidadesSet = new Set<string>();
       turnos.forEach((turno: any) => {
         if (turno.uidEspecialidad) {
           especialidadesSet.add(turno.uidEspecialidad);
         }
       });
-  
-      // Convertir Set a Array
+
       const aux = Array.from(especialidadesSet);
       const especias = await this.firestoreService.getEspecialidades();
       const especialidad = new Set<string>();
 
-      aux.forEach(element => {
-        especias.forEach(especia => {
-          if(element == especia.id )
-            {
-              console.log("entre??");
-              especialidad.add(especia.descripcion)
-            }
+      aux.forEach((element) => {
+        especias.forEach((especia) => {
+          if (element === especia.id) {
+            especialidad.add(especia.descripcion);
+          }
         });
       });
 
-      this.especialidades =  Array.from(especialidad);
-      console.log("aca ,", this.especialidades	)
+      this.especialidades = Array.from(especialidad);
     } catch (error) {
       console.error('Error al obtener los datos del paciente:', error);
     }
