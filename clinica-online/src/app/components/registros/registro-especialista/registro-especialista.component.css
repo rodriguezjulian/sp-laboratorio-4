@@ -1,150 +1,152 @@
 .fondo {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(45deg, #FFD700, #e48080);
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .especialidad
-  {
-    color: black !;
-  }
-  
-  .container {
-    max-width: 600px;
-    width: 100%;
-    padding: 20px;
-  }
-  .select-black {
-    height: auto;
-    min-height: 150px; /* Altura mínima */
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: white;
-    color: black;
-  }
-  
-  .select-black option {
-    padding: 5px;
-    cursor: pointer;
-  }
-  
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(45deg, #FFD700, #e48080);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.especialidad
+{
+  color: black;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+}
 .select-black {
-    color: black;
-    background-color: white;
-    border: 1px solid #ffee00;
-    border-radius: 5px;
-    padding: 10px;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
-  
-  .select-black option {
-    color: black; 
-    background-color: white;
-  }
-  
-  .card {
-    background-color: #343a40;
-    border-radius: 1rem;
-    padding: 2rem;
-    color: white;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Formulario */
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  label {
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    color: #ccc;
-    text-align: left;
-  }
-  
-  .form-input {
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1rem;
-    transition: border 0.3s;
-  }
-  
-  .form-input:focus {
-    outline: none;
-    border: 1px solid #ffee00;
-  }
-  
-  /* Especialidad Nueva */
-  .new-specialty {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .specialty-container {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .specialty-container .btn {
-    padding: 10px 15px;
-    border: none;
-    background-color: #ffee00;
-    color: black;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .specialty-container .btn:hover {
-    background-color: #e6d000;
-  }
-  
-  /* Botón de Enviar */
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .submit-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    background-color: #4caf50;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #45a045;
-  }
-  .mat-form-field {
-    width: 100%;
-    color : white;
-  }
-  
-  .mat-option {
-    text-align: left;
-    color : white;
-  }
-  
+  height: auto;
+  min-height: 150px; /* Altura mínima */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+  color: black;
+}
+
+.select-black option {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.select-black {
+  color: black;
+  background-color: white;
+  border: 1px solid #ffee00;
+  border-radius: 5px;
+  padding: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-black option {
+  color: black; 
+  background-color: white;
+}
+
+.card {
+  background-color: #343a40;
+  border-radius: 1rem;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.x
+{
+  color :white !important;
+}
+label {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #ccc;
+  text-align: left;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border: 1px solid #ffee00;
+}
+
+/* Especialidad Nueva */
+.new-specialty {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.specialty-container {
+  display: flex;
+  gap: 10px;
+}
+
+.specialty-container .btn {
+  padding: 10px 15px;
+  border: none;
+  background-color: #ffee00;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.specialty-container .btn:hover {
+  background-color: #e6d000;
+}
+
+/* Botón de Enviar */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #45a045;
+}
+.mat-form-field {
+  width: 100%;
+  color : white;
+}
+
+.mat-option {
+  text-align: left;
+  color : white;
+}
