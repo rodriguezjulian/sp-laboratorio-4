@@ -6,7 +6,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import * as XLSX from 'xlsx';
 import {pasaPorArriba} from '../../directivas/app-tooltip-directive.directive'
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-seccion-usuarios',
   templateUrl: './seccion-usuarios.component.html',
@@ -53,10 +53,96 @@ export class SeccionUsuariosComponent {
     this.loadTurnos(); // Cargar los turnos desde la base de dato
   }
 
-  verHistoria(paciente : any)
-  {
-    console.log("solo quiero ver que me esta llegando ", paciente);
-  }
+async verHistoria(paciente: any) {
+  // Obtener turnos realizados
+  const turnos = await this.firestoreService.getCollection('turnos', {
+    where: [
+      { field: 'uidPaciente', op: '==', value: paciente.id },
+      { field: 'estado', op: '==', value: 'Realizado' },
+    ],
+  });
+
+  console.log("Paciente seleccionado: ", paciente);
+  console.log("Turnos obtenidos: ", turnos);
+
+  const historial: any[] = [];
+
+  turnos.forEach((turno: any) => {
+    const dataAMostar: any = {
+      fecha: turno.fecha || 'N/A',
+      estado: turno.estado || 'N/A',
+      diagnostico: turno.diagnostico || 'N/A',
+      altura: turno.historiaClinica?.altura || 'N/A',
+      peso: turno.historiaClinica?.peso || 'N/A',
+      presion: turno.historiaClinica?.presion || 'N/A',
+      temperatura: turno.historiaClinica?.temperatura || 'N/A',
+      dato1: turno.historiaClinica?.datosDinamicos?.[0]
+        ? `${turno.historiaClinica.datosDinamicos[0].clave ?? "N/A"} ${turno.historiaClinica.datosDinamicos[0].valor ?? "N/A"}`
+        : "N/A",
+      dato2: turno.historiaClinica?.datosDinamicos?.[1]
+        ? `${turno.historiaClinica.datosDinamicos[1].clave ?? "N/A"} ${turno.historiaClinica.datosDinamicos[1].valor ?? "N/A"}`
+        : "N/A",
+      dato3: turno.historiaClinica?.datosDinamicos?.[2]
+        ? `${turno.historiaClinica.datosDinamicos[2].clave ?? "N/A"} ${turno.historiaClinica.datosDinamicos[2].valor ?? "N/A"}`
+        : "N/A",
+    };
+
+    historial.push(dataAMostar);
+  });
+
+  const tableRows = historial
+    .map(
+      (entry) => `
+      <tr>
+        <td>${entry.fecha}</td>
+        <td>${entry.estado}</td>
+        <td>${entry.diagonostico}</td>
+        <td>${entry.altura}</td>
+        <td>${entry.peso}</td>
+        <td>${entry.presion}</td>
+        <td>${entry.temperatura}</td>
+        <td>${entry.dato1}</td>
+        <td>${entry.dato2}</td>
+        <td>${entry.dato3}</td>
+      </tr>
+    `
+    )
+    .join('');
+
+  const tableHTML = `
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed;">
+        <thead>
+          <tr style="background-color: #f2f2f2;">
+            <th style="min-width: 100px;">Fecha</th>
+            <th style="min-width: 100px;">Estado</th>
+            <th style="min-width: 200px;">Diagnóstico</th>
+            <th style="min-width: 100px;">Altura</th>
+            <th style="min-width: 100px;">Peso</th>
+            <th style="min-width: 100px;">Presión</th>
+            <th style="min-width: 120px;">Temperatura</th>
+            <th style="min-width: 200px;">Dato 1</th>
+            <th style="min-width: 200px;">Dato 2</th>
+            <th style="min-width: 200px;">Dato 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  Swal.fire({
+    title: 'Historia Clínica',
+    html: tableHTML,
+    width: '1500px', // Aumenta el ancho del modal
+    showCloseButton: true,
+    confirmButtonText: 'Cerrar',
+    scrollbarPadding: false,
+  });
+}
+
   async toggleHabilitado(especialista: any) {
     especialista.habilitado = !especialista.habilitado;
     try {
