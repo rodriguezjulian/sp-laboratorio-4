@@ -1,10 +1,10 @@
 .fondo {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   background: linear-gradient(45deg, #ffd700, #e48080);
   background-attachment: fixed;
   background-size: cover;
@@ -12,31 +12,25 @@
 }
 
 .perfil-container {
-  max-width: 800px;
+  width: 100%;
+  max-width: 1200px;
   background: rgba(0, 0, 0, 0.8);
   padding: 20px;
   border-radius: 12px;
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-top: 50px;
-  text-align: center;
 }
 
-.perfil-card {
+.perfil-header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.perfil-images {
-  display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
 .perfil-images img {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #ffd700;
@@ -44,15 +38,53 @@
 }
 
 .perfil-info {
+  flex: 1;
   font-size: 16px;
   line-height: 1.5;
-  text-align: left;
-  width: 100%;
 }
 
-/* Selector de especialidad */
-.especialidad-selector {
-  margin: 20px 0;
+.perfil-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.historia-clinica-section,
+.especialidad-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 8px;
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 10px;
+  text-align: center;
+}
+
+.table-custom thead th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.table-custom tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.table-custom tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #e0f7fa;
 }
 
 .form-control {
@@ -63,10 +95,8 @@
   border-radius: 6px;
   background: #fff;
   color: #333;
-  margin-top: 10px;
 }
 
-/* Botón de descarga */
 .btn-descargar {
   margin-top: 20px;
   padding: 12px 20px;
@@ -88,43 +118,4 @@
 .btn-descargar:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-  transform: none;
-}
-.tabla-historia-clinica {
-  margin: 20px 0;
-}
-
-.table-custom {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: white;
-  border-radius: 8px;
-}
-
-.table-custom th,
-.table-custom td {
-  padding: 10px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.table-custom thead th {
-  background-color: #4caf50;
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.table-custom tbody tr:nth-child(odd) {
-  background-color: #f9f9f9;
-}
-
-.table-custom tbody tr:nth-child(even) {
-  background-color: #f1f1f1;
-}
-
-.table-custom tbody tr:hover {
-  background-color: #e0f7fa;
 }
