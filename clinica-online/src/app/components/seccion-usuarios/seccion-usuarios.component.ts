@@ -71,7 +71,7 @@ async verHistoria(paciente: any) {
     const dataAMostar: any = {
       fecha: turno.fecha || 'N/A',
       estado: turno.estado || 'N/A',
-      diagnostico: turno.diagnostico || 'N/A',
+      diagnostico: turno.diagonostico || 'N/A',
       altura: turno.historiaClinica?.altura || 'N/A',
       peso: turno.historiaClinica?.peso || 'N/A',
       presion: turno.historiaClinica?.presion || 'N/A',
@@ -96,7 +96,7 @@ async verHistoria(paciente: any) {
       <tr>
         <td>${entry.fecha}</td>
         <td>${entry.estado}</td>
-        <td>${entry.diagonostico}</td>
+        <td>${entry.diagnostico}</td>
         <td>${entry.altura}</td>
         <td>${entry.peso}</td>
         <td>${entry.presion}</td>
