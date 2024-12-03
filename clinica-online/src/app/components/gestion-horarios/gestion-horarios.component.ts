@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { LoaderService } from '../../servicios/loader.service'
-
+import {OcultarPrimerasPipe} from '../../pipe/ocultar-primeras.pipe'
 @Component({
   selector: 'app-gestion-horarios',
   templateUrl: './gestion-horarios.component.html',
   styleUrls: ['./gestion-horarios.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,OcultarPrimerasPipe],
 })
 export class GestionHorariosComponent implements OnInit {
   especialista: any;

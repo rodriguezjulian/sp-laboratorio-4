@@ -16,8 +16,8 @@
         <!-- Datos del especialista -->
         <div class="datos-container ms-4">
           <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
-          <p><strong>DNI:</strong> {{ especialista?.dni }}</p>
-          <p><strong>Correo:</strong> {{ especialista?.correo }}</p>
+          <p><strong>DNI:</strong> {{ especialista?.dni | ocultarPrimeras}}</p>
+          <p><strong>Correo:</strong> {{ especialista?.correo | ocultarPrimeras }}</p>
         </div>
       </div>
   
