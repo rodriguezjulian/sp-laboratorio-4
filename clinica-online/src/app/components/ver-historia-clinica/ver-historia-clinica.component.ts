@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter,SimpleChanges  } from '@angular/core';
 import {ReemplazarNulosPipe} from '../../pipe/reemplazar-nulos.pipe'
 
 @Component({
@@ -13,19 +13,29 @@ export class VerHistoriaClinicaComponent {
   @Input() paciente: any; // Paciente con su historia clínica
   @Output() cerrarModal = new EventEmitter<void>();
   datosDinamicosProcesados: string[][] = [];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['paciente'] && changes['paciente'].currentValue) {
+      this.procesarDatosDinamicos();
+    }
+  }
+
   async ngOnInit() {
     console.log("Desde ver historia clinica", this.paciente);
 
     // Procesar los datos dinámicos
-    this.datosDinamicosProcesados = this.paciente.historiaClinica.map((historias: any) =>
-      historias.datosDinamicos.map(
-        (historia: any) => `${historia.clave}: ${historia.valor}`
-      )
-    );
+
 
     console.log("Datos dinámicos procesados:", this.datosDinamicosProcesados);
   }
-
+procesarDatosDinamicos()
+{
+  this.datosDinamicosProcesados = this.paciente.historiaClinica.map((historias: any) =>
+    historias.datosDinamicos.map(
+      (historia: any) => `${historia.clave}: ${historia.valor}`
+    )
+  );
+}
   cerrar() {
       this.cerrarModal.emit();
   }
