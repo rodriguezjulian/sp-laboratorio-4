@@ -46,9 +46,7 @@ export class MiPerfilPacienteComponent implements OnInit {
         ],
       });
 
-
-      const maxDatos = 3;
-      const especialidadesSet = new Set<string>();
+      
       this.historiaClinicaCompleta.forEach((turno: any) => {
         if (turno.uidEspecialidad) {
           especialidadesSet.add(turno.uidEspecialidad);
@@ -69,10 +67,13 @@ export class MiPerfilPacienteComponent implements OnInit {
         // Agregar la historia clínica a la lista completa
         this.historiaClinicaCompleta.push(turno.historiaClinica);
       });
-
+      const especialidadesSet = new Set<string>();
+      turnos.forEach((turno: any) => {
+        if (turno.uidEspecialidad) {
+          especialidadesSet.add(turno.uidEspecialidad);
+        }
+      });
       const aux = Array.from(especialidadesSet);
-
-      
       const especias = await this.firestoreService.getEspecialidades();
       const especialidad = new Set<string>();
       aux.forEach((element) => {
@@ -83,6 +84,8 @@ export class MiPerfilPacienteComponent implements OnInit {
         });
       });
       this.especialidades = Array.from(especialidad);
+
+      console.log("Especialidades obtenidas", this.especialidades);
       
     } catch (error) {
       console.error('Error al obtener los datos del paciente:', error);
