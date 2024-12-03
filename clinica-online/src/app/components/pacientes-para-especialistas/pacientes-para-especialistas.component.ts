@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../../servicios/auth.service'
 import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-historia-clinica.component'
+import { LoaderService } from '../../servicios/loader.service'
+
 @Component({
   selector: 'app-pacientes-para-especialistas',
   templateUrl: './pacientes-para-especialistas.component.html',
@@ -18,11 +20,12 @@ export class PacientesParaEspecialistasComponent implements OnInit {
   especialistaLogueado: any;
   pacienteSeleccionado: any = null;
 
-  constructor(private firestoreService: FirestoreService, private auth: AuthService) {}
+  constructor(private firestoreService: FirestoreService, private auth: AuthService,public loader: LoaderService) {}
 
   async ngOnInit() {
     try {
       // Obtener especialista logueado
+      this.loader.setLoader(true);
       this.especialistaLogueado = await this.auth.obtenerUsuarioActual();
       console.log("Especialista logueado en este momento", this.especialistaLogueado.uid);
   
@@ -90,7 +93,7 @@ export class PacientesParaEspecialistasComponent implements OnInit {
   
         return paciente;
       });
-  
+      this.loader.setLoader(false);
       console.log("Pacientes cargados: ", this.pacientes);
     } catch (error) {
       console.error('Error al cargar los pacientes:', error);

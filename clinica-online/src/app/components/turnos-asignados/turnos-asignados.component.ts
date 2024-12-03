@@ -7,6 +7,7 @@ import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.d
 import { BuscarPacienteEspecialidadPipe } from '../../pipe/buscar-especialidad-paciente.pipe';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { LoaderService } from '../../servicios/loader.service'
 
 @Component({
   selector: 'app-turnos-asignados',
@@ -47,15 +48,17 @@ export class TurnosAsignadosComponent implements OnInit {
   especialidades: any[] = []; // Lista de especialidades del especialista
   especialidadSeleccionada: string | null = null; // Especialidad seleccionada para filtrar
 
-  constructor(private firestoreService: FirestoreService, private auth: Auth) {}
+  constructor(private firestoreService: FirestoreService, private auth: Auth,public loader: LoaderService) {}
 
   async ngOnInit() {
+    this.loader.setLoader(true);
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
         await this.cargarEspecialidades();
         this.configurarDiasDisponibles();
         await this.cargarTurnosAsignados();
+        this.loader.setLoader(false);
       } 
     });
   }

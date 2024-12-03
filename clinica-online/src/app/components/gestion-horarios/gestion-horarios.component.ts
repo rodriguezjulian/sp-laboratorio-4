@@ -3,6 +3,7 @@ import { FirestoreService } from '../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
+import { LoaderService } from '../../servicios/loader.service'
 
 @Component({
   selector: 'app-gestion-horarios',
@@ -44,9 +45,10 @@ export class GestionHorariosComponent implements OnInit {
   huboCambios: boolean = false;
   usuarioLogueado: User | null = null;
 
-  constructor(private firestoreService: FirestoreService, private auth: Auth) {}
+  constructor(private firestoreService: FirestoreService, private auth: Auth,public loader: LoaderService) {}
 
   async ngOnInit() {
+    this.loader.setLoader(true);
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
@@ -57,6 +59,7 @@ export class GestionHorariosComponent implements OnInit {
        
       }
     });
+    this.loader.setLoader(false);
   }
 
   async cargarEspecialista() {

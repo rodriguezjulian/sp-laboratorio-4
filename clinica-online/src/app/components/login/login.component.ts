@@ -8,6 +8,8 @@ import { Router, RouterLink } from '@angular/router';
 import { signOut } from '@angular/fire/auth';
 import {pasaPorArriba} from '../../directivas/app-tooltip-directive.directive'
 import { trigger, transition, style, animate } from '@angular/animations';
+import { LoaderService } from '../../servicios/loader.service'
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -75,7 +77,7 @@ export class LoginComponent {
     },
   ];
 
-  constructor(private router: Router, private fb: FormBuilder ,private auth : AuthService, private firestore : FirestoreService) {
+  constructor(private router: Router, private fb: FormBuilder ,private auth : AuthService, private firestore : FirestoreService,public loader: LoaderService) {
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
@@ -91,8 +93,10 @@ export class LoginComponent {
 
   onLogin() {
     if (this.loginForm.valid) {
+      this.loader.setLoader(true);
       this.Login()
       this.GuardarRegistroExitoso();
+      this.loader.setLoader(false);
     } else {
       console.log('Formulario inválido');
     }
