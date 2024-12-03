@@ -44,6 +44,23 @@
 ## PACIENTES ATENDIDOS
 <img src="/clinica-online/src/assets/readme/pacientesAtendidos.jpeg">
 
+# RECORRIDO PARA ADMINS
+## SECTOR USUARIOS
+<img src="/clinica-online/src/assets/readme/usuariosAdmin.jpeg">
+
+
+## TURNOS DE TODA LA CLINICA
+<img src="/clinica-online/src/assets/readme/turnosGeneral.jpeg">
+
+## CREAR TURNO
+### SE ELIGE AL PACIENTE Y LUEGO SE REPITE EL RECORRIDO MOSTRADO ANTERIORMENTE
+<img src="/clinica-online/src/assets/readme/listaDePacientes.jpeg">
+
+## ESTADISTICAS
+<img src="/clinica-online/src/assets/readme/estadisticas1.jpeg">
+<img src="/clinica-online/src/assets/readme/estadisticas2.jpeg">
+<img src="/clinica-online/src/assets/readme/estadisticas3.jpeg">
+
 
 
 
