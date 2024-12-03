@@ -8,12 +8,13 @@ import {pasaPorArriba} from '../../directivas/app-tooltip-directive.directive'
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { LoaderService } from '../../servicios/loader.service'
+import {PintarBordeDirective} from '../../directivas/pintar-borde.directive'
 
 @Component({
   selector: 'app-seccion-usuarios',
   templateUrl: './seccion-usuarios.component.html',
   styleUrls: ['./seccion-usuarios.component.scss'],
-  imports : [CommonModule,pasaPorArriba],
+  imports : [CommonModule,pasaPorArriba,PintarBordeDirective],
   standalone : true,
   animations: [
     trigger('fadeInUp', [
