@@ -165,4 +165,15 @@ export class RegistroPacienteComponent implements OnInit {
   executeRecaptchaVisible(token:any){
     this.token = !this.token;
   }
+  redireccion()
+  {
+    if(this.usuarioLogueado == null)
+    {
+      this.router.navigate(['/']);
+    }
+    else
+    {
+      this.router.navigate(['/seccionUsuarios']);
+    }
+  }
 }

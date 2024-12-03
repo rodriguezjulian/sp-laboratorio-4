@@ -262,8 +262,15 @@ export class RegistroEspecialistaComponent implements OnInit {
       });
     }finally{this.loader.setLoader(false);}
   }
-  SeccionUsuarios()
+  redireccion()
   {
-    this.router.navigate(['/seccionUsuarios']);
+    if(this.usuarioLogueado == null)
+    {
+      this.router.navigate(['/']);
+    }
+    else
+    {
+      this.router.navigate(['/seccionUsuarios']);
+    }
   }
 }
