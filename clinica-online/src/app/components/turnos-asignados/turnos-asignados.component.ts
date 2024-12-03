@@ -267,6 +267,9 @@ export class TurnosAsignadosComponent implements OnInit {
     let peso = '';
     let temperatura = '';
     let presion = '';
+    let calificacionSalud = 50; // Default para el control de rango
+    let diasParaRevisar = ''; // Para el cuadro de texto numérico
+    let reservarConsulta = false; // Default para el switch
     const datosDinamicos: { clave: string; valor: string }[] = [];
   
     Swal.fire({
@@ -289,6 +292,26 @@ export class TurnosAsignadosComponent implements OnInit {
             <label class="form-label fw-bold">Presión arterial:</label>
             <input type="text" id="presion" class="form-control" />
           </div>
+  
+          <!-- Control de rango -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">Calificación General de Salud:</label>
+            <input type="range" id="calificacionSalud" class="form-range" min="0" max="100" value="50" />
+            <span id="calificacionValor">50</span>
+          </div>
+  
+          <!-- Cuadro de texto numérico -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">Días estimados para próxima revisión:</label>
+            <input type="number" id="diasParaRevisar" class="form-control" />
+          </div>
+  
+          <!-- Switch -->
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="reservarConsulta" />
+            <label class="form-check-label" for="reservarConsulta">¿Reservar otra consulta?</label>
+          </div>
+  
           <div id="datos-dinamicos-container">
             <label class="form-label fw-bold">Datos Dinámicos (máximo 3):</label>
             <div class="input-group mb-2">
@@ -302,11 +325,24 @@ export class TurnosAsignadosComponent implements OnInit {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Guardar',
+      didOpen: () => {
+        // Actualizar el valor visual del control de rango
+        const calificacionInput = document.getElementById('calificacionSalud') as HTMLInputElement;
+        const calificacionValor = document.getElementById('calificacionValor');
+        calificacionInput?.addEventListener('input', () => {
+          if (calificacionValor) {
+            calificacionValor.textContent = calificacionInput.value;
+          }
+        });
+      },
       preConfirm: () => {
         altura = (document.getElementById('altura') as HTMLInputElement).value;
         peso = (document.getElementById('peso') as HTMLInputElement).value;
         temperatura = (document.getElementById('temperatura') as HTMLInputElement).value;
         presion = (document.getElementById('presion') as HTMLInputElement).value;
+        calificacionSalud = +(document.getElementById('calificacionSalud') as HTMLInputElement).value;
+        diasParaRevisar = (document.getElementById('diasParaRevisar') as HTMLInputElement).value;
+        reservarConsulta = (document.getElementById('reservarConsulta') as HTMLInputElement).checked;
   
         const claves = Array.from(document.querySelectorAll('.clave-dinamico')).map(
           (input: any) => input.value.trim()
@@ -322,7 +358,7 @@ export class TurnosAsignadosComponent implements OnInit {
         });
   
         // Validaciones
-        if (!altura || !peso || !temperatura || !presion) {
+        if (!altura || !peso || !temperatura || !presion || !diasParaRevisar) {
           Swal.showValidationMessage('Por favor completa todos los campos obligatorios.');
           return;
         }
@@ -337,7 +373,7 @@ export class TurnosAsignadosComponent implements OnInit {
           return;
         }
   
-        return { altura, peso, temperatura, presion, datosDinamicos };
+        return { altura, peso, temperatura, presion, calificacionSalud, diasParaRevisar, reservarConsulta, datosDinamicos };
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -349,25 +385,6 @@ export class TurnosAsignadosComponent implements OnInit {
           Swal.fire('Guardado', 'Historia clínica guardada con éxito.', 'success');
         });
       }
-    });
-  
-    // Controlar el límite de datos dinámicos
-    document.getElementById('add-dynamic')?.addEventListener('click', () => {
-      const container = document.getElementById('datos-dinamicos-container');
-      const count = container?.querySelectorAll('.clave-dinamico').length || 0;
-  
-      if (count >= 3) {
-        Swal.fire('Límite alcanzado', 'Solo puedes agregar hasta 3 datos dinámicos.', 'error');
-        return;
-      }
-  
-      const newInputGroup = document.createElement('div');
-      newInputGroup.className = 'input-group mb-2';
-      newInputGroup.innerHTML = `
-        <input type="text" placeholder="Clave" class="form-control clave-dinamico" />
-        <input type="text" placeholder="Valor" class="form-control valor-dinamico" />
-      `;
-      container?.appendChild(newInputGroup);
     });
   }
   
