@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {ReemplazarNulosPipe} from '../../pipe/reemplazar-nulos.pipe'
 
 @Component({
   selector: 'app-ver-historia-clinica',
   templateUrl: './ver-historia-clinica.component.html',
   styleUrls: ['./ver-historia-clinica.component.scss'],
   standalone: true,
-  imports : [CommonModule]
+  imports : [CommonModule,ReemplazarNulosPipe]
 })
 export class VerHistoriaClinicaComponent {
   @Input() paciente: any; // Paciente con su historia clínica
