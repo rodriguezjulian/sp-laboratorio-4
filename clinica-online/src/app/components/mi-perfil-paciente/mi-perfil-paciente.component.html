@@ -28,7 +28,10 @@
               <th>Altura</th>
               <th>Peso</th>
               <th>Presión</th>
-              <th>Temperatura</th>
+              <th>Temperatura</th>        
+              <th>Nota de salud</th>
+              <th>Dias para volver</th>
+              <th>Debe volver</th>
               <th>Dato 1</th>
               <th>Dato 2</th>
               <th>Dato 3</th>
@@ -46,6 +49,24 @@
               <td>{{ historia.peso }}</td>
               <td>{{ historia.presion }}</td>
               <td>{{ historia.temperatura }}</td>
+              
+                <td>{{ historia.calificacionSalud }}</td>
+                <td>{{ historia.diasParaRevisar }}</td>
+                @if(!historia?.reservarConsulta)
+                {
+                  <td>N/A </td>
+                }
+                @else
+                {
+                  @if(historia.reservarConsulta == false)
+                  {
+                    <td>NO</td>
+                  }
+                  @else
+                  {
+                    <td>SI</td>
+                  }
+                }
               <td *ngFor="let dato of historia.datosDinamicos">
                 @if(dato.clave && dato.clave !== "" && dato.valor && dato.valor !== "")
                 {

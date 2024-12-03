@@ -46,26 +46,35 @@ export class MiPerfilPacienteComponent implements OnInit {
         ],
       });
 
+      console.log("turnos obtenidos ", turnos);
+
       
       this.historiaClinicaCompleta.forEach((turno: any) => {
         if (turno.uidEspecialidad) {
           especialidadesSet.add(turno.uidEspecialidad);
         }
       });
-
+      let contadorUno = 0;
+      let contadorDos = 0;
       turnos.forEach(turno => {
-        if (!turno.historiaClinica.datosDinamicos) {
-          turno.historiaClinica.datosDinamicos = [];
+        console.log("fuera ", contadorUno++);
+        if(turno?.historiaClinica)
+        {
+          console.log("adentro del if ", contadorDos++);
+          if (!turno.historiaClinica.datosDinamicos) {
+            turno.historiaClinica.datosDinamicos = [];
+          }
+        
+          // Si tiene menos de 3 elementos, rellenar con objetos vacíos
+          while (turno.historiaClinica.datosDinamicos.length < 3) {
+            turno.historiaClinica.datosDinamicos.push({ clave: null, valor: null });
+          }
+          turno.historiaClinica.fecha = turno.fecha || null;
+        
+          // Agregar la historia clínica a la lista completa
+          this.historiaClinicaCompleta.push(turno.historiaClinica);
         }
-      
-        // Si tiene menos de 3 elementos, rellenar con objetos vacíos
-        while (turno.historiaClinica.datosDinamicos.length < 3) {
-          turno.historiaClinica.datosDinamicos.push({ clave: null, valor: null });
-        }
-        turno.historiaClinica.fecha = turno.fecha || null;
-      
-        // Agregar la historia clínica a la lista completa
-        this.historiaClinicaCompleta.push(turno.historiaClinica);
+
       });
       const especialidadesSet = new Set<string>();
       turnos.forEach((turno: any) => {
@@ -73,6 +82,11 @@ export class MiPerfilPacienteComponent implements OnInit {
           especialidadesSet.add(turno.uidEspecialidad);
         }
       });
+
+
+
+
+
       const aux = Array.from(especialidadesSet);
       const especias = await this.firestoreService.getEspecialidades();
       const especialidad = new Set<string>();
