@@ -83,6 +83,7 @@ export class RegistroPacienteComponent implements OnInit {
         console.log(usuarioLogueado.contrasena);
       }
     if (this.registroForm.invalid) {
+      this.loader.setLoader(false);
       Swal.fire({
         title: 'Verifique datos ingresados',
         text: '¡Tenga en cuenta cumplir con las normas.!',
