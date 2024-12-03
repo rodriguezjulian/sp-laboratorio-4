@@ -46,9 +46,17 @@
               <td>{{ historia.peso }}</td>
               <td>{{ historia.presion }}</td>
               <td>{{ historia.temperatura }}</td>
-              <td *ngFor="let clave of clavesDinamicas">
-                {{ historia.datosDinamicos?.[clave] || 'N/A' }}
+              <td *ngFor="let dato of historia.datosDinamicos">
+                @if(dato.clave && dato.clave !== "" && dato.valor && dato.valor !== "")
+                {
+                  {{ dato.clave }} {{ dato.valor }}
+                }
+                @else
+                {
+                  N/A
+                }
               </td>
+              
             </tr>
           </tbody>
         </table>
