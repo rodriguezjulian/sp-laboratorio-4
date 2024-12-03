@@ -15,6 +15,7 @@ import {OcultarPrimerasPipe} from '../../pipe/ocultar-primeras.pipe'
 export class GestionHorariosComponent implements OnInit {
   especialista: any;
   especialidades: any[] = [];
+  mostrarDatos = false;
   dias: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   turnos: string[] = [
     '08:00',
@@ -46,7 +47,11 @@ export class GestionHorariosComponent implements OnInit {
   usuarioLogueado: User | null = null;
 
   constructor(private firestoreService: FirestoreService, private auth: Auth,public loader: LoaderService) {}
+ 
 
+  toggleMostrarDatos() {
+    this.mostrarDatos = !this.mostrarDatos;
+  }
   async ngOnInit() {
     this.loader.setLoader(true);
     onAuthStateChanged(this.auth, async (user) => {

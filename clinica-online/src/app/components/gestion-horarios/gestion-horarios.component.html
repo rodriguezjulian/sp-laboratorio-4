@@ -13,13 +13,33 @@
           />
         </div>
   
-        <!-- Datos del especialista -->
         <div class="datos-container ms-4">
           <h3>{{ especialista?.nombre }} {{ especialista?.apellido }}</h3>
-          <p><strong>DNI:</strong> {{ especialista?.dni | ocultarPrimeras}}</p>
-          <p><strong>Correo:</strong> {{ especialista?.correo | ocultarPrimeras }}</p>
+          <p>
+            <strong>DNI: </strong> 
+            <span>{{ mostrarDatos ? especialista?.dni : (especialista?.dni | ocultarPrimeras) }}</span>
+            <button class="btn btn-sm ms-2" (click)="toggleMostrarDatos()">
+              <img
+                [src]="mostrarDatos ? '../assets/1.png' : '../assets/2.png'"
+                alt="Toggle View"
+                style="width: 20px; height: 20px;"
+              />
+            </button>
+          </p>
+          <p>
+            <strong>Correo: </strong> 
+            <span>{{ mostrarDatos ? especialista?.correo : (especialista?.correo | ocultarPrimeras) }}</span>
+            <button class="btn btn-sm ms-2" (click)="toggleMostrarDatos()">
+              <img
+                [src]="mostrarDatos ? '../assets/1.png' : '../assets/2.png'"
+                alt="Toggle View"
+                style="width: 20px; height: 20px;"
+              />
+            </button>
+          </p>
         </div>
       </div>
+        
   
       <!-- Tabla de días y horarios -->
       <div class="horarios-container">
