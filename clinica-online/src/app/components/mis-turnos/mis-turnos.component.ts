@@ -8,6 +8,7 @@ import { LoginComponent } from '../login/login.component';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialista-especialidad.pipe';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { LoaderService } from '../../servicios/loader.service'
 
 @Component({
   selector: 'app-mis-turnos',
@@ -56,9 +57,10 @@ export class MisTurnosComponent implements OnInit {
     rechazado: 'Rechazado',
   };
 
-  constructor(private firestoreService: FirestoreService, private auth: Auth) {}
+  constructor(private firestoreService: FirestoreService, private auth: Auth,public loader: LoaderService) {}
 
   ngOnInit() {
+    this.loader.setLoader(true);
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
         this.usuarioLogueado = user;
@@ -66,6 +68,7 @@ export class MisTurnosComponent implements OnInit {
         await this.cargarTurnos();
       }
     });
+    this.loader.setLoader(false);
   }
 
   async cargarTurnos() {

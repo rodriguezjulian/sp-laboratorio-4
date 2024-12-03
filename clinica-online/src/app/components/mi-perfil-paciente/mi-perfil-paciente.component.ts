@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LoaderService } from '../../servicios/loader.service'
+
 
 @Component({
   selector: 'app-mi-perfil-paciente',
@@ -22,12 +24,13 @@ export class MiPerfilPacienteComponent implements OnInit {
   historiaClinicaCompleta: any[] = []; // Agrega esta propiedad
   constructor(
     private auth: AuthService,
-    private firestoreService: FirestoreService
+    private firestoreService: FirestoreService,public loader: LoaderService
   ) {}
 
   
   async ngOnInit() {
     try {
+      this.loader.setLoader(true);
       // Obtener el usuario logueado
       const usuarioLogueado = await this.auth.obtenerUsuarioActual();
       const pacienteDoc = await this.firestoreService.getDocument(
@@ -89,10 +92,11 @@ export class MiPerfilPacienteComponent implements OnInit {
       this.clavesDinamicas = Array.from(new Set(allClavesDinamicas));
 
       console.log("claves dinamicas" , this.clavesDinamicas);
+      
   
     } catch (error) {
       console.error('Error al obtener los datos del paciente:', error);
-    }
+    }finally{this.loader.setLoader(false);}
   }
 
   async descargarHistoriaClinica() {
