@@ -13,6 +13,7 @@ import { FormArray, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { LoaderService } from '../../../servicios/loader.service'
 
 @Component({
   selector: 'app-registro-especialista',
@@ -32,20 +33,39 @@ export class RegistroEspecialistaComponent implements OnInit {
   token:boolean = false;
   usuarioLogueado: User | null = null;
 
-  constructor(private firestoreService: FirestoreService, private fb: FormBuilder,
+  constructor(private firestoreService: FirestoreService, private fb: FormBuilder,public loader: LoaderService,
     private authService : AuthService, private router: Router, private imagenService : ImagenService, private auth: Auth) {
-    this.registroForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      edad: ['', [Validators.required, Validators.min(18), Validators.max(100)]],
-      dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-      especialidad: ['', Validators.required],
-      nuevaEspecialidad: [''], // Para agregar una especialidad personalizada
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]],
-      fotoPerfil: ['', [Validators.required]],
-    });
+      {
+        this.registroForm = this.fb.group({
+          nombre: [
+            '',
+            [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ\\s]+$')],
+          ],
+          apellido: [
+            '',
+            [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ\\s]+$')],
+          ],
+          edad: ['', [Validators.required, Validators.min(18), Validators.max(100)]],
+          dni: [
+            '',
+            [Validators.required, Validators.pattern('^[0-9]{8}$')],
+          ],
+          especialidad: ['', Validators.required],
+          nuevaEspecialidad: [''],
+          correo: [
+            '',
+            [Validators.required, Validators.email],
+          ],
+          contrasena: [
+            '',
+            [Validators.required, Validators.minLength(8)],
+          ],
+          fotoPerfil: ['', Validators.required],
+        });
+      }
   }
+
+
 
   async ngOnInit() {
     const auxiliar = await this.firestoreService.getEspecialidades();
@@ -57,6 +77,10 @@ export class RegistroEspecialistaComponent implements OnInit {
         this.usuarioLogueado = null;
       }
     });
+  }  
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.registroForm.get(controlName);
+    return !!control && control.hasError(errorName) && (control.dirty || control.touched);
   }
 
   Home(){
@@ -93,6 +117,7 @@ export class RegistroEspecialistaComponent implements OnInit {
   }
 
  async onSubmit() {
+  this.loader.setLoader(true);
   for (const field in this.registroForm.controls) {
     const control = this.registroForm.get(field);
     if (control?.invalid) {
@@ -111,6 +136,7 @@ export class RegistroEspecialistaComponent implements OnInit {
         }
         else
         {
+          this.loader.setLoader(false);
           Swal.fire({
             title: 'Error',
             text: 'Verifica que no es un robot para continuar',
@@ -131,6 +157,7 @@ export class RegistroEspecialistaComponent implements OnInit {
         }
       });
     }
+    this.loader.setLoader(false);
   }
   onCheckboxChange(event: any) {
     const especialidadArray: FormArray = this.registroForm.get('especialidad') as FormArray;
@@ -192,11 +219,16 @@ export class RegistroEspecialistaComponent implements OnInit {
             'especialista',
             especialista,
             this.registroForm.get('correo')?.value,
-            this.registroForm.get('contrasena')?.value,usuarioLogueado.correo,usuarioLogueado.contrasena
+            this.registroForm.get('contrasena')?.value,
+            usuarioLogueado.correo,
+            usuarioLogueado.contrasena
           );
         }else
         {
-          await this.authService.createUser("especialista",especialista, this.registroForm.get('correo')?.value, this.registroForm.get('contrasena')?.value);
+          await this.authService.createUser("especialista",
+            especialista, 
+            this.registroForm.get('correo')?.value,
+             this.registroForm.get('contrasena')?.value);
         }
       Swal.fire({
         title: 'Especialista creado',
@@ -228,7 +260,7 @@ export class RegistroEspecialistaComponent implements OnInit {
           document.body.classList.remove('swal2-height-auto');   
         }
       });
-    }
+    }finally{this.loader.setLoader(false);}
   }
   SeccionUsuarios()
   {

@@ -1,99 +1,134 @@
 <section class="fondo">
-    <div class="container">
-      <div class="form-container">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="title">Registro de Especialista</h2>
-            <p class="subtitle">Por favor ingrese los datos requeridos</p>
-  
-            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-              <!-- Campo Nombre -->
-              <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input id="nombre" formControlName="nombre" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Apellido -->
-              <div class="form-group">
-                <label for="apellido">Apellido</label>
-                <input id="apellido" formControlName="apellido" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Edad -->
-              <div class="form-group">
-                <label for="edad">Edad</label>
-                <input id="edad" formControlName="edad" type="number" class="form-input" />
-              </div>
-  
-              <!-- Campo DNI -->
-              <div class="form-group">
-                <label for="dni">DNI</label>
-                <input id="dni" formControlName="dni" type="text" class="form-input" />
-              </div>
-  
-              <div class=" x form-group">
-                <label for="especialidad">Especialidades</label>
-                <mat-form-field appearance="outline" class="form-full-width">
-                  <mat-label class="x">Seleccionar Especialidades</mat-label>
-                  <mat-select  class="x"
-                    formControlName="especialidad" 
-                    multiple 
-                    [disableOptionCentering]="true">
-                    <mat-option *ngFor="let especialidad of especialidades" [value]="especialidad">
-                      {{ especialidad }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              
-              <!-- Nueva Especialidad -->
-              <div class="form-group new-specialty">
-                <label for="nuevaEspecialidad">Nueva Especialidad</label>
-                <div class="specialty-container">
-                  <input id="nuevaEspecialidad" formControlName="nuevaEspecialidad" type="text" class="form-input" />
-                  <button type="button" (click)="agregarEspecialidad()" class="btn btn-secondary">Agregar</button>
-                </div>
-              </div>
-  
-              <!-- Campo Correo -->
-              <div class="form-group">
-                <label for="correo">Correo</label>
-                <input id="correo" formControlName="correo" type="email" class="form-input" />
-              </div>
-  
-              <!-- Campo Contraseña -->
-              <div class="form-group">
-                <label for="contrasena">Contraseña</label>
-                <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
-              </div>
+  <div class="container">
+    <div class="form-container">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="title">Registro de Especialista</h2>
+          <p class="subtitle">Por favor ingrese los datos requeridos</p>
 
-              <div class="col-md-6 form-floating form-control-group p-1 mb-2">
-                <input type="file" class="form-control small-input" id="fotoPerfil" formControlName="fotoPerfil" (change)="uploadImageUno($event)">
-                <label class="form-label small-label" for="fotoPerfil">Foto de perfil</label>
+          <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+            <!-- Campo Nombre -->
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input id="nombre" formControlName="nombre" type="text" class="form-input" />
+              <span class="error" *ngIf="hasError('nombre', 'required')">
+                El nombre es obligatorio.
+              </span>
+              <span class="error" *ngIf="hasError('nombre', 'pattern')">
+                Solo se permiten letras.
+              </span>
             </div>
-            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7" ></re-captcha>
-              <!-- Botón Enviar -->
-              <div class="button-container">
-                <button type="submit" class="submit-button">Registrar Especialista</button>
+
+            <!-- Campo Apellido -->
+            <div class="form-group">
+              <label for="apellido">Apellido</label>
+              <input id="apellido" formControlName="apellido" type="text" class="form-input" />
+              <span class="error" *ngIf="hasError('apellido', 'required')">
+                El apellido es obligatorio.
+              </span>
+              <span class="error" *ngIf="hasError('apellido', 'pattern')">
+                Solo se permiten letras.
+              </span>
+            </div>
+
+            <!-- Campo Edad -->
+            <div class="form-group">
+              <label for="edad">Edad</label>
+              <input id="edad" formControlName="edad" type="number" class="form-input" />
+              <span class="error" *ngIf="hasError('edad', 'required')">
+                La edad es obligatoria.
+              </span>
+              <span class="error" *ngIf="hasError('edad', 'min')">
+                La edad mínima es 18 años.
+              </span>
+              <span class="error" *ngIf="hasError('edad', 'max')">
+                La edad máxima es 100 años.
+              </span>
+            </div>
+
+            <!-- Campo DNI -->
+            <div class="form-group">
+              <label for="dni">DNI</label>
+              <input id="dni" formControlName="dni" type="text" class="form-input" />
+              <span class="error" *ngIf="hasError('dni', 'required')">
+                El DNI es obligatorio.
+              </span>
+              <span class="error" *ngIf="hasError('dni', 'pattern')">
+                Debe contener exactamente 8 números.
+              </span>
+            </div>
+
+            <!-- Campo Especialidades -->
+            <div class="form-group">
+              <label for="especialidad">Especialidades</label>
+              <mat-form-field appearance="outline" class="form-full-width">
+                <mat-label class="x">Seleccionar Especialidades</mat-label>
+                <mat-select class="x"
+                  formControlName="especialidad"
+                  multiple
+                  [disableOptionCentering]="true"
+                >
+                  <mat-option *ngFor="let especialidad of especialidades" [value]="especialidad">
+                    {{ especialidad }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <span class="error" *ngIf="hasError('especialidad', 'required')">
+                Debes seleccionar al menos una especialidad.
+              </span>
+            </div>
+
+            <!-- Campo Nueva Especialidad -->
+            <div class="form-group">
+              <label for="nuevaEspecialidad">Nueva Especialidad</label>
+              <div class="specialty-container">
+                <input id="nuevaEspecialidad" formControlName="nuevaEspecialidad" type="text" class="form-input" />
+                <button type="button" (click)="agregarEspecialidad()" class="btn btn-secondary">Agregar</button>
               </div>
-              <div *ngIf="msjError!=''">
-                <strong><label  style="color: red;" class="form-label">
-                    {{msjError}}
-                  </label></strong>
-                </div>  
-            </form>
-          </div>
-          <div class="text-end">
-            @if(usuarioLogueado!=null)
-            {
-              <button (click)="SeccionUsuarios()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
-            }@else 
-            {
-              <button (click)="Home()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
-            }
-          </div>
+            </div>
+
+            <!-- Campo Correo -->
+            <div class="form-group">
+              <label for="correo">Correo</label>
+              <input id="correo" formControlName="correo" type="email" class="form-input" />
+              <span class="error" *ngIf="hasError('correo', 'required')">
+                El correo es obligatorio.
+              </span>
+              <span class="error" *ngIf="hasError('correo', 'email')">
+                Formato de correo inválido.
+              </span>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="form-group">
+              <label for="contrasena">Contraseña</label>
+              <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
+              <span class="error" *ngIf="hasError('contrasena', 'required')">
+                La contraseña es obligatoria.
+              </span>
+              <span class="error" *ngIf="hasError('contrasena', 'minlength')">
+                Mínimo 8 caracteres.
+              </span>
+            </div>
+
+            <!-- Campo Foto -->
+            <div class="form-group">
+              <label for="fotoPerfil">Foto de perfil</label>
+              <input
+                type="file"
+                id="fotoPerfil"
+                formControlName="fotoPerfil"
+                (change)="uploadImageUno($event)"
+              />
+              <span class="error" *ngIf="hasError('fotoPerfil', 'required')">
+                La foto de perfil es obligatoria.
+              </span>
+            </div>
+            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7"></re-captcha>
+            <button type="submit" class="mt-1 submit-button">Registrar Especialista</button>
+          </form>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>
