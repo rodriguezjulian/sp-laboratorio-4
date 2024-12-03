@@ -24,13 +24,26 @@
 <img src="/clinica-online/src/assets/readme/misTurnosPaciente.jpeg">
 
 ## SOLICITAR TURNO 
-### PASO 1 ELEGIR ESPECIALISTA
+### PASO 1 - ELEGIR ESPECIALISTA
 <img src="/clinica-online/src/assets/readme/solicitarTurno1.jpeg">
 
-### PASO 2 ELEGIR ESPECIALIDAD
+### PASO 2 - ELEGIR ESPECIALIDAD
 <img src="/clinica-online/src/assets/readme/solicitarTurno2.jpeg">
 
-### PASO 3 ELEGIR FECHA, DIA Y HORARIO
+### PASO 3 - ELEGIR FECHA, DIA Y HORARIO
 <img src="/clinica-online/src/assets/readme/solicitarTurno3.jpeg">
+
+# RECORRIDO PARA ESPECIALISTAS
+
+## PERFIL ESPECIALISTA
+<img src="/clinica-online/src/assets/readme/perfilEspecialista.jpeg">
+
+## TURNOS ASIGNADOS
+<img src="/clinica-online/src/assets/readme/turnosEspecialista.jpeg">
+
+## PACIENTES ATENDIDOS
+<img src="/clinica-online/src/assets/readme/pacientesAtendidos.jpeg">
+
+
 
 
