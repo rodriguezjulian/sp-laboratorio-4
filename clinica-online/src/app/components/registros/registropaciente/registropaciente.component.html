@@ -1,89 +1,90 @@
 <section class="fondo">
-    <div class="container">
-      <div class="form-container">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="title">Registro de Paciente</h2>
-            <p class="subtitle">Por favor ingrese los datos requeridos</p>
-  
-            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-              <!-- Campo Nombre -->
-              <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input id="nombre" formControlName="nombre" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Apellido -->
-              <div class="form-group">
-                <label for="apellido">Apellido</label>
-                <input id="apellido" formControlName="apellido" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Edad -->
-              <div class="form-group">
-                <label for="edad">Edad</label>
-                <input id="edad" formControlName="edad" type="number" class="form-input" />
-              </div>
-  
-              <!-- Campo DNI -->
-              <div class="form-group">
-                <label for="dni">DNI</label>
-                <input id="dni" formControlName="dni" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Obra Social -->
-              <div class="form-group">
-                <label for="obraSocial">Obra Social</label>
-                <input id="obraSocial" formControlName="obraSocial" type="text" class="form-input" />
-              </div>
-  
-              <!-- Campo Correo -->
-              <div class="form-group">
-                <label for="correo">Correo</label>
-                <input id="correo" formControlName="correo" type="email" class="form-input" />
-              </div>
-  
-              <!-- Campo Contraseña -->
-              <div class="form-group">
-                <label for="contrasena">Contraseña</label>
-                <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
-              </div>
-
-              <div class="row mb-2">
-                <div class="col-md-6 form-floating form-control-group p-1 mb-2">
-                    <input type="file" class="form-control small-input" id="fotoPerfilUno" formControlName="fotoPerfilUno" (change)="uploadImageUno($event)">
-                    <label class="form-label small-label" for="fotoPerfil1">Primera foto de perfil</label>
-
-                </div>
-                <div class="col-md-6 form-floating form-control-group p-1 mb-2">
-                    <input type="file" class="form-control small-input" id="fotoPerfilDos" formControlName="fotoPerfilDos" (change)="uploadImageDos($event)">
-                    <label class="form-label small-label" for="fotoPerfil2">Segunda foto de perfil</label>
-
-                </div>
+  <div class="container">
+    <div class="form-container">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="title">Registro de Paciente</h2>
+          <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Campo Nombre -->
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input id="nombre" formControlName="nombre" type="text" class="form-input" />
+              <span class="error-message" *ngIf="hasError('nombre', 'required')">El nombre es obligatorio</span>
+              <span class="error-message" *ngIf="hasError('nombre', 'pattern')">Solo se permiten letras</span>
             </div>
-            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7" ></re-captcha>
-              <!-- Botón Enviar -->
-              <div class="button-container">
-                <button type="submit" class="submit-button">Registrar Paciente</button>
-              </div>
-              <div *ngIf="msjError!=''">
-                <strong><label  style="color: red;" class="form-label">
-                    {{msjError}}
-                  </label></strong>
-                </div> 
-            </form>
-          </div>
-          <div class="text-end">
-            @if(usuarioLogueado!=null)
-            {
-              <button (click)="SeccionUsuarios()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
-            }@else 
-            {
-              <button (click)="Home()" class="btn btn-primary btn-lg px-5 mb-4 " style="background-color:brown; color: white;"> ATRAS </button>
-            }
-          </div>
+
+            <!-- Campo Apellido -->
+            <div class="form-group">
+              <label for="apellido">Apellido</label>
+              <input id="apellido" formControlName="apellido" type="text" class="form-input" />
+              <span class="error-message" *ngIf="hasError('apellido', 'required')">El apellido es obligatorio</span>
+              <span class="error-message" *ngIf="hasError('apellido', 'pattern')">Solo se permiten letras</span>
+            </div>
+
+            <!-- Campo Edad -->
+            <div class="form-group">
+              <label for="edad">Edad</label>
+              <input id="edad" formControlName="edad" type="number" class="form-input" />
+              <span class="error-message" *ngIf="hasError('edad', 'required')">La edad es obligatoria</span>
+              <span class="error-message" *ngIf="hasError('edad', 'min')">La edad mínima es 1</span>
+              <span class="error-message" *ngIf="hasError('edad', 'max')">La edad máxima es 120</span>
+            </div>
+
+            <!-- Campo DNI -->
+            <div class="form-group">
+              <label for="dni">DNI</label>
+              <input id="dni" formControlName="dni" type="text" class="form-input" />
+              <span class="error-message" *ngIf="hasError('dni', 'required')">El DNI es obligatorio</span>
+              <span class="error-message" *ngIf="hasError('dni', 'pattern')">Debe tener exactamente 8 dígitos</span>
+            </div>
+
+            <!-- Campo Obra Social -->
+            <div class="form-group">
+              <label for="obraSocial">Obra Social</label>
+              <input id="obraSocial" formControlName="obraSocial" type="text" class="form-input" />
+              <span class="error-message" *ngIf="hasError('obraSocial', 'required')">La obra social es obligatoria</span>
+              <span class="error-message" *ngIf="hasError('obraSocial', 'minlength')">Debe tener al menos 3 caracteres</span>
+            </div>
+
+            <!-- Campo Correo -->
+            <div class="form-group">
+              <label for="correo">Correo</label>
+              <input id="correo" formControlName="correo" type="email" class="form-input" />
+              <span class="error-message" *ngIf="hasError('correo', 'required')">El correo es obligatorio</span>
+              <span class="error-message" *ngIf="hasError('correo', 'email')">Debe ser un correo válido</span>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="form-group">
+              <label for="contrasena">Contraseña</label>
+              <input id="contrasena" formControlName="contrasena" type="password" class="form-input" />
+              <span class="error-message" *ngIf="hasError('contrasena', 'required')">La contraseña es obligatoria</span>
+              <span class="error-message" *ngIf="hasError('contrasena', 'minlength')">Debe tener al menos 8 caracteres</span>
+            </div>
+
+            <!-- Fotos -->
+            <div class="form-group">
+              <label for="fotoPerfilUno">Primera Foto</label>
+              <input type="file" id="fotoPerfilUno" formControlName="fotoPerfilUno" (change)="uploadImageUno($event)" />
+              <span class="error-message" *ngIf="hasError('fotoPerfilUno', 'required')">Esta foto es obligatoria</span>
+            </div>
+
+            <div class="form-group">
+              <label for="fotoPerfilDos">Segunda Foto</label>
+              <input type="file" id="fotoPerfilDos" formControlName="fotoPerfilDos" (change)="uploadImageDos($event)" />
+              <span class="error-message" *ngIf="hasError('fotoPerfilDos', 'required')">Esta foto es obligatoria</span>
+            </div>
+
+            <!-- Captcha -->
+            <re-captcha (resolved)="executeRecaptchaVisible($event)" siteKey="6LfBWIoqAAAAAG9GDoRLUsrzEVeUtSbt1F7z--Y7"></re-captcha>
+
+            <div class="button-container">
+              <button type="submit" class="submit-button">Registrar Paciente</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

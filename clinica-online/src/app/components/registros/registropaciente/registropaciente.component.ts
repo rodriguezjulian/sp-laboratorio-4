@@ -8,183 +8,160 @@ import { AuthService } from '../../../servicios/auth.service';
 import { ImagenService } from './../../../servicios/imagen.service'; 
 import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
 import { FirestoreService } from '../../../servicios/firestore.service';
+import { LoaderService } from '../../../servicios/loader.service'
+
+
 @Component({
   selector: 'app-registro-paciente',
   templateUrl: './registropaciente.component.html',
   styleUrls: ['./registropaciente.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,RecaptchaModule,RecaptchaFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, RecaptchaModule, RecaptchaFormsModule],
 })
 export class RegistroPacienteComponent implements OnInit {
   registroForm: FormGroup;
   private file1: any;
   private file2: any;
-  token:boolean = false;
-  public msjError : string = "";
+  token: boolean = false;
   usuarioLogueado: User | null = null;
   proximaRuta : string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private auth: Auth, private firestoreService : FirestoreService,
-    private router: Router, private imagenService : ImagenService
+    private auth: Auth, 
+    private firestoreService: FirestoreService,
+    private router: Router, 
+    private imagenService: ImagenService,public loader: LoaderService
   ) {
+    // Configuración del formulario con validaciones
     this.registroForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+      apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
       edad: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-      obraSocial: ['', Validators.required],
+      obraSocial: ['', [Validators.required, Validators.minLength(3)]],
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(8)]],
-      fotoPerfilUno: ['', [Validators.required]],
-      fotoPerfilDos: ['', [Validators.required]],
+      fotoPerfilUno: ['', Validators.required],
+      fotoPerfilDos: ['', Validators.required],
     });
   }
 
-  async ngOnInit()
-  {
+  async ngOnInit() {
     onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.usuarioLogueado = user;
-      } else {
-        this.usuarioLogueado = null;
-      }
+      this.usuarioLogueado = user || null;
     });
   }
 
-  async onSubmit() {
-    if(this.usuarioLogueado!=null)
-    {
-      let uid = this.usuarioLogueado.uid;
-      console.log(uid);
-     
-      let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
-      this.proximaRuta = "/home"
-      console.log(usuarioLogueado.correo);
-      console.log(usuarioLogueado.contrasena);
-    }
-    for (const field in this.registroForm.controls) {
-      const control = this.registroForm.get(field);
-      if (control?.invalid) {
-        
-        this.msjError = `Campo inválido: ${field}`;
-        console.log(`Campo inválido: ${field}`, control.errors);
-        return;
-      }
-    }
-    if (this.registroForm.valid) {
-      console.log("antes de llamar a crearpaciente()")
-      await this.crearPaciente();
-    } else {
-      Swal.fire({
-        title: 'ERROR',
-        html: 'Por favor verifica los datos ingresados.',
-        icon: 'error',
-        didOpen: () => {
-          document.documentElement.classList.remove('swal2-height-auto');
-          document.body.classList.remove('swal2-height-auto');
-        },
-      });
-    }
+  // Función para verificar errores en un campo
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.registroForm.get(controlName);
+    return !!control && control.hasError(errorName) && (control.dirty || control.touched);
   }
-  SeccionUsuarios()
-  {
-    this.router.navigate(['/seccionUsuarios']);
-  }
-  Home(){
-    this.router.navigate(['']);
-  }
+  
+
   uploadImageUno(foto: any) {
     this.file1 = foto.target.files[0];
-  }
-
-  executeRecaptchaVisible(token:any){
-    this.token = !this.token;
   }
 
   uploadImageDos(foto: any) {
     this.file2 = foto.target.files[0];
   }
-  async crearPaciente() {
 
-    let url1 = await this.imagenService.subirImg(this.file1);
-    let url2 = await this.imagenService.subirImg(this.file2);
-    const paciente = {
-      nombre: this.registroForm.get('nombre')?.value,
-      apellido: this.registroForm.get('apellido')?.value,
-      edad: this.registroForm.get('edad')?.value,
-      dni: this.registroForm.get('dni')?.value,
-      obraSocial: this.registroForm.get('obraSocial')?.value,
-      correo: this.registroForm.get('correo')?.value,
-      contrasena: this.registroForm.get('contrasena')?.value,
-      autorizado : "no",
-      urlFotoPerfil : url1,
-      urlFotoPerfilDos : url2,
-      rol : "paciente"
-    };
-
-    try {
-      console.log("por crear paciente")
-
-      if(this.token)
-        {
-          if(this.usuarioLogueado!=null)
-            {
-              let uid = this.usuarioLogueado.uid;
-              let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
-              await this.authService.createUser(
-                'paciente',
-                paciente,
-                this.registroForm.get('correo')?.value,
-                this.registroForm.get('contrasena')?.value,usuarioLogueado.correo,usuarioLogueado.contrasena
-              );
-            }else
-            {
-              console.log("lo creo sin estar logueado")
-              await this.authService.createUser(
-                'paciente',
-                paciente,
-                this.registroForm.get('correo')?.value,
-                this.registroForm.get('contrasena')?.value
-              );
-            }
-          this.registroForm.reset();
-          Swal.fire({
-            title: 'Paciente registrado',
-            text: '¡Ya puede empezar a usar nuestro sitio!',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            backdrop: `rgba(0,0,0,0.8)`,
-            didOpen: () => {
-              document.documentElement.classList.remove('swal2-height-auto');
-              document.body.classList.remove('swal2-height-auto');
-            },
-          });
-            this.router.navigate([this.proximaRuta]);
-        }
-        else
-        {
-          Swal.fire({
-            title: 'Error',
-            text: 'Verifica que no es un robot para continuar',
-            icon: 'error',
-          });
-        }
-
-    } catch (error) {
+  async onSubmit() {
+    this.loader.setLoader(true);
+    if(this.usuarioLogueado!=null)
+      {
+        let uid = this.usuarioLogueado.uid;
+        console.log(uid);
+       
+        let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
+        this.proximaRuta = "/home"
+        console.log(usuarioLogueado.correo);
+        console.log(usuarioLogueado.contrasena);
+      }
+    if (this.registroForm.invalid) {
       Swal.fire({
-        title: 'ERROR',
-        html: 'Hubo un problema al registrar al paciente.',
+        title: 'Verifique datos ingresados',
+        text: '¡Tenga en cuenta cumplir con las normas.!',
         icon: 'error',
-        didOpen: () => {
-          document.documentElement.classList.remove('swal2-height-auto');
-          document.body.classList.remove('swal2-height-auto');
-        },
+        confirmButtonText: 'Aceptar',
       });
+      return;
     }
+
+    await this.crearPaciente();
+    this.loader.setLoader(false);
+  }
+
+  async crearPaciente() {
+    try {
+      const url1 = await this.imagenService.subirImg(this.file1);
+      const url2 = await this.imagenService.subirImg(this.file2);
+
+      const paciente = {
+        nombre: this.registroForm.get('nombre')?.value,
+        apellido: this.registroForm.get('apellido')?.value,
+        edad: this.registroForm.get('edad')?.value,
+        dni: this.registroForm.get('dni')?.value,
+        obraSocial: this.registroForm.get('obraSocial')?.value,
+        correo: this.registroForm.get('correo')?.value,
+        contrasena: this.registroForm.get('contrasena')?.value,
+        autorizado: "no",
+        urlFotoPerfil: url1,
+        urlFotoPerfilDos: url2,
+        rol: "paciente"
+      };
+      if(this.token)
+      {
+        if(this.usuarioLogueado!=null)
+          {
+            let uid = this.usuarioLogueado.uid;
+            let usuarioLogueado : any = await this.firestoreService.getUsuarioInfo(uid);
+            await this.authService.createUser(
+              'paciente',
+              paciente,
+              this.registroForm.get('correo')?.value,
+              this.registroForm.get('contrasena')?.value,usuarioLogueado.correo,usuarioLogueado.contrasena
+            );
+          }else
+          {
+            console.log("lo creo sin estar logueado")
+            await this.authService.createUser(
+              'paciente',
+              paciente,
+              this.registroForm.get('correo')?.value,
+              this.registroForm.get('contrasena')?.value
+            );
+          }
+  
+        Swal.fire({
+          title: 'Paciente registrado',
+          text: '¡Ya puede empezar a usar nuestro sitio!',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
+  
+        this.registroForm.reset();
+        this.router.navigate([this.proximaRuta]);
+      }
+      else
+      {
+        Swal.fire({
+          title: 'Error',
+          text: 'Verifica que no es un robot para continuar',
+          icon: 'error',
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error al registrar paciente:', error);
+    }
+  }
+
+  executeRecaptchaVisible(token:any){
+    this.token = !this.token;
   }
 }
