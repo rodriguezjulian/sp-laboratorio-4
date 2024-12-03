@@ -10,7 +10,9 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
-  
+  .error{
+    color : red;
+  }
   .container {
     max-width: 600px;
     width: 100%;

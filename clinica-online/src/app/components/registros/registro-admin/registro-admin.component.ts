@@ -10,6 +10,8 @@ import { RecaptchaModule, RecaptchaFormsModule } from "ng-recaptcha-18";
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { FirestoreService } from '../../../servicios/firestore.service';
+import { LoaderService } from '../../../servicios/loader.service'
+
 @Component({
   selector: 'app-registro-admin',
   templateUrl: './registro-admin.component.html',
@@ -32,7 +34,7 @@ export class RegistroAdminComponent implements OnInit {
     private router: Router,
     private imagenService: ImagenService,
     private auth: Auth,
-    private firestore : FirestoreService
+    private firestore : FirestoreService,public loader: LoaderService
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -65,6 +67,7 @@ export class RegistroAdminComponent implements OnInit {
   }
 
   async onSubmit() {
+    this.loader.setLoader(true);
     for (const field in this.registroForm.controls) {
       const control = this.registroForm.get(field);
       if (control?.invalid) {
@@ -81,6 +84,7 @@ export class RegistroAdminComponent implements OnInit {
           this.registroForm.reset();
         }else
         {
+          this.loader.setLoader(false);
           Swal.fire({
             title: 'Error',
             text: 'Verifica que no es un robot para continuar',
@@ -96,6 +100,7 @@ export class RegistroAdminComponent implements OnInit {
         icon: 'error',
       });
     }
+    this.loader.setLoader(false);
   }
 
   executeRecaptchaVisible(token:any){
@@ -149,11 +154,16 @@ export class RegistroAdminComponent implements OnInit {
       }
       
     } catch (error) {
+      this.loader.setLoader(false);
       Swal.fire({
         title: 'Error',
         text: 'Ocurrió un problema al crear el administrador.',
         icon: 'error',
       });
     }
+  }
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.registroForm.get(controlName);
+    return !!control && control.hasError(errorName) && (control.dirty || control.touched);
   }
 }
