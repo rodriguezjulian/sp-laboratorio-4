@@ -6,7 +6,7 @@ import { BuscarEspecialistaEspecialidadPipe } from '../../pipe/buscar-especialis
 import { FormsModule } from '@angular/forms';
 import { EstadoTurnoColorDirective } from '../../directivas/estado-turno-color.directive';
 import { getDownloadURL } from '@angular/fire/storage';
-
+import { LoaderService } from '../../servicios/loader.service'
 @Component({
   selector: 'app-turnos',
   templateUrl: './turnos.component.html',
@@ -18,10 +18,13 @@ export class TurnosComponent implements OnInit {
   turnos: any[] = []; // Lista de turnos
   BuscarEspecialistaEspecialidad: string = ''; // Input de búsqueda
 
-  constructor(private firestoreService: FirestoreService) {}
+  constructor(private firestoreService: FirestoreService,public loader: LoaderService) {}
 
   async ngOnInit() {
+    console.log("sisi");
+    this.loader.setLoader(true);
     await this.cargarTurnos();
+    this.loader.setLoader(false);
   }
 
   async cargarTurnos() {

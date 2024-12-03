@@ -7,6 +7,8 @@ import * as XLSX from 'xlsx';
 import {pasaPorArriba} from '../../directivas/app-tooltip-directive.directive'
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
+import { LoaderService } from '../../servicios/loader.service'
+
 @Component({
   selector: 'app-seccion-usuarios',
   templateUrl: './seccion-usuarios.component.html',
@@ -31,7 +33,7 @@ export class SeccionUsuariosComponent {
   especialistas: any[] = [];
   turnos: any[] = []; 
   administradores: any[] = [];
-  constructor(private router: Router,private firestoreService: FirestoreService) {}
+  constructor(private router: Router,private firestoreService: FirestoreService,public loader: LoaderService) {}
 
   navigateTo(userType: string): void {
     switch (userType) {
@@ -49,8 +51,10 @@ export class SeccionUsuariosComponent {
     }
   }
   ngOnInit(): void {
+    this.loader.setLoader(true);
     this.loadUsers();
     this.loadTurnos(); // Cargar los turnos desde la base de dato
+    this.loader.setLoader(false);
   }
 
 async verHistoria(paciente: any) {

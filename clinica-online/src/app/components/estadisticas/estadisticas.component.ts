@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { LoaderService } from '../../servicios/loader.service'
 @Component({
   selector: 'app-estadisticas',
   templateUrl: './estadisticas.component.html',
@@ -26,7 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule,]
 })
 export class EstadisticasComponent {
-  constructor(private firestoreService: FirestoreService) {}
+  constructor(private firestoreService: FirestoreService,public loader: LoaderService) {}
   barrasChart: Chart | undefined;
   turnos : any [] =[];
   cantidadDeTurnosPorEspecialidad: { [key: string]: number } = {};
@@ -45,8 +45,10 @@ export class EstadisticasComponent {
 
   cantidadDeTurnosPorDia: { [key: string]: number } = {};
   async ngOnInit() {
+    this.loader.setLoader(true);
     await this.obtenerTurnosPorEspecialidad();
     await this.calcularTurnosPorDia();
+    this.loader.setLoader(false);
   }
 
   async obtenerTurnosPorEspecialidad() {

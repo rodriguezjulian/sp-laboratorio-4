@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FirestoreService } from '../../../servicios/firestore.service';
 import { CommonModule } from '@angular/common';
+import { LoaderService } from '../../../servicios/loader.service'
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -13,10 +14,13 @@ export class ListaUsuariosComponent implements OnInit {
   pacientes: any[] = []; 
   @Output() selectPaciente = new EventEmitter<any>();
 
-  constructor(private firestoreService: FirestoreService) {}
+  constructor(private firestoreService: FirestoreService,public loader: LoaderService) {}
 
   async ngOnInit() {
+    this.loader.setLoader(true);
+
     await this.cargarPacientes();
+    this.loader.setLoader(false);
   }
   async cargarPacientes() {
     try {
