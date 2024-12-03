@@ -125,6 +125,7 @@ export class RegistroAdminComponent implements OnInit {
         correo: this.registroForm.get('correo')?.value,
         contrasena: this.registroForm.get('contrasena')?.value,
         urlFotoPerfil: url,
+        rol : "admin"
       };
 
 
